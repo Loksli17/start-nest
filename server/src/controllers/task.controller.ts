@@ -9,7 +9,9 @@ export class TaskController {
     private readonly taskService: TaskService = new TaskService();
 
     @Get('get-all')
-    public async getAll(): Promise<Array<Task>> {
-        return await this.taskService.getAll()
+    public async getAll(): Promise<{tasks: Array<Task>}> {
+        let tasks: Array<Task> = [];
+        tasks = await this.taskService.getAll();
+        return {tasks: tasks};
     }
 }

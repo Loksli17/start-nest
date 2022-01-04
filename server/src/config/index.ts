@@ -10,4 +10,9 @@ export default {
         port    : 3306,
         host    : '127.0.0.1',
     },
+
+    cors: {
+        origin : "http://localhost:8080",
+        methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"]
+    },
 }
