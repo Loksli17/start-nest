@@ -2,7 +2,7 @@
     <div class="home">
         
         <h1>Todo list</h1>
-        <button class="new-btn">New task</button>
+        <button class="new-btn" @click="newTask">New task</button>
 
         <div class="task-wrapper">
             <div class="task" v-for="task in tasks" :key="task.id">
@@ -12,7 +12,7 @@
                 <span>{{task.taskTypeId}}</span>
 
                 <button>Edit</button>
-                <button>Remove</button>
+                <button @click="removeTask(task.id)">Remove</button>
             </div>
         </div>
     </div>
@@ -20,21 +20,49 @@
 
 <script lang="ts">
 import { defineComponent, ref, Ref } from 'vue';
-import axios, { AxiosResponse }                         from 'axios';
+import axios, { AxiosResponse }      from 'axios';
 
 
 export default defineComponent({
     name: 'Home',
 
     setup(){
+
+        const 
+            newTask = () => {
+                axios.put('http://localhost:3000/task/add').then((response: AxiosResponse) => {
+                    console.log(response);
+                    return response
+                }).then((response: AxiosResponse) => {
+                    getTasks();
+                });
+            },
+
+            getTasks = () => {
+                axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
+                    tasks.value = response.data.tasks;
+                });
+            },
+
+            removeTask = (id: number) => {
+                axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
+                    console.log(response);
+                    return response;
+                }).then((response: AxiosResponse) => {
+                    getTasks();
+                });
+            };
+
         let tasks: Ref<Array<Record<string, any>>> = ref([]);
-        
-        axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
-            tasks.value = response.data.tasks;
-        });
+
+        getTasks();
 
         return {
-            tasks
+            tasks,
+
+            newTask,
+            getTasks,
+            removeTask,
         };
     }
 });
@@ -55,6 +83,8 @@ export default defineComponent({
 
     body {
         background: rgb(245, 243, 243);
+        padding-bottom: 40px;
+        box-sizing: border-box;
     }
 
     .task-wrapper{

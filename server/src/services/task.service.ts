@@ -6,6 +6,16 @@ import Task           from "src/models/Task";
 export class TaskService {
 
     async getAll(): Promise<Array<Task>> {
-        return await Task.findAll(); 
+        return await Task.findAll({
+            order: [['id', 'DESC']], 
+        }); 
+    }
+
+    async addOne(task: Task): Promise<void> {
+        await task.save();
+    }
+
+    async removeOne(id: number): Promise<void> {
+        await Task.destroy({where: {id: id}});
     }
 }
