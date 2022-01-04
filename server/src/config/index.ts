@@ -3,7 +3,7 @@ export default {
         port: 3000,
     },
 
-     db: {
+    db: {
         name    : 'todolist',
         user    : 'root',
         password: '1234',
