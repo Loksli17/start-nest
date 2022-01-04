@@ -6,7 +6,7 @@ export default class Task extends Model {
     @Column
     public text: string;
 
-    @Column
+    @Column({primaryKey: true, autoIncrement: true})
     public id?: number;
 
     @Column
