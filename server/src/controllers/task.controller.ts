@@ -1,11 +1,15 @@
 import { Controller, Get } from "@nestjs/common";
+import Task                from "src/models/Task";
+import { TaskService }     from "src/services/task.service";
 
 
 @Controller('task')
 export class TaskController {
 
+    private readonly taskService: TaskService = new TaskService();
+
     @Get('get-all')
-    public getAll(): Array<Record<string, any>>{
-        return [{id: 1, text: 'text', date: '2022-04-01'}];
+    public async getAll(): Promise<Array<Task>> {
+        return await this.taskService.getAll()
     }
 }
