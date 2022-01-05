@@ -1,6 +1,8 @@
 import { SequelizeModule } from "@nestjs/sequelize"
 import config              from ".";
 import Task                from './../models/Task';
+import TaskType            from "./../models/TaskType";
+
 
 export default SequelizeModule.forRoot({
     dialect : 'mysql',
@@ -9,5 +11,5 @@ export default SequelizeModule.forRoot({
     password: config.db.password,
     database: config.db.name,
     username: config.db.user,
-    models  : [Task],
+    models  : [Task, TaskType],
 });
