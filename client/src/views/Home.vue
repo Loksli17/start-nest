@@ -16,6 +16,17 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-back">
+
+        <form>
+            <input type="text" name="text" v-model="text" id="">
+            
+            <select name="taskTypeId">
+                <option v-for="type in types" :key="type.id" :value="type.id">{{type.name}}</option>
+            </select>
+        </form>
+    </div>
 </template>
 
 <script lang="ts">
@@ -30,7 +41,7 @@ export default defineComponent({
 
         const 
             newTask = () => {
-                axios.put('http://localhost:3000/task/add').then((response: AxiosResponse) => {
+                axios.put('http://localhost:3000/task/add', {task: {text: 'Teeeext', taskTypeId: 1}}).then((response: AxiosResponse) => {
                     console.log(response);
                     return response
                 }).then((response: AxiosResponse) => {
@@ -51,18 +62,33 @@ export default defineComponent({
                 }).then((response: AxiosResponse) => {
                     getTasks();
                 });
+            },
+
+            getTypes = () => {
+                axios.get(`http://localhost:3000/task-type/get-all`).then((response: AxiosResponse) => {
+                    types = response.data.types;
+                    console.log(types);
+                });
             };
 
-        let tasks: Ref<Array<Record<string, any>>> = ref([]);
+        let 
+            id   : Ref<number>                     = ref(1),
+            text : Ref<string>                     = ref(''),
+            types: Ref<Array<Record<string, any>>> = ref([]),
+            tasks: Ref<Array<Record<string, any>>> = ref([]);
 
         getTasks();
+        getTypes();
 
         return {
             tasks,
+            types,
 
             newTask,
             getTasks,
             removeTask,
+            text,
+            id
         };
     }
 });

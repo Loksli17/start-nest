@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Put } from "@nestjs/common";
-import Task                from "src/models/Task";
-import { TaskService }     from "src/services/task.service";
+import { Controller, Delete, Get, Param, Put, Request } from "@nestjs/common";
+import Task                                             from "src/models/Task";
+import { TaskService }                                  from "src/services/task.service";
+import * as moment                                      from 'moment';
 
 
 @Controller('task')
@@ -17,13 +18,13 @@ export class TaskController {
 
 
     @Put('add')
-    public async addOne(): Promise<{msg: string}> {
+    public async addOne(@Request() req): Promise<{msg: string}> {
 
         const task: Task = Task.build({
-            text      : 'text',
-            taskTypeId: 1,
+            text      : req.body.task.text,
+            taskTypeId: req.body.task.taskTypeId,
             date      : new Date(),
-            time      : '22:00:00',
+            time      : moment().format('hh:mm:ss'),
         });
 
         await this.taskService.addOne(task);
