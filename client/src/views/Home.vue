@@ -105,7 +105,14 @@
                 showEditModal = (id_: number) => {
                     modalToggle.value  = true;
                     actionStatus.value = 'edit';
-                    id.value           = id_;
+
+                    let task: Record<string, any> | undefined = {};
+
+                    task = tasks.value.find((task) => task.id === id_); 
+
+                    id.value     = id_;
+                    text.value   = task!.text;
+                    typeId.value = task!.taskTypeId;
                 },
 
                 showNewModal = () => {
