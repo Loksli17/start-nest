@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         
-        <h1>Todo list</h1>
+        <h1 class="text-3xl font-bold underline">Todo list</h1>
         <button class="new-btn" @click="newTask">New task</button>
 
         <div class="task-wrapper">
