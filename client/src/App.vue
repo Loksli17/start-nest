@@ -1,30 +1,55 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+
+    <div class="fixed h-16 grid grid-flow-col auto-cols-max gap-5 px-10 items-center bg-blue-200 w-full opacity-90" id="nav">
+        <router-link class="text-gray-800 text-xl hover:underline" v-for="link in links" :key="link.to" :to="link.to">{{link.text}}</router-link>
+    </div>
+
+
+    <div class="md:h-full pt-24 md:grid gap-8 px-10 pb-14 bg-white">
+        <router-view/>
+    </div>
+
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+    import { defineComponent, Ref, ref } from 'vue';
 
-#nav {
-  padding: 30px;
+    export default defineComponent({
+        
+        setup(){
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+            const links: Ref<Array<{to: string, text: string}>> = ref([
+                {to: "/",      text: 'Todolist'},
+                {to: "/about", text: 'About'},
+            ]);
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+            return {
+                links
+            }
+        }
+    })
+</script>
+
+
+// <style lang="scss">
+// #app {
+//   font-family: Avenir, Helvetica, Arial, sans-serif;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   text-align: center;
+//   color: #2c3e50;
+// }
+
+// #nav {
+//   padding: 30px;
+
+//   a {
+//     font-weight: bold;
+//     color: #2c3e50;
+
+//     &.router-link-exact-active {
+//       color: #42b983;
+//     }
+//   }
+// }
+// </style>

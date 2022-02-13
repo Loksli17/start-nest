@@ -1,22 +1,30 @@
 <template>
-    <div class="home">
+    <div class="">
         
-        <h1 class="text-3xl font-bold underline">Todo list</h1>
-        <button class="new-btn" @click="newTask">New task</button>
+        <div class="">
+            <h1 class=" text-5xl font-bold">Todolist</h1>
+        </div>
 
-        <div class="task-wrapper">
-            <div class="task" v-for="task in tasks" :key="task.id">
-                <span class="text">{{task.text}}</span>
+        <div class=" mt-6">
+            <button class="p-4 w-max bg-blue-500  text-white text-lg" @click="newTask">New task</button>
+        </div>
+
+        <div class=" mt-14 grid gap-5 md:grid-cols-1">
+            <div class="grid grid-flow-col grid-cols-todo bg-gray-100 p-6" v-for="task in tasks" :key="task.id">
+                <span class="text text-blue-600">{{task.text}}</span>
                 <span>{{task.date}}</span>
                 <span>{{task.time}}</span>
                 <span>{{task.taskTypeId}}</span>
 
-                <button>Edit</button>
-                <button @click="removeTask(task.id)">Remove</button>
+                <div class="grid grid-flow-col auto-cols-max gap-3">
+                    <button>&#9998;</button>
+                    <button class=" text-red-500" @click="removeTask(task.id)">&#10006;</button>
+                </div>
             </div>
         </div>
     </div>
 
+<!-- 
     <div class="modal-back">
 
         <form>
@@ -26,9 +34,10 @@
                 <option v-for="type in types" :key="type.id" :value="type.id">{{type.name}}</option>
             </select>
         </form>
-    </div>
+    </div> -->
     
 </template>
+
 
 
 <script lang="ts">
@@ -96,47 +105,3 @@
     });
 
 </script>
-
-
-<style lang="scss">
-
-    *{
-        margin: 0px;
-        padding: 0px;
-    }
-
-    .new-btn{
-        margin: 30px 0px;
-    }
-
-    body {
-        background: rgb(245, 243, 243);
-        padding-bottom: 40px;
-        box-sizing: border-box;
-    }
-
-    .task-wrapper{
-        display: grid;
-        row-gap: 20px;
-        justify-content: center;
-        
-        .task{
-            width: 900px;
-            padding: 10px 20px;
-            
-            display: grid;
-            grid-auto-flow: column;
-            grid-template-columns: 3fr max-content max-content max-content max-content;
-            column-gap: 10px;
-            background: #fff;
-
-            button{
-                cursor: pointer;
-            }
-
-            .text{
-                text-align: left;
-            }
-        }
-    }
-</style>
