@@ -27,7 +27,9 @@
             </select>
         </form>
     </div>
+    
 </template>
+
 
 <script lang="ts">
     import { defineComponent, ref, Ref } from 'vue';
@@ -44,7 +46,7 @@
                     axios.put('http://localhost:3000/task/add', {task: {text: 'Teeeext', taskTypeId: 1}}).then((response: AxiosResponse) => {
                         console.log(response);
                         return response
-                    }).then((response: AxiosResponse) => {
+                    }).then(() => {
                         getTasks();
                     });
                 },
@@ -59,7 +61,7 @@
                     axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
                         console.log(response);
                         return response;
-                    }).then((response: AxiosResponse) => {
+                    }).then(() => {
                         getTasks();
                     });
                 },
