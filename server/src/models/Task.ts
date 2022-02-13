@@ -1,5 +1,6 @@
 import { Column, Model, Table } from "sequelize-typescript";
 
+
 @Table({tableName: 'task', timestamps: false})
 export default class Task extends Model {
 

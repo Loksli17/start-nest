@@ -30,68 +30,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
-import axios, { AxiosResponse }      from 'axios';
+    import { defineComponent, ref, Ref } from 'vue';
+    import axios, { AxiosResponse }      from 'axios';
 
 
-export default defineComponent({
-    name: 'Home',
+    export default defineComponent({
+        name: 'Home',
 
-    setup(){
+        setup(){
 
-        const 
-            newTask = () => {
-                axios.put('http://localhost:3000/task/add', {task: {text: 'Teeeext', taskTypeId: 1}}).then((response: AxiosResponse) => {
-                    console.log(response);
-                    return response
-                }).then((response: AxiosResponse) => {
-                    getTasks();
-                });
-            },
+            const 
+                newTask = () => {
+                    axios.put('http://localhost:3000/task/add', {task: {text: 'Teeeext', taskTypeId: 1}}).then((response: AxiosResponse) => {
+                        console.log(response);
+                        return response
+                    }).then((response: AxiosResponse) => {
+                        getTasks();
+                    });
+                },
 
-            getTasks = () => {
-                axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
-                    tasks.value = response.data.tasks;
-                });
-            },
+                getTasks = () => {
+                    axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
+                        tasks.value = response.data.tasks;
+                    });
+                },
 
-            removeTask = (id: number) => {
-                axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
-                    console.log(response);
-                    return response;
-                }).then((response: AxiosResponse) => {
-                    getTasks();
-                });
-            },
+                removeTask = (id: number) => {
+                    axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
+                        console.log(response);
+                        return response;
+                    }).then((response: AxiosResponse) => {
+                        getTasks();
+                    });
+                },
 
-            getTypes = () => {
-                axios.get(`http://localhost:3000/task-type/get-all`).then((response: AxiosResponse) => {
-                    types = response.data.types;
-                    console.log(types);
-                });
+                getTypes = () => {
+                    axios.get(`http://localhost:3000/task-type/get-all`).then((response: AxiosResponse) => {
+                        types.value = response.data.types;
+                        console.log(types.value);
+                    });
+                };
+
+            let 
+                id   : Ref<number>                     = ref(1),
+                text : Ref<string>                     = ref(''),
+                types: Ref<Array<Record<string, any>>> = ref([]),
+                tasks: Ref<Array<Record<string, any>>> = ref([]);
+
+            getTasks();
+            getTypes();
+
+            return {
+                tasks,
+                types,
+
+                newTask,
+                getTasks,
+                removeTask,
+                text,
+                id
             };
-
-        let 
-            id   : Ref<number>                     = ref(1),
-            text : Ref<string>                     = ref(''),
-            types: Ref<Array<Record<string, any>>> = ref([]),
-            tasks: Ref<Array<Record<string, any>>> = ref([]);
-
-        getTasks();
-        getTypes();
-
-        return {
-            tasks,
-            types,
-
-            newTask,
-            getTasks,
-            removeTask,
-            text,
-            id
-        };
-    }
-});
+        }
+    });
 
 </script>
 
