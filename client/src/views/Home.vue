@@ -63,10 +63,8 @@
 
 
             const
-            
                 newTask = () => {
                     axios.put('http://localhost:3000/task/add', {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
-                        console.log(response);
                         return response
                     }).then(() => {
                         getTasks();
@@ -75,6 +73,7 @@
 
                 getTasks = () => {
                     axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
+                        console.log(response.data.tasks);
                         tasks.value = response.data.tasks;
                     });
                 },

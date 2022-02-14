@@ -7,9 +7,11 @@ import { TaskService }        from './services/task.service';
 import { TaskTypeController } from './controllers/taskType.controller';
 import { TaskTypeService }    from './services/taskType.service';
 
+
 @Module({
     imports    : [database],
     controllers: [AppController, TaskController, TaskTypeController],
     providers  : [AppService, TaskService, TaskTypeService],
 })
+
 export class AppModule {}

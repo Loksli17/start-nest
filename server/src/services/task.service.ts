@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import Task           from "src/models/Task";
+import TaskType       from "src/models/TaskType";
 
 
 @Injectable()
@@ -7,7 +8,8 @@ export class TaskService {
 
     async getAll(): Promise<Array<Task>> {
         return await Task.findAll({
-            order: [['id', 'DESC']], 
+            order  : [['id', 'DESC']], 
+            include: [{model: TaskType}]
         }); 
     }
 
