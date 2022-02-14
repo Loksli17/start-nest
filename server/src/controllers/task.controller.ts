@@ -1,13 +1,14 @@
 import { Controller, Delete, Get, Param, Put, Request } from "@nestjs/common";
 import Task                                             from "src/models/Task";
 import { TaskService }                                  from "src/services/task.service";
-import * as moment                                      from 'moment';
+
 
 
 @Controller('task')
 export class TaskController {
 
     private readonly taskService: TaskService = new TaskService();
+
 
     @Get('get-all')
     public async getAll(): Promise<{tasks: Array<Task>}> {
@@ -20,15 +21,7 @@ export class TaskController {
     @Put('add')
     public async addOne(@Request() req): Promise<{msg: string}> {
 
-        const task: Task = Task.build({
-            text      : req.body.task.text,
-            taskTypeId: req.body.task.taskTypeId,
-            date      : new Date(),
-            time      : moment().format('hh:mm:ss'),
-        });
-
-        await this.taskService.addOne(task);
-
+        await this.taskService.saveOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId});
         return {msg: 'Created successfully'}
     }
 
@@ -38,5 +31,14 @@ export class TaskController {
         const id: number = params.id;
         await this.taskService.removeOne(id);
         return {msg: 'Removed successfully'};
+    }
+
+
+    @Put('edit/:id')
+    public async editOne(@Request() req, @Param() params): Promise<{msg: string}> {
+
+        const id: number = params.id;
+        await this.taskService.updateOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId}, id);
+        return {msg: 'Updated successfully'};
     }
 }
