@@ -12,7 +12,7 @@ export default {
     },
 
     cors: {
-        origin : ["http://localhost:8080", 'http://192.168.1.35:8080'],
+        origin : ["http://localhost:8080", 'http://192.168.43.17:8080'],
         methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"]
     },
 }

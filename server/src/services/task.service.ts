@@ -29,7 +29,7 @@ export class TaskService {
     }
 
 
-    async updateOne(reqTask: {text: string, taskTypeId: number}, id: number): Promise<void> {
+    async updateOne(reqTask: {text: string, taskTypeId: number}, id: number): Promise<Task> {
         
         const task: Task = await Task.findOne({where: {id: id}});
         
@@ -39,6 +39,8 @@ export class TaskService {
         task.set('time',       moment().format('hh:mm:ss'));
 
         await task.save();
+
+        return task;
     }
 
 

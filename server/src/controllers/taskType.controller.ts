@@ -8,6 +8,7 @@ export class TaskTypeController {
 
     private readonly taskTypeService: TaskTypeService = new TaskTypeService();
 
+    
     @Get('get-all')
     public async getAll(): Promise<{types: Array<TaskType>}> {
         let types: Array<TaskType> = [];

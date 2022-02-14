@@ -35,10 +35,11 @@ export class TaskController {
 
 
     @Put('edit/:id')
-    public async editOne(@Request() req, @Param() params): Promise<{msg: string}> {
+    public async editOne(@Request() req, @Param() params): Promise<{msg: string, task: Task}> {
 
         const id: number = params.id;
-        await this.taskService.updateOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId}, id);
-        return {msg: 'Updated successfully'};
+        const task: Task = await this.taskService.updateOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId}, id);
+        console.log(task);
+        return {msg: 'Updated successfully', task: task};
     }
 }

@@ -69,7 +69,7 @@
             const
                 newTask = () => {
                     axios.put('http://localhost:3000/task/add', {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
-                        return response
+                        return response;
                     }).then(() => {
                         getTasks();
                     });
@@ -77,14 +77,12 @@
 
                 getTasks = () => {
                     axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
-                        console.log(response.data.tasks);
                         tasks.value = response.data.tasks;
                     });
                 },
 
                 removeTask = (id: number) => {
                     axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
-                        console.log(response);
                         return response;
                     }).then(() => {
                         getTasks();
@@ -93,14 +91,22 @@
 
                 editTask = (id: number) => {
                     axios.put(`http://localhost:3000/task/edit/${id}`, {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
-                        console.log(response);
+                        tasks.value.map((task: Record<string, any>) => {
+                             
+                            if(task.id == id){
+                                task.text       = response.data.task.text;
+                                task.taskTypeId = response.data.task.taskTypeId;
+                                task.type       = {id: response.data.task.taskTypeId, name: types.value.find(value => value.id == response.data.task.taskTypeId)!.name};
+                            }
+
+                            return task;
+                        });
                     })
                 },
 
                 getTypes = () => {
                     axios.get(`http://localhost:3000/task-type/get-all`).then((response: AxiosResponse) => {
                         types.value = response.data.types;
-                        console.log(types.value);
                     });
                 },
 
