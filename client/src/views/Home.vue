@@ -14,7 +14,11 @@
                 <span class="text text-blue-600">{{task.text}}</span>
                 <span>{{task.date}}</span>
                 <span>{{task.time}}</span>
-                <span>{{task.taskTypeId}}</span>
+
+                <span v-if="task.taskTypeId == 1" class=" text-yellow-400"> {{task.type.name}} </span>
+                <span v-if="task.taskTypeId == 2" class=" text-green-400"> {{task.type.name}} </span>
+                <span v-if="task.taskTypeId == 3" class=" text-blue-400"> {{task.type.name}} </span>
+                <span v-if="task.taskTypeId == 4" class=" text-indigo-400"> {{task.type.name}} </span>
 
                 <div class="grid grid-flow-col auto-cols-max gap-3">
                     <button @click="showEditModal(task.id)">&#9998;</button>
