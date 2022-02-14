@@ -1,5 +1,5 @@
-import { Column, Model, Table, HasOne, ForeignKey, BelongsTo } from "sequelize-typescript";
-import TaskType                         from "./TaskType";
+import { Column, Model, Table, ForeignKey, BelongsTo } from "sequelize-typescript";
+import TaskType                                        from "./TaskType";
 
 
 @Table({tableName: 'task', timestamps: false})
