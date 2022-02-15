@@ -1,37 +1,37 @@
 <template>
-    <div class="">
-        
+
+    <CustomScroll :body="true">
         <div class="">
-            <h1 class=" text-5xl font-bold">Todolist</h1>
-        </div>
+            
+            <div class="">
+                <h1 class=" text-5xl font-bold">Todolist</h1>
+            </div>
 
-        <div class=" mt-6">
-            <button class="p-4 w-max bg-blue-500  text-white text-lg" @click="showNewModal()">New task</button>
-        </div>
+            <div class=" mt-6">
+                <button class="p-4 w-max bg-blue-500  text-white text-lg" @click="showNewModal()">New task</button>
+            </div>
 
-        <div class=" mt-14 grid gap-5 md:grid-cols-1">
-            <div class="grid grid-flow-col grid-cols-todo bg-gray-100 p-6" v-for="task in tasks" :key="task.id">
-                <span class="text text-blue-600">{{task.text}}</span>
-                <span>{{task.date}}</span>
-                <span>{{task.time}}</span>
+            <div class=" mt-14 grid gap-5 md:grid-cols-1">
+                <div class="grid grid-flow-col grid-cols-todo bg-gray-100 p-6" v-for="task in tasks" :key="task.id">
+                    <span class="text text-blue-600">{{task.text}}</span>
+                    <span>{{task.date}}</span>
+                    <span>{{task.time}}</span>
 
-                <span v-if="task.taskTypeId == 1" class=" text-yellow-400"> {{task.type.name}} </span>
-                <span v-if="task.taskTypeId == 2" class=" text-green-400"> {{task.type.name}} </span>
-                <span v-if="task.taskTypeId == 3" class=" text-blue-400"> {{task.type.name}} </span>
-                <span v-if="task.taskTypeId == 4" class=" text-indigo-400"> {{task.type.name}} </span>
+                    <span v-if="task.taskTypeId == 1" class=" text-yellow-400"> {{task.type.name}} </span>
+                    <span v-if="task.taskTypeId == 2" class=" text-green-400"> {{task.type.name}} </span>
+                    <span v-if="task.taskTypeId == 3" class=" text-blue-400"> {{task.type.name}} </span>
+                    <span v-if="task.taskTypeId == 4" class=" text-indigo-400"> {{task.type.name}} </span>
 
-                <div class="grid grid-flow-col auto-cols-max gap-3">
-                    <button @click="showEditModal(task.id)">&#9998;</button>
-                    <button class=" text-red-500" @click="removeTask(task.id)">&#10006;</button>
+                    <div class="grid grid-flow-col auto-cols-max gap-3">
+                        <button @click="showEditModal(task.id)">&#9998;</button>
+                        <button class=" text-red-500" @click="removeTask(task.id)">&#10006;</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </CustomScroll>
 
-    <CustomScroll
-        :fullPage="true"
-    />
-
+    
 
     <div @click.self="modalToggle = false" class="grid justify-center items-center fixed w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
 
@@ -47,6 +47,7 @@
     </div>
     
 </template>
+
 
 
 

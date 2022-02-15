@@ -1,8 +1,11 @@
 <template>
-    
-    <div ref="wrapper" class="scroll-wrap">
-        
-        <div ref="scroller" class="scroller"></div>
+
+    <div ref="wrapper">
+        <slot></slot>
+
+        <div ref="scrollerWrap" class="scroll-wrap">
+            <div ref="scroller" class="scroller"></div>
+        </div>
     </div>
 
 </template>
@@ -14,7 +17,7 @@
     export default defineComponent({
 
         props: {
-            fullPage: {
+            body: {
                 type: Boolean,
                 default: false,
             }
@@ -24,26 +27,22 @@
 
             let
                 oldYVal     : Ref<number> = ref(0),
+                scrollerWrap              = ref(null),
                 scroller                  = ref(null),
                 docHeight   : Ref<number> = ref(0),
                 screenHeight: Ref<number> = ref(0),
                 percent     : Ref<number> = ref(0);
 
             let
+                scrollWrap: HTMLDivElement,
                 scrollElem: HTMLDivElement;
 
-            if(props.fullPage){
-                // docHeight.value = Math.max(
-                //     document.body.scrollHeight, document.documentElement.scrollHeight,
-                //     document.body.offsetHeight, document.documentElement.offsetHeight,
-                //     document.body.clientHeight, document.documentElement.clientHeight
-                // );
-
+            if(props.body){
                 screenHeight.value = document.documentElement.clientHeight;
-                // percent.value = (screenHeight.value / docHeight.value) * 100;
+            } else {
+                // screenHeight.value = document
             }
 
-            
             const countData = () => {
                 docHeight.value = Math.max(
                     document.body.scrollHeight, document.documentElement.scrollHeight,
@@ -51,12 +50,12 @@
                     document.body.clientHeight, document.documentElement.clientHeight
                 );
 
-                console.log(screenHeight.value, docHeight.value)
-
                 percent.value = (screenHeight.value / docHeight.value) * 100;
 
                 scrollElem = scroller.value as any;
-                scrollElem.style.height = percent.value + 'px';
+                scrollElem.style.height = percent.value + '%';
+
+                scrollerWrap = scrollerWrap.value as any;
 
                 window.addEventListener('scroll', (e) => {
                     
@@ -68,13 +67,11 @@
                 });
             };
 
-
             onMounted(() => {
 
                 setTimeout(() => {
                     countData();
                 }, 0);
-
 
                 const resizeObserver = new ResizeObserver(entries => {
                     countData();
@@ -87,6 +84,7 @@
             return {
                 docHeight,
 
+                scrollerWrap,
                 scroller
             }
         }
@@ -96,7 +94,7 @@
 
 <style>
 
-    /* body::-webkit-scrollbar {
+    body::-webkit-scrollbar {
         display: none;
     }
 
@@ -104,10 +102,10 @@
     body {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
-    } */
+    } 
     
     .scroll-wrap{
-        width: 8px;
+        width: 10px;
         height: 100%;
         position: fixed;
         background: #dad3d3;
@@ -118,7 +116,8 @@
     .scroller{
         position: fixed;
         right: 0px;
-        width: 6px;
+        width: 10px;
         background: #e92323;
+        cursor: pointer;
     }
 </style>

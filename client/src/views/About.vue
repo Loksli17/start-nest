@@ -1,5 +1,16 @@
 <template>
     <div class="about auto-cols-max">
+
+    <div class=" h-96 bg-blue-100 overflow-y-auto">
+
+        <div class=" p-9" v-for="i in 10" :key="i">
+            item#{{i}}
+        </div>
+
+        <!-- <CustomScroll
+            :fullPage="true"
+        /> -->
+    </div>
         
     <button
         type="button"
@@ -86,10 +97,14 @@
 <script lang="ts">
     import { defineComponent, ref, Ref, watch } from 'vue';
     import axios, { AxiosResponse }             from 'axios';
+    import CustomScroll                         from '../components/CustomScroll/CustomScroll.vue';
     import 'tw-elements';
 
 
     export default defineComponent({
         
+        components: {
+            // CustomScroll,
+        }
     });
 </script>
