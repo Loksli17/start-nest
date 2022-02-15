@@ -28,6 +28,10 @@
         </div>
     </div>
 
+    <CustomScroll
+        :fullPage="true"
+    />
+
 
     <div @click.self="modalToggle = false" class="grid justify-center items-center fixed w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
 
@@ -50,10 +54,16 @@
     import { defineComponent, ref, Ref, watch, inject } from 'vue';
     import axios, { AxiosResponse }                     from 'axios';
     import { ToastPluginApi }                           from 'vue-toast-notification';
+    import CustomScroll                                 from '../components/CustomScroll/CustomScroll.vue';
     import 'tw-elements';
+
 
     export default defineComponent({
         name: 'Home',
+
+        components: {
+            CustomScroll,
+        },
 
         setup(){
 
