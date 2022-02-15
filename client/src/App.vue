@@ -1,6 +1,6 @@
 <template>
 
-    <div class="fixed h-16 grid grid-flow-col auto-cols-max gap-5 px-10 items-center bg-blue-200 w-full opacity-90" id="nav">
+    <div class="fixed z-10 h-16 grid grid-flow-col auto-cols-max gap-5 px-10 items-center bg-blue-200 w-full opacity-90" id="nav">
         <router-link class="text-gray-800 text-xl hover:underline" v-for="link in links" :key="link.to" :to="link.to">{{link.text}}</router-link>
     </div>
 

@@ -1,10 +1,11 @@
 <template>
 
-    <div ref="wrapperHtmlRef" class="scroll-main-wrapper">
+    <div ref="wrapperHtmlRef" :class="{'scroll-main-wrapper': !body}">
+        
         <slot></slot>
 
-        <div ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body}">
-            <div ref="scrollerHtmlRef" :class="{'scroller-body': body}"></div>
+        <div ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body, 'scroll-wrap': !body}">
+            <div ref="scrollerHtmlRef" :class="{'scroller-body': body, 'scroller': !body}"></div>
         </div>
     </div>
 
@@ -19,7 +20,7 @@
 
         props: {
             body: {
-                type: Boolean,
+                type   : Boolean,
                 default: false,
             }
         },
@@ -51,7 +52,8 @@
                         document.body.clientHeight, document.documentElement.clientHeight
                     );
                 } else {
-                    wrapperHeight.value = scrollerWrapHtml.scrollHeight;
+                    wrapperHeight.value = wrapperHtml.scrollHeight;
+                    console.log('wrapperHeight', wrapperHeight.value);
                 }
             };
 
@@ -59,7 +61,8 @@
                 if(props.body){
                     screenHeight.value = document.documentElement.clientHeight;
                 } else {
-                    screenHeight.value = scrollerWrapHtml.clientHeight;
+                    screenHeight.value = wrapperHtml.clientHeight;
+                    console.log('screenHeight', screenHeight.value);
                 }
             };
 
@@ -69,10 +72,23 @@
             };
 
             const scrollHandeler = () => {
-                window.addEventListener('scroll', (e) => {
-                    let newTop: number = (window.scrollY * screenHeight.value) / wrapperHeight.value;
-                    scrollerHtml.style.top = (newTop) + 'px';
-                });
+                
+                const elem = props.body ? window : wrapperHtml;
+
+                if(props.body){
+                    window.addEventListener('scroll', (e) => {
+                        let newTop: number = (window.scrollY * screenHeight.value) / wrapperHeight.value;
+                        scrollerHtml.style.top = (newTop) + 'px';
+                    });
+                } else {
+                    wrapperHtml.addEventListener('scroll', (e) => {
+                        scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+
+                        let newTop: number = (wrapperHtml.scrollTop * screenHeight.value) / wrapperHeight.value;
+                        scrollerHtml.style.top = (newTop) + 'px';
+                    });
+                }
+                
             };
 
 
@@ -182,17 +198,35 @@
     /* Hide scrollbar for IE, Edge and Firefox */
     body {
         -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        scrollbar-width: 0;  /* Firefox */
     }
 
     .scroll-main-wrapper{
+        max-height: 384px;
+        overflow-y: scroll;
+        position: relative;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
 
+    .scroll-main-wrapper::-webkit-scrollbar {
+        display: none;
     }
     
     .scroll-wrap-body{
         width: 10px;
-        height: 100%;
+        height: 100vh;
         position: fixed;
+        background: #dad3d3;
+        top: 0px;
+        right: 0px;
+        z-index: 1000;
+    }
+
+    .scroll-wrap{
+        width: 10px;
+        height: 100%;
+        position: absolute;
         background: #dad3d3;
         top: 0px;
         right: 0px;
@@ -200,6 +234,15 @@
 
     .scroller-body{
         position: fixed;
+        right: 0px;
+        width: 10px;
+        background: #e92323;
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+    .scroller{
+        position: absolute;
         right: 0px;
         width: 10px;
         background: #e92323;

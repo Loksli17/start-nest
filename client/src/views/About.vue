@@ -1,16 +1,13 @@
 <template>
     <div class="about auto-cols-max">
 
-    <div class=" h-96 bg-blue-100 overflow-y-auto">
-
-        <div class=" p-9" v-for="i in 10" :key="i">
-            item#{{i}}
+    <CustomScroll class=" h-96">   
+        <div class="bg-blue-100 ">
+            <div class=" p-9" v-for="i in 10" :key="i">
+                item#{{i}}
+            </div>
         </div>
-
-        <!-- <CustomScroll
-            :fullPage="true"
-        /> -->
-    </div>
+    </CustomScroll> 
         
     <button
         type="button"
@@ -104,7 +101,7 @@
     export default defineComponent({
         
         components: {
-            // CustomScroll,
+            CustomScroll,
         }
     });
 </script>
