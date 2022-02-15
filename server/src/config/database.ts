@@ -12,4 +12,5 @@ export default SequelizeModule.forRoot({
     database: config.db.name,
     username: config.db.user,
     models  : [Task, TaskType],
+    logging : false,
 });

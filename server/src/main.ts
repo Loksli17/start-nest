@@ -1,10 +1,11 @@
 import { NestFactory }                            from '@nestjs/core';
 import { AppModule }                              from './app.module';
 import config                                     from './config';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import AppClusterService                          from './cluster.service';
 
 
-async function bootstrap() {
+const bootstrap = async (): Promise<void> => {
     const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
     app.enableCors({
@@ -17,4 +18,6 @@ async function bootstrap() {
     await app.listen(config.app.port);
 }
 
-bootstrap();
+
+AppClusterService.clisterize(bootstrap);
+// bootstrap();
