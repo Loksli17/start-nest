@@ -48,7 +48,8 @@
 
 <script lang="ts">
     import { defineComponent, ref, Ref, watch } from 'vue';
-    import axios, { AxiosResponse }      from 'axios';
+    import axios, { AxiosResponse }             from 'axios';
+    import 'tw-elements';
 
 
     export default defineComponent({
