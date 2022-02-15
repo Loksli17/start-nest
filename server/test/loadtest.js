@@ -20,6 +20,7 @@ export const options = {
     },
 }
 
+
 export default () => {
 
     const response2 = http.get('http://localhost:3000/task/get-all');
@@ -29,5 +30,4 @@ export default () => {
     });
 
     sleep(1);
-  
 };

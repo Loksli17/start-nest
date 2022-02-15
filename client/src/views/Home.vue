@@ -47,10 +47,10 @@
 
 
 <script lang="ts">
-    import { defineComponent, ref, Ref, watch } from 'vue';
-    import axios, { AxiosResponse }             from 'axios';
+    import { defineComponent, ref, Ref, watch, inject } from 'vue';
+    import axios, { AxiosResponse }                     from 'axios';
+    import { ToastPluginApi }                           from 'vue-toast-notification';
     import 'tw-elements';
-
 
     export default defineComponent({
         name: 'Home',
@@ -58,6 +58,7 @@
         setup(){
 
             let
+                Toast       : ToastPluginApi                  = inject('Toast') as ToastPluginApi,
                 actionStatus: Ref<string>                     = ref('add'),
                 modalToggle : Ref<boolean>                    = ref(false),
                 id          : Ref<number>                     = ref(1),
@@ -72,6 +73,8 @@
                     axios.put('http://localhost:3000/task/add', {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
                         return response;
                     }).then(() => {
+                        const type: string = types.value.find(value => value.id == typeId.value)!.name;
+                        Toast.success(`New ${type} task was created!`);
                         getTasks();
                     });
                 },
@@ -86,6 +89,7 @@
                     axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
                         return response;
                     }).then(() => {
+                        Toast.success(`Task with id = ${id} was removed!`);
                         getTasks();
                     });
                 },
@@ -102,6 +106,8 @@
 
                             return task;
                         });
+
+                        Toast.success(`Task with id = ${id} was edited!`);
                     })
                 },
 
