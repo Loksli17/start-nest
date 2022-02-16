@@ -4,7 +4,7 @@
         
         <slot></slot>
 
-        <div ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body, 'scroll-wrap': !body}">
+        <div v-if="showScrollComputed" ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body, 'scroll-wrap': !body}">
             <div ref="scrollerHtmlRef" :class="{'scroller-body': body, 'scroller': !body}"></div>
         </div>
     </div>
@@ -14,7 +14,7 @@
 
 
 <script lang="ts">
-    import { defineComponent, ref, Ref, onMounted, nextTick } from 'vue';
+    import { defineComponent, ref, Ref, onMounted, computed, watch } from 'vue';
 
     export default defineComponent({
 
@@ -22,10 +22,27 @@
             body: {
                 type   : Boolean,
                 default: false,
+            },
+
+            showScroll: {
+                type   : Boolean,
+                default: true,
             }
         },
 
+        emits: ['update:show-scroll'],
+
         setup(props, { emit }){
+
+            const showScrollComputed = computed({
+                get(): boolean {
+                    return props.showScroll;
+                },
+                set(newVal: boolean): void {
+                    emit('update:show-scroll', newVal);
+                }
+            });
+
 
             let
                 scrollerHeight: Ref<number> = ref(0), //* in percent
@@ -53,7 +70,6 @@
                     );
                 } else {
                     wrapperHeight.value = wrapperHtml.scrollHeight;
-                    console.log('wrapperHeight', wrapperHeight.value);
                 }
             };
 
@@ -62,7 +78,6 @@
                     screenHeight.value = document.documentElement.clientHeight;
                 } else {
                     screenHeight.value = wrapperHtml.clientHeight;
-                    console.log('screenHeight', screenHeight.value);
                 }
             };
 
@@ -71,25 +86,38 @@
                 scrollerHtml.style.height = scrollerHeight.value + '%';
             };
 
-            const scrollHandeler = () => {
-                
-                const elem = props.body ? window : wrapperHtml;
+            const countScrollTop = (scrollTop: number) => {
+                let newTop: number = (scrollTop * screenHeight.value) / wrapperHeight.value;
+                scrollerHtml.style.top = (newTop) + 'px';
+            }
+
+            const scrollHandler = () => {
 
                 if(props.body){
-                    window.addEventListener('scroll', (e) => {
-                        let newTop: number = (window.scrollY * screenHeight.value) / wrapperHeight.value;
-                        scrollerHtml.style.top = (newTop) + 'px';
+                    window.addEventListener('scroll', () => {
+                        countScrollTop(window.scrollY);
                     });
                 } else {
-                    wrapperHtml.addEventListener('scroll', (e) => {
-                        scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
-
-                        let newTop: number = (wrapperHtml.scrollTop * screenHeight.value) / wrapperHeight.value;
-                        scrollerHtml.style.top = (newTop) + 'px';
+                    wrapperHtml.addEventListener('scroll', () => {
+                        if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                        countScrollTop(wrapperHtml.scrollTop);
                     });
-                }
-                
+                } 
             };
+
+            watch(scrollerHtmlRef, (value: any) => {
+                console.log(value);
+                if(value == null) return;
+
+                scrollerHtml = scrollerHtmlRef.value as HTMLDivElement;
+                if(!props.body) scrollerWrapHtml = scrollerWrapHtmlRef.value as HTMLDivElement;
+
+                countScrollerHeight();
+                scrollHandler();
+
+                if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+            });
 
 
             onMounted(() => {
@@ -101,14 +129,16 @@
                     countWrapperHeight();
                     countScreenHeight();
                     countScrollerHeight();
-                    scrollHandeler();
+                    scrollHandler();
+                    countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
                 }, 0);
 
                 const resizeObserver = new ResizeObserver(entries => {
                     countWrapperHeight();
                     countScreenHeight();
                     countScrollerHeight();
-                    scrollHandeler();
+                    scrollHandler();
+                    countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
                 });
 
                 const elem = props.body ? document.body : wrapperHtml;
@@ -119,71 +149,10 @@
             return {
                 wrapperHtmlRef,
                 scrollerHtmlRef,
-                scrollerWrapHtmlRef
+                scrollerWrapHtmlRef,
+
+                showScrollComputed
             }
-
-            // let
-            //     oldYVal     : Ref<number> = ref(0),
-            //     scrollerWrap              = ref(null),
-            //     scroller                  = ref(null),
-            //     docHeight   : Ref<number> = ref(0),
-            //     screenHeight: Ref<number> = ref(0),
-            //     percent     : Ref<number> = ref(0);
-
-            // let
-            //     scrollWrap: HTMLDivElement,
-            //     scrollElem: HTMLDivElement;
-
-            // if(props.body){
-            //     screenHeight.value = document.documentElement.clientHeight;
-            // } else {
-            //     // screenHeight.value = document
-            // }
-
-            // const countData = () => {
-            //     docHeight.value = Math.max(
-            //         document.body.scrollHeight, document.documentElement.scrollHeight,
-            //         document.body.offsetHeight, document.documentElement.offsetHeight,
-            //         document.body.clientHeight, document.documentElement.clientHeight
-            //     );
-
-            //     percent.value = (screenHeight.value / docHeight.value) * 100;
-
-            //     scrollElem = scroller.value as any;
-            //     scrollElem.style.height = percent.value + '%';
-
-            //     scrollerWrap = scrollerWrap.value as any;
-
-            //     window.addEventListener('scroll', (e) => {
-                    
-            //         let deltaY: number = window.scrollY - oldYVal.value;
-            //         let newTop: number = (deltaY * screenHeight.value) / docHeight.value;
-                    
-            //         console.log(window.scrollY, screenHeight.value, window)
-            //         scrollElem.style.top = (newTop) + 'px';
-            //     });
-            // };
-
-            // onMounted(() => {
-
-            //     setTimeout(() => {
-            //         countData();
-            //     }, 0);
-
-            //     const resizeObserver = new ResizeObserver(entries => {
-            //         countData();
-            //     });
-
-            //     resizeObserver.observe(document.body);
-            // })
-
-
-            // return {
-            //     docHeight,
-
-            //     scrollerWrap,
-            //     scroller
-            // }
         }
     })
 </script>
@@ -220,7 +189,7 @@
         background: #dad3d3;
         top: 0px;
         right: 0px;
-        z-index: 1000;
+        z-index: 2;
     }
 
     .scroll-wrap{
@@ -238,7 +207,7 @@
         width: 10px;
         background: #e92323;
         cursor: pointer;
-        z-index: 1000;
+        z-index: 2;
     }
 
     .scroller{

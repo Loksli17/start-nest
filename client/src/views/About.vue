@@ -1,7 +1,7 @@
 <template>
     <div class="about auto-cols-max">
 
-    <CustomScroll class=" h-96">   
+    <CustomScroll v-model:show-scroll="scrollShow" class=" h-96">   
         <div class="bg-blue-100 ">
             <div class=" p-9" v-for="i in 10" :key="i">
                 item#{{i}}
@@ -10,12 +10,13 @@
     </CustomScroll> 
         
     <button
+        @click="scrollShow = !scrollShow"
         type="button"
         data-mdb-ripple="true"
         data-mdb-ripple-color="light"
         class="mt-7 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
     >
-        Click me
+        Toggle scroll
     </button>
 
     <div class=" mt-7 bg-blue-100 rounded-lg py-5 px-6 mb-3 text-base text-blue-700 inline-flex items-center w-full" role="alert">
@@ -102,6 +103,19 @@
         
         components: {
             CustomScroll,
+        },
+
+        setup(props){
+
+            let scrollShow: Ref<boolean> = ref(true);
+            
+            watch(scrollShow, (value: boolean) => {
+                console.log(value);
+            })
+
+            return {
+                scrollShow,
+            }
         }
     });
 </script>

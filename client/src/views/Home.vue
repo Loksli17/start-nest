@@ -1,6 +1,6 @@
 <template>
 
-    <CustomScroll :body="true">
+    <CustomScroll v-model:show-scroll="showScroll" :body="true">
         <div class="">
             
             <div class="">
@@ -33,7 +33,7 @@
 
     
 
-    <div @click.self="modalToggle = false" class="grid justify-center items-center fixed w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
+    <div @click.self="modalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
 
         <form class=" bg-white p-8 grid gap-10 opacity-100">
             <input class="cursor-pointer border-2 border-gray-600 p-3" type="text" name="text" v-model="text" id="">
@@ -69,6 +69,7 @@
         setup(){
 
             let
+                showScroll  : Ref<boolean>                    = ref(true),
                 Toast       : ToastPluginApi                  = inject('Toast') as ToastPluginApi,
                 actionStatus: Ref<string>                     = ref('add'),
                 modalToggle : Ref<boolean>                    = ref(false),
@@ -164,7 +165,8 @@
             getTypes();
 
             watch(modalToggle, (value: boolean) => {
-                document.body.style.overflowY = value ? 'hidden' : 'auto'; 
+                document.body.style.overflowY = value ? 'hidden' : 'scroll';
+                showScroll.value = !value;
             });
 
             return {
@@ -185,7 +187,9 @@
 
                 showEditModal,
                 showNewModal,
-                submitClick
+                submitClick,
+
+                showScroll
             };
         }
     });
