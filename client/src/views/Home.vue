@@ -165,7 +165,6 @@
             getTypes();
 
             watch(modalToggle, (value: boolean) => {
-                document.body.style.overflowY = value ? 'hidden' : 'scroll';
                 showScroll.value = !value;
             });
 

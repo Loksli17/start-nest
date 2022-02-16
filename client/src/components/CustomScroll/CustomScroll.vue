@@ -106,8 +106,14 @@
             };
 
             watch(scrollerHtmlRef, (value: any) => {
-                console.log(value);
-                if(value == null) return;
+                if(value == null) {
+                    if(props.body) document.body.style.overflowY = 'hidden';
+                    else           wrapperHtml.style.overflowY = 'hidden';
+                    return;
+                }
+
+                if(props.body) document.body.style.overflowY = 'scroll';
+                else           wrapperHtml.style.overflowY = 'scroll';
 
                 scrollerHtml = scrollerHtmlRef.value as HTMLDivElement;
                 if(!props.body) scrollerWrapHtml = scrollerWrapHtmlRef.value as HTMLDivElement;
