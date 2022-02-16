@@ -109,13 +109,13 @@
             };
 
             const mouseDown = (e: MouseEvent) => {
+                e.preventDefault();
+
                 let startY: number = e.clientY;
                 
                 isDragging.value = true;
 
                 document.onmousemove = (ev: MouseEvent) => {
-                    e.stopPropagation();
-                    e.preventDefault();
 
                     let endY  : number = ev.clientY;
                     let deltaY: number = endY - startY;
@@ -136,18 +136,12 @@
                 }
 
                 document.onmouseup = (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-
                     isDragging.value = false;
                     document.onmousemove = null;
                 }
             }
 
             const mouseUp = (e: MouseEvent) => {
-                e.stopPropagation();
-                e.preventDefault();
-
                 isDragging.value = false;
                 document.onmousemove = null;
             }
