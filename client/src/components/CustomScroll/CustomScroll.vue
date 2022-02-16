@@ -62,6 +62,8 @@
                 scrollerWrapHtml: HTMLDivElement,
                 scrollerHtml    : HTMLDivElement;
 
+            const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
+
 
             const countWrapperHeight = () => {
                 if(props.body){
@@ -122,6 +124,9 @@
 
                     topValue.value += deltaY;
                     startY = ev.clientY;
+
+                    const screenHeightPx = scrollerHtml.clientHeight;
+                    topValue.value = clamp(topValue.value, 0, screenHeight.value - screenHeightPx);
 
                     scrollerHtml.style.top = (topValue.value) + 'px';
 
