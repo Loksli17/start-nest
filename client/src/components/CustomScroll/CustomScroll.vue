@@ -5,7 +5,7 @@
         <slot></slot>
 
         <div v-if="showScrollComputed" ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body, 'scroll-wrap': !body}">
-            <div ref="scrollerHtmlRef" :class="{'scroller-body': body, 'scroller': !body}"></div>
+            <div ref="scrollerHtmlRef" @mousedown="mouseDown" @mouseup="mouseUp"  :class="{'scroller-body': body, 'scroller': !body}"></div>
         </div>
     </div>
 
@@ -45,9 +45,11 @@
 
 
             let
-                scrollerHeight: Ref<number> = ref(0), //* in percent
-                wrapperHeight : Ref<number> = ref(0),
-                screenHeight  : Ref<number> = ref(0);
+                isDragging    : Ref<boolean> = ref(false),
+                topValue      : Ref<number>  = ref(0),
+                scrollerHeight: Ref<number>  = ref(0), //* in percent
+                wrapperHeight : Ref<number>  = ref(0),
+                screenHeight  : Ref<number>  = ref(0);
 
 
             const
@@ -87,23 +89,69 @@
             };
 
             const countScrollTop = (scrollTop: number) => {
-                let newTop: number = (scrollTop * screenHeight.value) / wrapperHeight.value;
-                scrollerHtml.style.top = (newTop) + 'px';
+                topValue.value = (scrollTop * screenHeight.value) / wrapperHeight.value;
+                scrollerHtml.style.top = (topValue.value) + 'px';
             }
 
             const scrollHandler = () => {
 
                 if(props.body){
                     window.addEventListener('scroll', () => {
-                        countScrollTop(window.scrollY);
+                        if(!isDragging.value) countScrollTop(window.scrollY);
                     });
                 } else {
                     wrapperHtml.addEventListener('scroll', () => {
+                        if(isDragging.value) return;
                         if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
                         countScrollTop(wrapperHtml.scrollTop);
                     });
                 } 
             };
+
+            const mouseDown = (e: MouseEvent) => {
+                let startY: number = e.clientY;
+                
+                isDragging.value = true;
+
+                document.onmousemove = (ev: MouseEvent) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    let endY  : number = ev.clientY;
+                    let deltaY: number = endY - startY;
+
+                    topValue.value += deltaY;
+                    startY = ev.clientY;
+
+                    scrollerHtml.style.top = (topValue.value) + 'px';
+
+                    let top: number = (topValue.value * wrapperHeight.value) / screenHeight.value;
+                    
+                    if(props.body) {
+                        window.scrollTo(0, top);
+                    } else {
+                        if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                        wrapperHtml.scrollTo({top: top});
+                    }
+                }
+
+                document.onmouseup = (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    isDragging.value = false;
+                    document.onmousemove = null;
+                }
+            }
+
+            const mouseUp = (e: MouseEvent) => {
+                e.stopPropagation();
+                e.preventDefault();
+
+                isDragging.value = false;
+                document.onmousemove = null;
+            }
+
 
             watch(scrollerHtmlRef, (value: any) => {
                 if(value == null) {
@@ -157,7 +205,10 @@
                 scrollerHtmlRef,
                 scrollerWrapHtmlRef,
 
-                showScrollComputed
+                showScrollComputed,
+
+                mouseDown,
+                mouseUp,
             }
         }
     })
@@ -173,8 +224,15 @@
     /* Hide scrollbar for IE, Edge and Firefox */
     body {
         -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: 0;  /* Firefox */
+        scrollbar-width: none;  /* Firefox */
     }
+
+    /*
+    html {
+        -ms-overflow-style: none;
+        scrollbar-width: none;  
+    }
+    */
 
     .scroll-main-wrapper{
         max-height: 384px;
