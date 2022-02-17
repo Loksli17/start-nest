@@ -1,6 +1,6 @@
 <template>
 
-    <CustomScroll v-model:show-scroll="showScroll" :body="true">
+    
         <div class="">
             
             <div class="">
@@ -29,8 +29,6 @@
                 </div>
             </div>
         </div>
-    </CustomScroll>
-
     
 
     <div @click.self="modalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
@@ -55,18 +53,18 @@
     import { defineComponent, ref, Ref, watch, inject } from 'vue';
     import axios, { AxiosResponse }                     from 'axios';
     import { ToastPluginApi }                           from 'vue-toast-notification';
-    import CustomScroll                                 from '../components/CustomScroll/CustomScroll.vue';
+    
     import 'tw-elements';
 
 
     export default defineComponent({
         name: 'Home',
 
-        components: {
-            CustomScroll,
-        },
+       
 
         setup(){
+
+            const basicUrl = "192.168.1.35:3000";
 
             let
                 showScroll  : Ref<boolean>                    = ref(true),
@@ -82,7 +80,7 @@
 
             const
                 newTask = () => {
-                    axios.put('http://localhost:3000/task/add', {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
+                    axios.put(`http://${basicUrl}/task/add`, {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
                         return response;
                     }).then(() => {
                         const type: string = types.value.find(value => value.id == typeId.value)!.name;
@@ -92,13 +90,13 @@
                 },
 
                 getTasks = () => {
-                    axios.get('http://localhost:3000/task/get-all').then((response: AxiosResponse) => {
+                    axios.get(`http://${basicUrl}/task/get-all`).then((response: AxiosResponse) => {
                         tasks.value = response.data.tasks;
                     });
                 },
 
                 removeTask = (id: number) => {
-                    axios.delete(`http://localhost:3000/task/remove/${id}`).then((response: AxiosResponse) => {
+                    axios.delete(`http://${basicUrl}/task/remove/${id}`).then((response: AxiosResponse) => {
                         return response;
                     }).then(() => {
                         Toast.success(`Task with id = ${id} was removed!`);
@@ -107,7 +105,7 @@
                 },
 
                 editTask = (id: number) => {
-                    axios.put(`http://localhost:3000/task/edit/${id}`, {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
+                    axios.put(`http://${basicUrl}/task/edit/${id}`, {task: {text: text.value, taskTypeId: typeId.value}}).then((response: AxiosResponse) => {
                         tasks.value.map((task: Record<string, any>) => {
                              
                             if(task.id == id){
@@ -124,7 +122,7 @@
                 },
 
                 getTypes = () => {
-                    axios.get(`http://localhost:3000/task-type/get-all`).then((response: AxiosResponse) => {
+                    axios.get(`http://${basicUrl}/task-type/get-all`).then((response: AxiosResponse) => {
                         types.value = response.data.types;
                     });
                 },
