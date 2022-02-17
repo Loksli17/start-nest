@@ -66,23 +66,27 @@
 
 
             const countWrapperHeight = () => {
-                if(props.body){
-                    wrapperHeight.value = Math.max(
-                        document.body.scrollHeight, document.documentElement.scrollHeight,
-                        document.body.offsetHeight, document.documentElement.offsetHeight,
-                        document.body.clientHeight, document.documentElement.clientHeight
-                    );
-                } else {
-                    wrapperHeight.value = wrapperHtml.scrollHeight;
-                }
+                // if(props.body){
+                //     wrapperHeight.value = Math.max(
+                //         document.body.scrollHeight, document.documentElement.scrollHeight,
+                //         document.body.offsetHeight, document.documentElement.offsetHeight,
+                //         document.body.clientHeight, document.documentElement.clientHeight
+                //     );
+                // } else {
+                //     wrapperHeight.value = wrapperHtml.scrollHeight;
+                // }
+
+                wrapperHeight.value = wrapperHtml.scrollHeight;
             };
 
             const countScreenHeight = () => {
-                if(props.body){
-                    screenHeight.value = document.documentElement.clientHeight;
-                } else {
-                    screenHeight.value = wrapperHtml.clientHeight;
-                }
+                // if(props.body){
+                //     screenHeight.value = document.documentElement.clientHeight;
+                // } else {
+                //     screenHeight.value = wrapperHtml.clientHeight;
+                // }
+
+                screenHeight.value = wrapperHtml.clientHeight;
             };
 
             const countScrollerHeight = () => {
@@ -97,17 +101,23 @@
 
             const scrollHandler = () => {
 
-                if(props.body){
-                    window.addEventListener('scroll', () => {
-                        if(!isDragging.value) countScrollTop(window.scrollY);
-                    });
-                } else {
-                    wrapperHtml.addEventListener('scroll', () => {
-                        if(isDragging.value) return;
-                        if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
-                        countScrollTop(wrapperHtml.scrollTop);
-                    });
-                } 
+                // if(props.body){
+                //     window.addEventListener('scroll', () => {
+                //         if(!isDragging.value) countScrollTop(window.scrollY);
+                //     });
+                // } else {
+                //     wrapperHtml.addEventListener('scroll', () => {
+                //         if(isDragging.value) return;
+                //         if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                //         countScrollTop(wrapperHtml.scrollTop);
+                //     });
+                // }
+                
+                wrapperHtml.addEventListener('scroll', () => {
+                    if(isDragging.value) return;
+                    if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                    countScrollTop(wrapperHtml.scrollTop);
+                });
             };
 
             const mouseDown = (e: MouseEvent) => {
@@ -154,22 +164,23 @@
 
             watch(scrollerHtmlRef, (value: any) => {
                 if(value == null) {
-                    if(props.body) document.body.style.overflowY = 'hidden';
-                    else           wrapperHtml.style.overflowY = 'hidden';
+                    // if(props.body) document.body.style.overflowY = 'hidden';
+                    wrapperHtml.style.overflowY = 'hidden';
                     return;
                 }
 
-                if(props.body) document.body.style.overflowY = 'scroll';
-                else           wrapperHtml.style.overflowY = 'scroll';
+                // if(props.body) document.body.style.overflowY = 'scroll';
+                wrapperHtml.style.overflowY = 'scroll';
 
                 scrollerHtml = scrollerHtmlRef.value as HTMLDivElement;
-                if(!props.body) scrollerWrapHtml = scrollerWrapHtmlRef.value as HTMLDivElement;
+                // if(!props.body) scrollerWrapHtml = scrollerWrapHtmlRef.value as HTMLDivElement;
 
                 countScrollerHeight();
                 scrollHandler();
 
-                if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
-                countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                // if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                countScrollTop(wrapperHtml.scrollTop);
             });
 
 
@@ -183,7 +194,8 @@
                     countScreenHeight();
                     countScrollerHeight();
                     scrollHandler();
-                    countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                    // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                    countScrollTop(wrapperHtml.scrollTop);
                 }, 0);
 
                 const resizeObserver = new ResizeObserver(entries => {
@@ -191,7 +203,8 @@
                     countScreenHeight();
                     countScrollerHeight();
                     scrollHandler();
-                    countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                    // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                    countScrollTop(wrapperHtml.scrollTop);
                 });
 
                 const elem = props.body ? document.body : wrapperHtml;
@@ -217,13 +230,17 @@
 <style>
 
     body::-webkit-scrollbar {
-        display: none;
+        /* display: none; */
+        width: 0px;
+        background: transparent;
+        /* appearance: none; */
     }
 
     /* Hide scrollbar for IE, Edge and Firefox */
     body {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+        appearance: none;
     }
 
     /*
@@ -234,7 +251,7 @@
     */
 
     .scroll-main-wrapper{
-        max-height: 384px;
+        max-height: 100vh; /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
         overflow-y: scroll;
         position: relative;
         -ms-overflow-style: none;  /* IE and Edge */
@@ -262,6 +279,7 @@
         background: #dad3d3;
         top: 0px;
         right: 0px;
+        z-index: 11;
     }
 
     .scroller-body{
@@ -269,7 +287,7 @@
         right: 0px;
         width: 10px;
         background: #e92323;
-        cursor: pointer;
+        cursor: grab;
         z-index: 2;
     }
 
@@ -278,6 +296,6 @@
         right: 0px;
         width: 10px;
         background: #e92323;
-        cursor: pointer;
+        cursor: grab;
     }
 </style>
