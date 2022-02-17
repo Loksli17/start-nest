@@ -4,6 +4,9 @@ import { defineNuxtConfig } from 'nuxt3'
 export default defineNuxtConfig({
     ssr: true,
     css: ["~/assets/css/tailwind.css"],
+    buildModules: [
+        "@pinia/nuxt"
+    ],
     build: {
         postcss: {
             postcssOptions: {
