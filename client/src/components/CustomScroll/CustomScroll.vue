@@ -1,8 +1,8 @@
 <template>
 
-    <div ref="wrapperHtmlRef" :class="{'scroll-main-wrapper': !body}">
+    <div ref="wrapperHtmlRef" :class="{'scroll-main-wrapper': !body, 'scroll-main-wrapper-body': body}">
         
-        <slot></slot>
+        <slot ref="slotRef"></slot>
 
         <div v-if="showScrollComputed" ref="scrollerWrapHtmlRef" :class="{'scroll-wrap-body': body, 'scroll-wrap': !body}">
             <div ref="scrollerHtmlRef" @mousedown="mouseDown" @mouseup="mouseUp"  :class="{'scroller-body': body, 'scroller': !body}"></div>
@@ -30,16 +30,16 @@
             }
         },
 
-        emits: ['update:show-scroll'],
+        emits: ['update:showScroll'],
 
-        setup(props, { emit }){
+        setup(props, { emit, slots }){
 
             const showScrollComputed = computed({
                 get(): boolean {
                     return props.showScroll;
                 },
                 set(newVal: boolean): void {
-                    emit('update:show-scroll', newVal);
+                    emit('update:showScroll', newVal);
                 }
             });
 
@@ -91,7 +91,11 @@
 
             const countScrollerHeight = () => {
                 scrollerHeight.value = (screenHeight.value / wrapperHeight.value) * 100;
-                scrollerHtml.style.height = scrollerHeight.value + '%';
+                scrollerHtml.style.height = scrollerHeight.value + '%'; 
+
+                // if(scrollerHeight.value == 100){
+                //     emit('update:show-scroll', false);
+                // }
             };
 
             const countScrollTop = (scrollTop: number) => {
@@ -115,7 +119,8 @@
                 
                 wrapperHtml.addEventListener('scroll', () => {
                     if(isDragging.value) return;
-                    if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                    // if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                    scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
                     countScrollTop(wrapperHtml.scrollTop);
                 });
             };
@@ -142,12 +147,15 @@
 
                     let top: number = (topValue.value * wrapperHeight.value) / screenHeight.value;
                     
-                    if(props.body) {
-                        window.scrollTo(0, top);
-                    } else {
-                        if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
-                        wrapperHtml.scrollTo({top: top});
-                    }
+                    // if(props.body) {
+                    //     window.scrollTo(0, top);
+                    // } else {
+                    //     if(!props.body) scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                    //     wrapperHtml.scrollTo({top: top});
+                    // }
+
+                    scrollerWrapHtml.style.top = wrapperHtml.scrollTop + 'px';
+                    wrapperHtml.scrollTo({top: top});
                 }
 
                 document.onmouseup = (e) => {
@@ -162,10 +170,19 @@
             }
 
 
+            const checkFullHeight = () => {
+                if(scrollerHeight.value == 100){
+                    emit('update:showScroll', false);
+                } else {
+                    emit('update:showScroll', true);
+                }
+            }
+
+            //* for toggle scroll i need refresh my ref
             watch(scrollerHtmlRef, (value: any) => {
                 if(value == null) {
                     // if(props.body) document.body.style.overflowY = 'hidden';
-                    wrapperHtml.style.overflowY = 'hidden';
+                    // wrapperHtml.style.overflowY = 'hidden';
                     return;
                 }
 
@@ -195,7 +212,9 @@
                     countScrollerHeight();
                     scrollHandler();
                     // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
-                    countScrollTop(wrapperHtml.scrollTop);
+                    // countScrollTop(wrapperHtml.scrollTop);
+
+                    checkFullHeight();
                 }, 0);
 
                 const resizeObserver = new ResizeObserver(entries => {
@@ -204,12 +223,37 @@
                     countScrollerHeight();
                     scrollHandler();
                     // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
-                    countScrollTop(wrapperHtml.scrollTop);
+                    // countScrollTop(wrapperHtml.scrollTop);
+
+                    checkFullHeight();
                 });
 
-                const elem = props.body ? document.body : wrapperHtml;
+                // const elem = props.body ? document.body : wrapperHtml;
+                const elem = wrapperHtml;
 
                 resizeObserver.observe(elem);
+
+                if(slots && slots.default) {
+                    const def = slots.default();
+                    const slot = def[0];
+
+                    const slotResizeObserver = new ResizeObserver(entries => {
+                        console.log('RESIZEEEEE!!!!')
+                        countWrapperHeight();
+                        countScreenHeight();
+                        countScrollerHeight();
+                        scrollHandler();
+                        // countScrollTop(props.body ? window.scrollY : wrapperHtml.scrollTop);
+                        // countScrollTop(wrapperHtml.scrollTop);
+
+                        checkFullHeight();
+                    });
+
+                    // slotResizeObserver.observe();
+
+                    console.log(slot.el, slots.default());
+                }
+
             });
 
             return {
@@ -227,7 +271,7 @@
 </script>
 
 
-<style>
+<style scoped>
 
     body::-webkit-scrollbar {
         /* display: none; */
@@ -251,14 +295,30 @@
     */
 
     .scroll-main-wrapper{
-        max-height: 100vh; /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+        max-height: 100vh;
         overflow-y: scroll;
         position: relative;
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+        z-index: 0;
+        top: 0;
+    }
+
+    .scroll-main-wrapper-body{
+        max-height: 100vh;
+        overflow-y: scroll;
+        /* position: relative; */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+        z-index: 0;
+        top: 0;
     }
 
     .scroll-main-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scroll-main-wrapper-body::-webkit-scrollbar {
         display: none;
     }
     
@@ -279,7 +339,7 @@
         background: #dad3d3;
         top: 0px;
         right: 0px;
-        z-index: 11;
+        z-index: 0;
     }
 
     .scroller-body{

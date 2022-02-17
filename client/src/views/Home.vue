@@ -1,17 +1,17 @@
 <template>
 
-    
-        <div class="">
+    <CustomScroll v-model:show-scroll="showScroll" :body="true">
+        <div class="pt-24 pb-14">
             
-            <div class="">
+            <div class="px-10">
                 <h1 class=" text-5xl font-bold">Todolist</h1>
             </div>
 
-            <div class=" mt-6">
+            <div class="mt-6 px-10">
                 <button class="p-4 w-max bg-blue-500  text-white text-lg" @click="showNewModal()">New task</button>
             </div>
 
-            <div class=" mt-14 grid gap-5 md:grid-cols-1">
+            <div class="mt-14 px-10 grid gap-5 md:grid-cols-1">
                 <div class="grid grid-flow-col grid-cols-todo bg-gray-100 p-6" v-for="task in tasks" :key="task.id">
                     <span class="text text-blue-600">{{task.text}}</span>
                     <span>{{task.date}}</span>
@@ -29,6 +29,7 @@
                 </div>
             </div>
         </div>
+    </CustomScroll>
     
 
     <div @click.self="modalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
@@ -53,14 +54,17 @@
     import { defineComponent, ref, Ref, watch, inject } from 'vue';
     import axios, { AxiosResponse }                     from 'axios';
     import { ToastPluginApi }                           from 'vue-toast-notification';
-    
+    import CustomScroll                                 from '../components/CustomScroll/CustomScroll.vue';
     import 'tw-elements';
 
 
     export default defineComponent({
         name: 'Home',
 
-       
+        components: {
+            CustomScroll,
+        },
+        
 
         setup(){
 

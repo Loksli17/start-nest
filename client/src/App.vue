@@ -4,24 +4,18 @@
         <router-link class="text-gray-800 text-xl hover:underline" v-for="link in links" :key="link.to" :to="link.to">{{link.text}}</router-link>
     </div>
 
-    <CustomScroll v-model:show-scroll="showScroll">
-        <div class="md:h-full pt-24 md:grid gap-8 px-10 pb-14 bg-white">
-            <router-view/>
-        </div>
-    </CustomScroll>
+
+    <div class="md:h-full md:grid gap-8 bg-white">
+        <router-view/>
+    </div>
 
 </template>
 
 
 <script lang="ts">
     import { defineComponent, Ref, ref } from 'vue';
-    import CustomScroll                  from './components/CustomScroll/CustomScroll.vue';
 
     export default defineComponent({
-
-        components: {
-            CustomScroll,
-        },
         
         setup(){
 
