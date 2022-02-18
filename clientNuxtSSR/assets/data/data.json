@@ -1,0 +1,16 @@
+{
+    "arr": [
+        {
+            "id": 0,
+            "text": "hello"
+        },
+        {
+            "id": 1,
+            "text": "not hello"
+        },
+        {
+            "id": 2,
+            "text": "fuck"
+        }
+    ]
+}
