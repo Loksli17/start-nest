@@ -25,7 +25,7 @@ export class TaskController {
     public async addOne(@Request() req): Promise<{msg: string}> {
 
         await this.taskService.saveOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId});
-        return {msg: 'Created successfully'}
+        return { msg: 'Created successfully' }
     }
 
     
@@ -33,7 +33,7 @@ export class TaskController {
     public async removeOne(@Param() params): Promise<{msg: string}> {
         const id: number = params.id;
         await this.taskService.removeOne(id);
-        return {msg: 'Removed successfully'};
+        return  {msg: 'Removed successfully' };
     }
 
 
@@ -41,6 +41,6 @@ export class TaskController {
     public async editOne(@Request() req, @Param() params): Promise<{msg: string, task: Task}> {
         const id: number = params.id;
         const task: Task = await this.taskService.updateOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId}, id);
-        return {msg: 'Updated successfully', task: task};
+        return { msg: 'Updated successfully', task: task };
     }
 }
