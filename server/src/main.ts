@@ -6,6 +6,7 @@ import AppClusterService                          from './cluster.service';
 
 
 const bootstrap = async (): Promise<void> => {
+    
     const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
     app.enableCors({
@@ -15,7 +16,7 @@ const bootstrap = async (): Promise<void> => {
         exposedHeaders: ['set-cookie'],
     });
     
-    await app.listen(config.app.port, '192.168.1.35');
+    await app.listen(config.app.port, '192.168.1.40');
 }
 
 

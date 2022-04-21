@@ -8,8 +8,14 @@ import * as moment    from 'moment';
 export class TaskService {
 
 
-    async getAll(): Promise<Array<Task>> {
+    async getAll(queryData: string): Promise<Array<Task>> {
+
+        const condition: {taskTypeId?: string} = {};
+
+        if(queryData != 'all') condition.taskTypeId = queryData; 
+
         return await Task.findAll({
+            where  : condition,
             order  : [['id', 'DESC']], 
             include: [{model: TaskType}]
         }); 

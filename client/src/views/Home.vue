@@ -9,6 +9,11 @@
 
             <div class="mt-6 px-10">
                 <button class="p-4 w-max bg-blue-500  text-white text-lg" @click="showNewModal()">New task</button>
+
+                <select class="cursor-pointer border-2 border-gray-600 p-4 ml-5 text-lg" v-model="filterTypeId" name="taskTypeId">
+                    <option value="all">All</option>
+                    <option v-for="type in types" :key="type.id" :value="type.id">{{type.name}}</option>
+                </select>
             </div>
 
             <div class="mt-14 px-10 grid gap-5 md:grid-cols-1">
@@ -68,9 +73,10 @@
 
         setup(){
 
-            const basicUrl = "192.168.1.35:3000";
+            const basicUrl = "192.168.1.40:3000";
 
             let
+                filterTypeId: Ref<string>                     = ref("all"),
                 showScroll  : Ref<boolean>                    = ref(true),
                 Toast       : ToastPluginApi                  = inject('Toast') as ToastPluginApi,
                 actionStatus: Ref<string>                     = ref('add'),
@@ -89,12 +95,12 @@
                     }).then(() => {
                         const type: string = types.value.find(value => value.id == typeId.value)!.name;
                         Toast.success(`New ${type} task was created!`);
-                        getTasks();
+                        getTasks(filterTypeId.value);
                     });
                 },
 
-                getTasks = () => {
-                    axios.get(`http://${basicUrl}/task/get-all`).then((response: AxiosResponse) => {
+                getTasks = (filter: string | number) => {
+                    axios.get(`http://${basicUrl}/task/get-all?filter=${filter}`).then((response: AxiosResponse) => {
                         tasks.value = response.data.tasks;
                     });
                 },
@@ -104,7 +110,7 @@
                         return response;
                     }).then(() => {
                         Toast.success(`Task with id = ${id} was removed!`);
-                        getTasks();
+                        getTasks(filterTypeId.value);
                     });
                 },
 
@@ -163,11 +169,15 @@
                 };
 
 
-            getTasks();
+            getTasks(filterTypeId.value);
             getTypes();
 
             watch(modalToggle, (value: boolean) => {
                 showScroll.value = !value;
+            });
+
+            watch(filterTypeId, (value: any) => {
+                getTasks(value);
             });
 
             return {
@@ -182,6 +192,7 @@
                 actionStatus,
                 text,
                 typeId,
+                filterTypeId,
                 id,
 
                 modalToggle,

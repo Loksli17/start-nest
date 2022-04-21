@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Put, Request } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Put, Query, Request } from "@nestjs/common";
 import Task                                             from "src/models/Task";
 import { TaskService }                                  from "src/services/task.service";
 
@@ -11,9 +11,12 @@ export class TaskController {
 
 
     @Get('get-all')
-    public async getAll(): Promise<{tasks: Array<Task>}> {
+    public async getAll(@Query() query): Promise<{tasks: Array<Task>}> {
+
+        const queryData: string = query.filter;
+
         let tasks: Array<Task> = [];
-        tasks = await this.taskService.getAll();
+        tasks = await this.taskService.getAll(queryData);
         return { tasks: tasks };
     }
 
