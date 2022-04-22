@@ -3,7 +3,7 @@ import Tag                 from "src/models/Tag";
 import TagService from "src/services/tag.service";
 
 
-Controller('tag')
+@Controller('tag')
 export class TagController {
 
     private readonly tagService: TagService = new TagService();

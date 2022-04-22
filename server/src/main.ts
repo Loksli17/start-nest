@@ -16,7 +16,7 @@ const bootstrap = async (): Promise<void> => {
         exposedHeaders: ['set-cookie'],
     });
     
-    await app.listen(config.app.port, '192.168.1.40');
+    await app.listen(config.app.port);
 }
 
 
