@@ -20,8 +20,9 @@
         setup(){
 
             const links: Ref<Array<{to: string, text: string}>> = ref([
-                {to: "/",      text: 'Todolist'},
-                {to: "/about", text: 'About'},
+                {to: "/",        text: 'Todolist'},
+                {to: "/about",   text: 'About'},
+                {to: "/article", text: 'Article'},
             ]);
 
             return {

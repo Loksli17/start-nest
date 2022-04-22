@@ -9,7 +9,10 @@ export class TagController {
     private readonly tagService: TagService = new TagService();
 
     @Get('get-all')
-    public async getAll(): Promise<Array<Tag>> {
-        return await this.tagService.getAll();
+    public async getAll(): Promise<{tags: Array<Tag>}> {
+
+        return {
+            tags: await this.tagService.getAll(),
+        }
     }
 }

@@ -73,7 +73,7 @@
 
         setup(){
 
-            const basicUrl = "192.168.1.40:3000";
+            const basicUrl = "127.0.0.1:3000";
 
             let
                 filterTypeId: Ref<string>                     = ref("all"),
