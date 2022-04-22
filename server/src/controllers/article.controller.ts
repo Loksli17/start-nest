@@ -12,7 +12,7 @@ export class ArticleContoroller {
     @Get('get-all')
     public async getAll(@Query() query): Promise<Array<Article>> {
 
-        const tagIds: Array<number> = query.tagIds.split(',');
+        const tagIds: Array<number> = (query.tagIds != "") ? query.tagIds.split(',') : [];
 
         const articles: Array<Article> = await this.articleService.getAll(tagIds);
 

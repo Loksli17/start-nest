@@ -37,7 +37,9 @@
                             </span>
 
                             <span class="tags">
-                                {{article.tags.map(tag => tag.content).join(', ')}}
+                                <div v-for="tag in article.tags" :key="tag.id">
+                                    {{tag.content}}
+                                </div>
                             </span>
                         </div>
                     </div>
@@ -83,6 +85,7 @@
 
                 removeFilterTag = (tag: {id: number, content: string}) => {
                     filterTags.value.delete(tag);
+                    getArticles();
                 },
 
                 getArticles = () => {
@@ -93,8 +96,6 @@
                     });
 
                     axios.get(`http://${basicUrl}/article/get-all?tagIds=${tagIds.join(',')}`).then((response: AxiosResponse) => {
-                        console.log(response);
-
                         articles.value = response.data;
                     })
                 };
@@ -194,6 +195,19 @@
                     .article-content{
                         display: grid;
                         row-gap: 15px;
+                    }
+
+                    .tags{
+                        display: grid;
+                        grid-auto-flow: column;
+                        column-gap: 10px;
+                        grid-auto-columns: max-content;
+
+                        >div{
+                            box-sizing: border-box;
+                            padding: 5px;
+                            border: 1px solid rgb(41, 215, 228);
+                        }
                     }
                 }
             }
