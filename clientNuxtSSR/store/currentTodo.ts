@@ -22,3 +22,6 @@ export const useCurrentTodo = defineStore("currentTodo", {
     }
 })
 
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useCurrentTodo, import.meta.hot))
+}

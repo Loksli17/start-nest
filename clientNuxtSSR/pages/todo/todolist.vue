@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div v-if="todolist" class=" grid grid-flow-col gap-x-3" v-for="todo in todolist" :key="todo.id">
+    <div class="grid grid-flow-row gap-y-3">
+        <div v-if="todolist" class=" grid grid-flow-col gap-x-3 bg-amber-500" v-for="todo in todolist" :key="todo.id">
             <span>{{ todo.text }}</span>
             <span>{{ todo.date }}</span>
             <span>{{ todo.type.name }}</span>

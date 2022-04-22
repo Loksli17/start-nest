@@ -25,6 +25,5 @@
     import { useCurrentTodo } from '~~/store/currentTodo';
 
     const store = useCurrentTodo();
-
     const currentTodo = store.currentTodo;
 </script>
