@@ -9,11 +9,19 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         component: Home
     },
+
     {
         path: '/article',
         name: 'Article',
         component: Article
     },
+
+    {
+        path: '/chat',
+        name: 'Chat',
+        component: () => import('../views/Chat.vue'),
+    },
+
     {
         path: '/about',
         name: 'About',
