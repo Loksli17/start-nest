@@ -23,7 +23,24 @@
                 </div>
 
                 <div class="article-tags-wrap">
-                    kek
+                    <div v-for="article in articles" :key="article.id" class="article">
+                        <div class="img">
+
+                        </div>
+                        <div class="article-content">
+                            <span class="date">
+                                {{article.date}}
+                            </span>
+
+                            <span class="time">
+                                {{article.time}}
+                            </span>
+
+                            <span class="tags">
+                                {{article.tags.map(tag => tag.content).join(', ')}}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -47,7 +64,8 @@
             const basicUrl = "127.0.0.1:3000";
 
             let 
-                filterTags: Ref<Set<Record<string, unknown>>> = ref(new Set()),
+                articles  : Ref<Array<Record<string, unknown>>> = ref([]),
+                filterTags: Ref<Set<Record<string, unknown>>>   = ref(new Set()),
                 tags      : Ref<Array<Record<string, unknown>>> = ref([]);
 
 
@@ -76,6 +94,8 @@
 
                     axios.get(`http://${basicUrl}/article/get-all?tagIds=${tagIds.join(',')}`).then((response: AxiosResponse) => {
                         console.log(response);
+
+                        articles.value = response.data;
                     })
                 };
 
@@ -86,6 +106,7 @@
             return {
                 tags,
                 filterTags,
+                articles,
 
                 addFilterTag,
                 removeFilterTag,
@@ -99,7 +120,7 @@
 <style lang="scss">
     
     .page-wrapper{
-        margin-top: 90px;
+        margin-top: 100px;
         padding: 0px 50px;
     }
 
@@ -112,10 +133,11 @@
         display: grid;
         grid-template-columns: 350px auto;
         column-gap: 50px;
-        margin-top: 40px;
+        margin-top: 30px;
 
         .col-1{
             display: grid;
+            grid-auto-rows: max-content;
             row-gap: 20px;
             max-width: 100%;
 
@@ -140,7 +162,6 @@
                 grid-auto-columns: max-content;
                 column-gap: 15px;
                 margin-bottom: 40px;
-                // grid-template-columns: repeat(auto-fit, minmax(max-content, 100px));
 
                 .filter-tag{
                     font-size: 18px;
@@ -159,7 +180,22 @@
             }
 
             .article-tags-wrap{
-              
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+                gap: 30px;
+
+                .article {
+                    display: grid;
+                    grid-auto-columns: 1fr 1fr;
+                    padding: 13px 15px;
+                    background: rgb(231, 228, 228);
+                    border-radius: 10px;
+
+                    .article-content{
+                        display: grid;
+                        row-gap: 15px;
+                    }
+                }
             }
         }
     } 

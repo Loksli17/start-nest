@@ -11,6 +11,7 @@ export default class ArticleService {
                 {
                     model: Tag,
                     attributes: ['id', 'content'],
+                    // where: {id: 1},
                     // where: {id: {in: tagIds}},
                 }
             ]
