@@ -8,7 +8,7 @@ import Tag                      from "./Tag";
 export default class Article extends Model {
 
     @Column
-    public text: string;
+    public content: string;
 
     @Column({primaryKey: true, autoIncrement: true})
     public id?: number;

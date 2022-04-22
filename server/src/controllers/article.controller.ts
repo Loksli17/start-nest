@@ -1,16 +1,20 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
+import { query } from "express";
 import Article        from "src/models/Article";
+import ArticleService from "src/services/article.service";
 
 
 @Controller('article')
 export class ArticleContoroller {
 
-    @Post('gat-all')
-    public async getAll(@Body() body): Promise<Array<Article>> {
+    private readonly articleService: ArticleService = new ArticleService();
 
-        const articles: Array<Article> = [];
+    @Get('get-all')
+    public async getAll(@Query() query): Promise<Array<Article>> {
 
-        console.log(body);
+        const tagIds: Array<number> = query.tagIds.split(',');
+
+        const articles: Array<Article> = await this.articleService.getAll(tagIds);
 
         return articles
     }

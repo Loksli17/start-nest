@@ -16,13 +16,13 @@
 
             <div class="col-2">
 
-                <div class="filter-tags-wrap">
-                    <div class="filter-tag" v-for="tag in filterTags" :key="tag.id" @click="removeFilterTag(tag)">
+                <div v-if="filterTags.size > 0" class="filter-tags-wrap">
+                    <div class="filter-tag"  v-for="tag in filterTags" :key="tag.id" @click="removeFilterTag(tag)">
                         {{tag.content}}
                     </div>
                 </div>
 
-                <div>
+                <div class="article-tags-wrap">
                     kek
                 </div>
 
@@ -32,6 +32,68 @@
         
     </div>
 </template>
+
+
+<script lang="ts">
+    
+    import axios, { AxiosResponse } from 'axios';
+    import { defineComponent, Ref, ref } from 'vue';
+
+
+    export default defineComponent({
+        
+        setup(){
+
+            const basicUrl = "127.0.0.1:3000";
+
+            let 
+                filterTags: Ref<Set<Record<string, unknown>>> = ref(new Set()),
+                tags      : Ref<Array<Record<string, unknown>>> = ref([]);
+
+
+            const 
+                getTags = () => {
+                    axios.get(`http://${basicUrl}/tag/get-all`).then((response: AxiosResponse) => {
+                        tags.value = response.data.tags;
+                    });
+                },
+
+                addFilterTag = (tag: {id: number, content: string}) => {
+                    filterTags.value.add(tag);
+                    getArticles();
+                },
+
+                removeFilterTag = (tag: {id: number, content: string}) => {
+                    filterTags.value.delete(tag);
+                },
+
+                getArticles = () => {
+                    let tagIds: Array<number> = [];
+
+                    filterTags.value.forEach((tag: Record<string, any>) => {
+                        tagIds.push(tag.id);
+                    });
+
+                    axios.get(`http://${basicUrl}/article/get-all?tagIds=${tagIds.join(',')}`).then((response: AxiosResponse) => {
+                        console.log(response);
+                    })
+                };
+
+            getTags();
+            getArticles();
+
+
+            return {
+                tags,
+                filterTags,
+
+                addFilterTag,
+                removeFilterTag,
+            }
+        }
+    })
+</script>
+
 
 
 <style lang="scss">
@@ -71,11 +133,13 @@
         }
 
         .col-2{
+
             .filter-tags-wrap{
                 display: grid;
                 grid-auto-flow: column;
                 grid-auto-columns: max-content;
                 column-gap: 15px;
+                margin-bottom: 40px;
                 // grid-template-columns: repeat(auto-fit, minmax(max-content, 100px));
 
                 .filter-tag{
@@ -93,61 +157,11 @@
                     }
                 }
             }
+
+            .article-tags-wrap{
+              
+            }
         }
     } 
 
 </style>
-
-
-<script lang="ts">
-    
-    import axios, { AxiosResponse } from 'axios';
-    import { defineComponent, Ref, ref } from 'vue';
-
-
-    export default defineComponent({
-        
-        setup(){
-
-            const basicUrl = "127.0.0.1:3000";
-
-            let 
-                filterTags: Ref<Set<Record<string, unknown>>> = ref(new Set()),
-                tags      : Ref<Array<Record<string, unknown>>> = ref([]);
-
-
-            const 
-                getTags = () => {
-                    axios.get(`http://${basicUrl}/tag/get-all`).then((response: AxiosResponse) => {
-                        tags.value = response.data.tags;
-                    });
-                },
-
-                addFilterTag = (tag: {id: number, content: string}) => {
-                    filterTags.value.add(tag);
-                },
-
-                removeFilterTag = (tag: {id: number, content: string}) => {
-                    filterTags.value.delete(tag);
-                },
-
-                getArticles = () => {
-                    axios.post(`http://${basicUrl}/article/get-all`).then((response: AxiosResponse) => {
-                        console.log(response);
-                    })
-                };
-
-
-            getTags();
-
-
-            return {
-                tags,
-                filterTags,
-
-                addFilterTag,
-                removeFilterTag,
-            }
-        }
-    })
-</script>
