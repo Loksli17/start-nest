@@ -1,27 +1,102 @@
 
 <template>
-    <div class="pt-24 pb-14">
+    <div class="page-wrapper">
 
-        <div class="px-12">
-            <h1 class=" text-5xl font-bold">Article</h1>
+        <div class="header">
+            <h1>Article</h1>
         </div>
 
-        <div class="mt-11 grid grid-cols-article-wrap">
+        <div class="content-wrap">
 
-            <div class="grid grid-flow-row grid-cols-1 gap-4 px-12">
-                <div class=" py-3 px-4 bg-gray-300 w-full box-border cursor-pointer" v-for="tag in tags" :key="tag.id" @click="tagClick(tag)">
+            <div class="col-1">
+                <div class="tag" v-for="tag in tags" :key="tag.id" @click="addFilterTag(tag)">
                     {{tag.content}}
                 </div>
             </div>
 
-            <div class="">
-                kek
+            <div class="col-2">
+
+                <div class="filter-tags-wrap">
+                    <div class="filter-tag" v-for="tag in filterTags" :key="tag.id" @click="removeFilterTag(tag)">
+                        {{tag.content}}
+                    </div>
+                </div>
+
+                <div>
+                    kek
+                </div>
+
             </div>
         </div>
 
         
     </div>
 </template>
+
+
+<style lang="scss">
+    
+    .page-wrapper{
+        margin-top: 90px;
+        padding: 0px 50px;
+    }
+
+    .header{
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .content-wrap{
+        display: grid;
+        grid-template-columns: 350px auto;
+        column-gap: 50px;
+        margin-top: 40px;
+
+        .col-1{
+            display: grid;
+            row-gap: 20px;
+            max-width: 100%;
+
+            .tag{
+                padding: 13px 15px;
+                background: rgb(231, 228, 228);
+                border-radius: 10px;
+                cursor: pointer;
+
+                &:hover{
+                    transition: .4s;
+                    background: rgb(196, 190, 190);
+                }
+            }
+        }
+
+        .col-2{
+            .filter-tags-wrap{
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: max-content;
+                column-gap: 15px;
+                // grid-template-columns: repeat(auto-fit, minmax(max-content, 100px));
+
+                .filter-tag{
+                    font-size: 18px;
+                    border: 1px solid rgb(41, 215, 228);
+                    border-radius: 8px;
+                    text-align: center;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    cursor: pointer;
+
+                    &:hover{
+                        background: rgb(41, 215, 228);
+                        transition: .4s;
+                    }
+                }
+            }
+        }
+    } 
+
+</style>
 
 
 <script lang="ts">
@@ -37,8 +112,8 @@
             const basicUrl = "127.0.0.1:3000";
 
             let 
-                tagIds: Ref<Array<number>>                  = ref([]),
-                tags  : Ref<Array<Record<string, unknown>>> = ref([]);
+                filterTags: Ref<Set<Record<string, unknown>>> = ref(new Set()),
+                tags      : Ref<Array<Record<string, unknown>>> = ref([]);
 
 
             const 
@@ -48,9 +123,12 @@
                     });
                 },
 
-                tagClick = (tag: {id: number, content: string}) => {
-                    tagIds.value.push(tag.id);
-                    console.log(tagIds);
+                addFilterTag = (tag: {id: number, content: string}) => {
+                    filterTags.value.add(tag);
+                },
+
+                removeFilterTag = (tag: {id: number, content: string}) => {
+                    filterTags.value.delete(tag);
                 },
 
                 getArticles = () => {
@@ -65,8 +143,10 @@
 
             return {
                 tags,
+                filterTags,
 
-                tagClick
+                addFilterTag,
+                removeFilterTag,
             }
         }
     })
