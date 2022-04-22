@@ -8,16 +8,18 @@
 
         <div class="content-wrap">
 
+
             <div class="col-1">
-                <div class="tag" v-for="tag in tags" :key="tag.id" @click="addFilterTag(tag)">
+                <div class="tag" v-for="tag in tags" :key="tag.id" :class="{'active-tag': filterTags.has(tag)}" @click="clickTag(tag)">
                     {{tag.content}}
                 </div>
             </div>
 
+
             <div class="col-2">
 
                 <div v-if="filterTags.size > 0" class="filter-tags-wrap">
-                    <div class="filter-tag"  v-for="tag in filterTags" :key="tag.id" @click="removeFilterTag(tag)">
+                    <div class="filter-tag" v-for="tag in filterTags" :key="tag.id">
                         {{tag.content}}
                     </div>
                 </div>
@@ -78,8 +80,14 @@
                     });
                 },
 
-                addFilterTag = (tag: {id: number, content: string}) => {
-                    filterTags.value.add(tag);
+                clickTag = (tag: {id: number, content: string}) => {
+                    
+                    if(!filterTags.value.has(tag)){
+                        filterTags.value.add(tag);
+                    } else {
+                        filterTags.value.delete(tag);
+                    }
+
                     getArticles();
                 },
 
@@ -109,7 +117,7 @@
                 filterTags,
                 articles,
 
-                addFilterTag,
+                clickTag,
                 removeFilterTag,
             }
         }
@@ -146,12 +154,19 @@
                 padding: 13px 15px;
                 background: rgb(231, 228, 228);
                 border-radius: 10px;
+                box-sizing: border-box;
                 cursor: pointer;
 
                 &:hover{
                     transition: .4s;
                     background: rgb(196, 190, 190);
                 }
+            }
+
+            .active-tag{
+                color: rgb(33, 177, 202);
+                font-weight: bold;
+                border: 2px solid rgb(33, 177, 202);
             }
         }
 
@@ -171,12 +186,6 @@
                     text-align: center;
                     box-sizing: border-box;
                     padding: 10px;
-                    cursor: pointer;
-
-                    &:hover{
-                        background: rgb(41, 215, 228);
-                        transition: .4s;
-                    }
                 }
             }
 
