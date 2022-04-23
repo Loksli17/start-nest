@@ -1,13 +1,15 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import User from "src/models/User";
-import { AuthService } from "src/services/auth.service";
-import { UserService } from "src/services/user.service";
+import User                       from "src/models/User";
+import { AuthService }            from "src/services/auth.service";
 
 
 @Controller('auth')
 export default class AuthController {
 
-    private readonly authService: AuthService = new AuthService(new UserService());
+
+    constructor(
+        private readonly authService: AuthService
+    ) { }
 
 
     @Post('login')
@@ -20,6 +22,8 @@ export default class AuthController {
                 error: 'Login or password are unexpected!'
             }
         }
+
+        this.authService.createJWT(user);
 
         return {
             token: "token"

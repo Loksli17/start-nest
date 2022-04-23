@@ -4,6 +4,7 @@ import AuthController    from './controllers/auth.controller';
 import { UserService }   from './services/user.service';
 import { TaskModule }    from './modules/task.module';
 import { ArticleModule } from './modules/article.module';
+import { AuthModule } from './modules/auth.module';
 
 
 @Module({
@@ -11,10 +12,10 @@ import { ArticleModule } from './modules/article.module';
         database,
         TaskModule,
         ArticleModule,
+        AuthModule
     ],
 
     controllers: [
-        AuthController,
     ],
 
     providers: [
