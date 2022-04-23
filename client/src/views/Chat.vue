@@ -7,12 +7,21 @@
 <script lang="ts">
     import { defineComponent, inject } from 'vue';
     import { ToastPluginApi }          from 'vue-toast-notification';
+    import { useTokenStore }           from './../store/token';
+
 
     export default defineComponent({
         
         setup(){
-            const Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
+            
+            const
+                store = useTokenStore(),
+                Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
+            store.accessToken;
+
+            console.log(store.accessToken);
+            
             // Toast.success("ZAZAZA");
         }
     })

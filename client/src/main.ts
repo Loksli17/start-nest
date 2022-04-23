@@ -19,6 +19,6 @@ const app = createApp(App);
 
 app.use(VueToast, {position: 'bottom-right', duration: 6000}, ref);
 app.use(router).mount('#app');
-app.use(createPinia);
+app.use(createPinia());
 
 app.provide('Toast', app.config.globalProperties.$toast)

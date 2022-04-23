@@ -5,12 +5,13 @@ export const useTokenStore = defineStore({
     id: 'accessToken',
 
     state: () => ({
-        accessToken: '',
+        accessToken: localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : '' as any,
     }),
 
     actions: {
-        set(token: string){
-            this.accessToken = token;
+        edit(newToken: string) {
+            localStorage.setItem('accessToken', newToken);
+            this.accessToken = newToken;
         }
     }
 });

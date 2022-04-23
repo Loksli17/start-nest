@@ -34,9 +34,11 @@
         setup(){
 
             const
-                store                    = useTokenStore(),
-                Toast   : ToastPluginApi = inject('Toast') as ToastPluginApi, 
-                basicUrl                 = "127.0.0.1:3000";
+                store                 = useTokenStore(),
+                Toast: ToastPluginApi = inject('Toast') as ToastPluginApi, 
+                basicUrl              = "127.0.0.1:3000";
+
+            console.log(store);
 
             let
                 login   : Ref<string>  = ref(""),
@@ -52,7 +54,7 @@
                         Toast.error(response.data.error);
                     } else {
                         Toast.success('Success auth');
-                        store.set(response.data.accessToken);
+                        store.edit(response.data.accessToken);
                     }
                 });
             };
