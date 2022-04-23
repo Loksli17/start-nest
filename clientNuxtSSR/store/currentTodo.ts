@@ -19,7 +19,8 @@ export const useCurrentTodo = defineStore("currentTodo", {
         setTodo(val: Todo) {
             this.currentTodo = val;
         }
-    }
+    },
+    persist: true
 })
 
 if (import.meta.hot) {

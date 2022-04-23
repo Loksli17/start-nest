@@ -1,10 +1,19 @@
 <template>
     <div class="grid grid-flow-row gap-y-3">
-        <div v-if="todolist" class=" grid grid-flow-col gap-x-3 bg-amber-500" v-for="todo in todolist" :key="todo.id">
+        <div v-if="todolist" class=" grid grid-flow-col gap-x-3  p-1 bg-amber-500 text-gray-50" v-for="todo in todolist" :key="todo.id">
             <span>{{ todo.text }}</span>
             <span>{{ todo.date }}</span>
             <span>{{ todo.type.name }}</span>
         </div>
+
+        <div class=" grid grid-flow-row gap-1 rounded p-1 bg-slate-700 text-gray-50">
+            <span>{{ randomTodo.text }}</span>
+            <span>{{ randomTodo.date }}</span>
+            <span>{{ randomTodo.type.name }}</span>
+        </div>
+
+        <button @click="setRandomTodo">random</button>
+
         <nuxt-link to="/">home</nuxt-link>
     </div>
 </template>
@@ -15,6 +24,8 @@
     
     const store = useCurrentTodo();
     const todolist = ref([] as Array<Todo>);
+
+    const randomTodo = computed(() => store.currentTodo);
 
     try {
         // const res = await useFetch("http://localhost:3000/task/get-all");
@@ -44,10 +55,13 @@
                 }
             }
         ];
-        store.setTodo(todolist.value[Math.round(Math.random())]);
+
     } catch (err) {
         console.error(err);
     }
 
+    const setRandomTodo = () => {
+        store.setTodo(todolist.value[Math.round(Math.random())]);
+    }
 
 </script>

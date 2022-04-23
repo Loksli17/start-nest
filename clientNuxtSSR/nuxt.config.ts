@@ -4,16 +4,7 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
     ssr: true,
     buildModules: [
-        "@pinia/nuxt"
-    ],
-    build: {
-        postcss: {
-            postcssOptions: {
-                plugins: {
-                    tailwindcss: {},
-                    autoprefixer: {}
-                }
-            }
-        }
-    }
+        "@pinia/nuxt",
+        "@nuxtjs/tailwindcss"
+    ]
 })
