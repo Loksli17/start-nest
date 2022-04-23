@@ -17,6 +17,4 @@ import { AuthService } from "src/services/auth.service";
         AuthService, 
     ],
 })
-export class AuthModule {
-
-}
+export class AuthModule {}

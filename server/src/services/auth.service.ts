@@ -15,6 +15,7 @@ export class AuthService {
         signOptions: { expiresIn: '60s' },
     });
 
+
     public async validate(login: string, pass: string): Promise<User | null> {
 
         const user: User | undefined = await this.userService.getOne(login);
@@ -27,15 +28,13 @@ export class AuthService {
     }
 
 
-    public createJWT(user: User){
+    public createJWT(user: User): string {
         
         const payload = {
             login: user.get('login'),
             id   : user.get('id'), 
         }
         
-        return {
-            accessToken: this.jwtService.sign(payload),
-        }
+        return this.jwtService.sign(payload);
     }
 }
