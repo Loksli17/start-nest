@@ -51,14 +51,14 @@ DROP TABLE IF EXISTS `article_has_tag`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article_has_tag` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `article_id` int NOT NULL,
+  `articleId` int NOT NULL,
   `tagId` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_article_has_tag_tag1_idx` (`tagId`),
-  KEY `fk_article_has_tag_article1_idx` (`article_id`),
-  CONSTRAINT `fk_article_has_tag_article1` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
+  KEY `fk_article_has_tag_article1_idx` (`articleId`),
+  CONSTRAINT `fk_article_has_tag_article1` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`),
   CONSTRAINT `fk_article_has_tag_tag1` FOREIGN KEY (`tagId`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,8 +67,88 @@ CREATE TABLE `article_has_tag` (
 
 LOCK TABLES `article_has_tag` WRITE;
 /*!40000 ALTER TABLE `article_has_tag` DISABLE KEYS */;
-INSERT INTO `article_has_tag` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,1,5),(6,2,1),(7,2,2),(8,2,3),(9,3,1),(10,4,1),(11,5,1),(12,6,1),(13,7,1),(14,8,2),(15,9,3),(16,9,1),(17,9,11),(18,9,9),(19,10,2),(20,10,3),(21,10,8),(22,10,6),(23,11,3),(24,11,4),(25,11,5),(26,12,5),(27,12,4),(28,12,6),(29,13,1),(30,14,2),(31,15,3),(32,16,8),(33,17,7);
+INSERT INTO `article_has_tag` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,1,5),(6,2,1),(7,2,2),(8,2,3),(9,3,1),(10,4,1),(11,5,1),(12,6,1),(13,7,1),(14,8,2),(15,9,3),(16,9,1),(17,9,11),(18,9,9),(19,10,2),(20,10,3),(21,10,8),(22,10,6),(23,11,3),(24,11,4),(25,11,5),(26,12,5),(27,12,4),(28,12,6),(29,13,1),(30,14,2),(31,15,3),(32,16,8),(33,17,7),(34,9,2);
 /*!40000 ALTER TABLE `article_has_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `message`
+--
+
+DROP TABLE IF EXISTS `message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `message` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `content` varchar(500) NOT NULL,
+  `roomId` int NOT NULL,
+  `userId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_message_room1_idx` (`roomId`),
+  KEY `fk_message_user1_idx` (`userId`),
+  CONSTRAINT `fk_message_room1` FOREIGN KEY (`roomId`) REFERENCES `room` (`id`),
+  CONSTRAINT `fk_message_user1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `message`
+--
+
+LOCK TABLES `message` WRITE;
+/*!40000 ALTER TABLE `message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `room`
+--
+
+DROP TABLE IF EXISTS `room`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `room` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room`
+--
+
+LOCK TABLES `room` WRITE;
+/*!40000 ALTER TABLE `room` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `room_has_user`
+--
+
+DROP TABLE IF EXISTS `room_has_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `room_has_user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `roomId` int NOT NULL,
+  `userId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_room_has_user_user1_idx` (`userId`),
+  KEY `fk_room_has_user_room1_idx` (`roomId`),
+  CONSTRAINT `fk_room_has_user_room1` FOREIGN KEY (`roomId`) REFERENCES `room` (`id`),
+  CONSTRAINT `fk_room_has_user_user1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room_has_user`
+--
+
+LOCK TABLES `room_has_user` WRITE;
+/*!40000 ALTER TABLE `room_has_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room_has_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -111,7 +191,7 @@ CREATE TABLE `task` (
   PRIMARY KEY (`id`),
   KEY `fk_task_taskType_idx` (`taskTypeId`),
   CONSTRAINT `fk_task_taskType` FOREIGN KEY (`taskTypeId`) REFERENCES `tasktype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +200,7 @@ CREATE TABLE `task` (
 
 LOCK TABLES `task` WRITE;
 /*!40000 ALTER TABLE `task` DISABLE KEYS */;
-INSERT INTO `task` VALUES (28,'2022-01-08','01:22:00','Teeeext',1),(38,'2022-02-14','05:51:31','Teeeext',2),(44,'2022-04-21','12:08:46','Teeeext (111)',4),(48,'2022-02-15','12:28:28','test text (2000 test)',3),(56,'2022-02-16','12:45:08','HMMM',1),(57,'2022-02-15','12:24:17','highload test',4),(59,'2022-02-15','01:17:03','highload test 5!!!!!',1),(83,'2022-02-15','06:49:34','for scroll',1),(84,'2022-02-15','06:49:38','for scroll',1),(86,'2022-02-15','06:49:43','for scroll',1),(88,'2022-02-15','08:06:50','Text..',1),(98,'2022-02-17','08:42:32','Text..',1),(99,'2022-02-17','08:42:34','Text..',1),(100,'2022-02-17','08:42:36','Text..',1),(101,'2022-02-17','08:42:38','Text..',1),(102,'2022-02-17','08:43:03','Text..',1),(103,'2022-02-17','08:43:12','Text..',1),(104,'2022-02-17','08:43:20','Text..',1),(105,'2022-02-17','08:49:36','Text..',1),(106,'2022-02-17','08:50:51','Text..',1),(112,'2020-02-29','08:50:51','Text..',1),(113,'2022-03-14','17:28:05','text',1),(114,'2022-04-21','12:49:55','NEW TEXT',1),(115,'2022-04-21','12:09:02','Teeeext (111)',3);
+INSERT INTO `task` VALUES (38,'2022-02-14','05:51:31','Teeeext',2),(44,'2022-04-21','12:08:46','Teeeext (111)',4),(48,'2022-02-15','12:28:28','test text (2000 test)',3),(56,'2022-02-16','12:45:08','HMMM',1),(57,'2022-04-22','09:52:08','NEW NAAAAME',4),(59,'2022-02-15','01:17:03','highload test 5!!!!!',1),(83,'2022-02-15','06:49:34','for scroll',1),(86,'2022-02-15','06:49:43','for scroll',1),(88,'2022-02-15','08:06:50','Text..',1),(98,'2022-02-17','08:42:32','Text..',1),(99,'2022-02-17','08:42:34','Text..',1),(100,'2022-02-17','08:42:36','Text..',1),(101,'2022-02-17','08:42:38','Text..',1),(102,'2022-02-17','08:43:03','Text..',1),(103,'2022-02-17','08:43:12','Text..',1),(106,'2022-02-17','08:50:51','Text..',1),(112,'2020-02-29','08:50:51','Text..',1),(115,'2022-04-21','12:09:02','Teeeext (111)',3),(118,'2022-04-22','02:32:09','Text..',2),(119,'2022-04-22','02:32:13','Text..',2),(120,'2022-04-22','02:32:17','Text..',3);
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,6 +227,31 @@ LOCK TABLES `tasktype` WRITE;
 INSERT INTO `tasktype` VALUES (1,'Important'),(2,'Urgent'),(3,'Not-Important'),(4,'Not-Urgent');
 /*!40000 ALTER TABLE `tasktype` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `login` varchar(255) NOT NULL,
+  `password` varchar(455) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'loksli','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2'),(2,'dima','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2'),(3,'cheba','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c'),(4,'kek','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c'),(5,'lol','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c'),(6,'azaz','3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -157,4 +262,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-22  0:59:22
+-- Dump completed on 2022-04-23 12:26:08
