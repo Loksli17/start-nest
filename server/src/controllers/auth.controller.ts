@@ -1,6 +1,8 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
-import User                                 from "src/models/User";
-import { AuthService }                      from "src/services/auth.service";
+import { Body, Controller, HttpCode, Post, Request } from "@nestjs/common";
+
+import User            from "src/models/User";
+import { AuthService } from "src/services/auth.service";
+
 
 
 @Controller('auth')
@@ -32,7 +34,11 @@ export default class AuthController {
 
     @HttpCode(200)
     @Post('check-token')
-    public async checkToken(): Promise<any> {
+    public async checkToken(@Request() req): Promise<any> {
+
+        const accessToken: string = req.body.accessToken;
+
+        console.log(accessToken);
 
         return {
 
