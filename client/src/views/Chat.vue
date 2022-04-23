@@ -13,7 +13,7 @@
         setup(){
             const Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
-            Toast.success("ZAZAZA");
+            // Toast.success("ZAZAZA");
         }
     })
 </script>

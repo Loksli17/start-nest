@@ -22,6 +22,7 @@
 
 
 <script lang="ts">
+
     import { defineComponent, inject, Ref, ref } from 'vue';
     import axios, { AxiosResponse }              from 'axios';
     import { ToastPluginApi }                    from 'vue-toast-notification';
@@ -46,6 +47,8 @@
                 axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}).then((response: AxiosResponse) => {
                     if(response.data.error != undefined) {
                         Toast.error(response.data.error);
+                    } else {
+                        console.log(response.data.accessToken);
                     }
                 });
             };
