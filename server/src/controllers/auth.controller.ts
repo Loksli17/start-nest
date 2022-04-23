@@ -11,12 +11,18 @@ export default class AuthController {
 
 
     @Post('login')
-    public async login(@Body() body): Promise<{token: string}> {
+    public async login(@Body() body): Promise<{token: string} | {error: string}> {
 
-        const user: User | null = await this.authService.validate(body.login, body.password);
+        const user: User | undefined = await this.authService.validate(body.login, body.password);
+
+        if(user == undefined) {
+            return {
+                error: 'Login or password are unexpected!'
+            }
+        }
 
         return {
-            token: ""
+            token: "token"
         }
     }
 }

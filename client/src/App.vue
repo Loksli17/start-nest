@@ -17,21 +17,7 @@
         <div class=" bg-white grid justify-center content-center auto-rows-max gap-16">
             <h1 class="text-6xl font-bold">Auth</h1>
 
-            <form class="grid gap-6" @submit="sendLoginData">
-                <div class="">
-                    <h3>Login</h3>
-                    <input class="border-2 w-72 mt-2 p-2" name="login" type="text" v-model="login" placeholder="login">
-                </div>
-
-                <div>
-                    <h3>Password</h3>
-                    <input class="border-2 w-72 mt-2 p-2" name="pass" type="password" v-model="password" placeholder="password">
-                </div>
-
-                <div>
-                    <input class=" p-3 hover:bg-indigo-600 hover:text-white cursor-pointer" type="submit" value="Login">
-                </div>
-            </form>
+            <auth-form></auth-form>
         </div>
     </div>
 
@@ -45,20 +31,21 @@
 
 <script lang="ts">
     
-    import axios, { AxiosResponse } from 'axios';
-    import { defineComponent, Ref, ref, watch } from 'vue';
+
+    import { defineComponent, Ref, ref, watch, inject } from 'vue';
+    import { ToastPluginApi }                           from 'vue-toast-notification';
+    import AuthForm                                     from './components/AuthForm.vue';
 
 
     export default defineComponent({
+
+        components: {
+            AuthForm
+        },
         
         setup(){
 
-            const basicUrl = "127.0.0.1:3000";
-
-            let 
-                login   : Ref<string>  = ref(""),
-                password: Ref<string>  = ref(""),
-                toggle  : Ref<boolean> = ref(false);
+            let toggle: Ref<boolean> = ref(false);
 
             const links: Ref<Array<{to: string, text: string}>> = ref([
                 {to: "/",        text: 'Todolist'},
@@ -71,23 +58,22 @@
                 document.body.style.overflowY = (value) ? "hidden" : "auto";
             });
 
-            const sendLoginData = (e: Event) => {
-                e.stopPropagation();
-                e.preventDefault();
+            // const sendLoginData = (e: Event) => {
+            //     e.stopPropagation();
+            //     e.preventDefault();
 
-                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}).then((response: AxiosResponse) => {
-                    console.log(response);
-                });
-            };
+            //     axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}).then((response: AxiosResponse) => {
+            //         if(response.data.error != undefined) {
+            //             // Toast.error(response.data.error);
+            //         }
+            //     });
+            // };
 
             return {
                 links,
                 toggle,
 
-                login,
-                password,
-
-                sendLoginData
+                // sendLoginData
             }
         }
     })
