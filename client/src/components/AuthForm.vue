@@ -2,6 +2,7 @@
     <div>
 
         <form class="grid gap-6" @submit="sendLoginData">
+
             <div class="">
                 <h3>Login</h3>
                 <input class="border-2 w-72 mt-2 p-2" name="login" type="text" v-model="login" placeholder="login">
@@ -38,11 +39,9 @@
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi, 
                 basicUrl              = "127.0.0.1:3000";
 
-            console.log(store);
-
             let
-                login   : Ref<string>  = ref(""),
-                password: Ref<string>  = ref("");
+                login   : Ref<string> = ref(""),
+                password: Ref<string> = ref("");
 
 
             const sendLoginData = (e: Event) => {
@@ -61,6 +60,7 @@
 
             return {
                 sendLoginData,
+
                 password,
                 login,
             }
