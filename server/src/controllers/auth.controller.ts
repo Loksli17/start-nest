@@ -14,8 +14,6 @@ export default class AuthController {
     public async login(@Body() body): Promise<{token: string}> {
 
         const user: User | null = await this.authService.validate(body.login, body.password);
-        
-        
 
         return {
             token: ""

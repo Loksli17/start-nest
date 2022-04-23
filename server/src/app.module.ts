@@ -1,36 +1,23 @@
-import { Module }             from '@nestjs/common';
-import { AppController }      from './app.controller';
-import { AppService }         from './app.service';
-import { TaskController }     from './controllers/task.controller';
-import database               from './config/database';
-import { TaskService }        from './services/task.service';
-import { TaskTypeController } from './controllers/taskType.controller';
-import { TaskTypeService }    from './services/taskType.service';
-import { ArticleContoroller } from './controllers/article.controller';
-import { TagController }      from './controllers/tag.controller';
-import TagService             from './services/tag.service';
-import AuthController         from './controllers/auth.controller';
-import { UserService }        from './services/user.service';
+import { Module }        from '@nestjs/common';
+import database          from './config/database';
+import AuthController    from './controllers/auth.controller';
+import { UserService }   from './services/user.service';
+import { TaskModule }    from './modules/task.module';
+import { ArticleModule } from './modules/article.module';
 
 
 @Module({
-    
-    imports: [database],
+    imports: [
+        database,
+        TaskModule,
+        ArticleModule,
+    ],
 
     controllers: [
-        AppController, 
-        TaskController, 
-        TaskTypeController, 
-        ArticleContoroller, 
-        TagController,
         AuthController,
     ],
 
-    providers  : [
-        AppService, 
-        TaskService, 
-        TaskTypeService,
-        TagService,
+    providers: [
         UserService
     ],
 })

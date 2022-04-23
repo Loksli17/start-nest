@@ -2,7 +2,7 @@ import { NestFactory }                            from '@nestjs/core';
 import { AppModule }                              from './app.module';
 import config                                     from './config';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import AppClusterService                          from './cluster.service';
+import AppClusterService                          from './services/cluster.service';
 
 
 const bootstrap = async (): Promise<void> => {

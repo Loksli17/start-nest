@@ -23,7 +23,6 @@ export class TaskController {
 
     @Put('add')
     public async addOne(@Request() req): Promise<{msg: string}> {
-
         await this.taskService.saveOne({text: req.body.task.text, taskTypeId: req.body.task.taskTypeId});
         return { msg: 'Created successfully' }
     }
