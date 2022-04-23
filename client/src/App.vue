@@ -75,7 +75,7 @@
                 e.stopPropagation();
                 e.preventDefault();
 
-                axios.post(`http://${basicUrl}/auth/login`, {password: password, login: login}).then((response: AxiosResponse) => {
+                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}).then((response: AxiosResponse) => {
                     console.log(response);
                 });
             };
