@@ -9,6 +9,8 @@ import { TaskTypeService }    from './services/taskType.service';
 import { ArticleContoroller } from './controllers/article.controller';
 import { TagController }      from './controllers/tag.controller';
 import TagService             from './services/tag.service';
+import AuthController         from './controllers/auth.controller';
+import { UserService }        from './services/user.service';
 
 
 @Module({
@@ -20,14 +22,16 @@ import TagService             from './services/tag.service';
         TaskController, 
         TaskTypeController, 
         ArticleContoroller, 
-        TagController
+        TagController,
+        AuthController,
     ],
 
     providers  : [
         AppService, 
         TaskService, 
         TaskTypeService,
-        TagService
+        TagService,
+        UserService
     ],
 })
 
