@@ -17,9 +17,7 @@
             <h1 class="font-medium">Current todo</h1>
 
             <div class=" grid grid-flow-row gap-y-1 p-3 rounded">
-                <span>{{ currentTodo.id }}</span>
-                <span>{{ currentTodo.date }}</span>
-                <span>{{ currentTodo.type.name }}</span>
+                <Todo :todo="currentTodo" />
             </div>
         </div>
     </div>
@@ -27,6 +25,7 @@
 
 <script setup lang="ts">
     import { useCurrentTodo } from '~~/store/currentTodo';
+    import Todo               from '~~/components/TodoList/Todo.vue';
 
     const store = useCurrentTodo();
     const currentTodo = store.currentTodo;

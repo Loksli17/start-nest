@@ -1,22 +1,17 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import Todo from "~~/types/Todo";
+import ITodo from "~~/types/Todo";
 
 export const useCurrentTodo = defineStore("currentTodo", {
     state: () => ({
         currentTodo: {
+            userId: 0,
             id: 0,
-            date: "",
-            taskTypeId: 0,
-            text: "",
-            time: "",
-            type: {
-                id: 0,
-                name: ""
-            }
-        } as Todo
+            title: "",
+            completed: false
+        } as ITodo
     }),
     actions: {
-        setTodo(val: Todo) {
+        setTodo(val: ITodo) {
             this.currentTodo = val;
         }
     },
