@@ -1,7 +1,8 @@
-import { createApp, ref }           from 'vue';
-import App                          from './App.vue';
-import router                       from './router';
-import VueToast, { ToastPluginApi } from 'vue-toast-notification';
+import { createApp, ref } from 'vue';
+import App                from './App.vue';
+import router             from './router';
+import VueToast           from 'vue-toast-notification';
+import { createPinia }    from 'pinia';
 
 import './assets/css/input.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
@@ -18,6 +19,6 @@ const app = createApp(App);
 
 app.use(VueToast, {position: 'bottom-right', duration: 6000}, ref);
 app.use(router).mount('#app');
-
+app.use(createPinia);
 
 app.provide('Toast', app.config.globalProperties.$toast)

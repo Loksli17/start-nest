@@ -26,6 +26,7 @@
     import { defineComponent, inject, Ref, ref } from 'vue';
     import axios, { AxiosResponse }              from 'axios';
     import { ToastPluginApi }                    from 'vue-toast-notification';
+    import { useTokenStore }                     from './../store/token';
 
 
     export default defineComponent({
@@ -33,12 +34,14 @@
         setup(){
 
             const
+                store                    = useTokenStore(),
                 Toast   : ToastPluginApi = inject('Toast') as ToastPluginApi, 
                 basicUrl                 = "127.0.0.1:3000";
 
             let
                 login   : Ref<string>  = ref(""),
                 password: Ref<string>  = ref("");
+
 
             const sendLoginData = (e: Event) => {
                 e.stopPropagation();
@@ -48,7 +51,8 @@
                     if(response.data.error != undefined) {
                         Toast.error(response.data.error);
                     } else {
-                        console.log(response.data.accessToken);
+                        Toast.success('Success auth');
+                        store.set(response.data.accessToken);
                     }
                 });
             };

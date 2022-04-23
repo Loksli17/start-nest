@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Param, Put, Query, Request } from "@nestjs/common";
-import Task                                             from "src/models/Task";
-import { TaskService }                                  from "src/services/task.service";
+import Task                                                    from "src/models/Task";
+import { TaskService }                                         from "src/services/task.service";
 
 
 

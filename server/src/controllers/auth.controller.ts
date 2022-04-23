@@ -1,6 +1,6 @@
-import { Body, Controller, HttpCode, Post, Req } from "@nestjs/common";
-import User                       from "src/models/User";
-import { AuthService }            from "src/services/auth.service";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import User                                 from "src/models/User";
+import { AuthService }                      from "src/services/auth.service";
 
 
 @Controller('auth')
@@ -19,7 +19,7 @@ export default class AuthController {
         const user: User | undefined = await this.authService.validate(body.login, body.password);
 
         if(user == undefined) {
-            //change status
+            //! change status
             return {
                 error: 'Login or password are unexpected!'
             }
