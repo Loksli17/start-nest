@@ -22,7 +22,7 @@ export class AuthService {
     }
 
 
-    private async createJwt(user: User) {
+    public async createJwt(user: User) {
         
         const payload: {login: string, id: number} = {
             login: user.get('login'),
@@ -34,6 +34,7 @@ export class AuthService {
         }
     }
 
+    
     private async validateUser(login: string, password: string) {
         
         const user: User = await this.userService.getOneByLogin(login);
