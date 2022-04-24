@@ -5,7 +5,8 @@
         <div class="">
             <h1>Random todo</h1>
             <Todo :todo="randomTodo" /> 
-            <button @click="setRandomTodo">random</button>
+            <!-- <button @click="setRandomTodo">random</button> -->
+            <CustomButton @click="setRandomTodo">random</CustomButton>
         </div>
 
         <nuxt-link to="/">home</nuxt-link>
@@ -14,9 +15,10 @@
 
 <script setup lang="ts">
     import { useCurrentTodo } from '~~/store/currentTodo';
-    import ITodo from '~~/types/Todo';
-    import TodoListComponent from '~~/components/TodoList/TodoList.vue';
-    import Todo from '~~/components/TodoList/Todo.vue';
+    import ITodo              from '~~/types/Todo';
+    import TodoListComponent  from '~~/components/TodoList/TodoList.vue';
+    import Todo               from '~~/components/TodoList/Todo.vue';
+    import CustomButton       from "~~/components/CustomButton.vue";
     
     const store = useCurrentTodo();
     const todolist = ref([] as Array<ITodo>);
@@ -25,7 +27,6 @@
 
     try {
         const res = await useFetch("https://jsonplaceholder.typicode.com/todos");
-        console.log(res.data.value)
         todolist.value = (res.data.value as any);
 
     } catch (err) {
