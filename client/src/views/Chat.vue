@@ -59,13 +59,13 @@
                 };
 
 
-            axios.post(`http://${basicUrl}/auth/check-token`, {}, {
-                headers: {
-                    Authorization: `Bearer ${store.accessToken}`
-                }
-            }).then((response: AxiosResponse) => {
-                console.log(response);
-            });
+            // axios.post(`http://${basicUrl}/auth/check-token`, {}, {
+            //     headers: {
+            //         Authorization: `Bearer ${store.accessToken}`
+            //     }
+            // }).then((response: AxiosResponse) => {
+            //     console.log(response);
+            // });
 
             console.log(store.accessToken);
             
