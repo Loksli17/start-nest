@@ -1,4 +1,5 @@
 export default {
     secret   : 'Rukav kakshka',
-    expiresIn: '2m', 
+    expiresIn: '1m',
+    
 }

@@ -3,6 +3,7 @@ import { JwtService }  from "@nestjs/jwt";
 import { SHA512 } from "crypto-js";
 import User from "src/models/User";
 import { UserService } from "../user.service";
+import authConst from "./auth.const";
 
 
 @Injectable()
@@ -30,11 +31,12 @@ export class AuthService {
         }
         
         return {
-            accessToken: this.jwtService.sign(payload),
+            accessToken : this.jwtService.sign(payload),
+            refreshToken: this.jwtService.sign(payload, {secret: authConst.secret, expiresIn: '1d'}),
         }
     }
 
-    
+
     private async validateUser(login: string, password: string) {
         
         const user: User = await this.userService.getOneByLogin(login);
