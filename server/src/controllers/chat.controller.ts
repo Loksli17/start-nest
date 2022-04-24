@@ -1,4 +1,5 @@
 import { Controller, Put, Request, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "src/services/auth/jwt-auth.guard";
 
 import { MessageService } from "src/services/chat/message.servise";
 import { RoomService }    from "src/services/chat/room.service";
@@ -15,6 +16,7 @@ export default class ChatController {
     ) {}
 
 
+    @UseGuards(JwtAuthGuard)
     @Put('create-room')
     public async createRoom(@Request() req): Promise<any> {
 

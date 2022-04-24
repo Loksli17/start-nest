@@ -49,6 +49,7 @@
                 },
 
                 sendRoom = () => {
+                    console.log(store.accessToken);
                     axios.put(`http://${basicUrl}/chat/create-room`, {name: name.value}, {
                         headers: {
                             Authorization: `Bearer ${store.accessToken}`
