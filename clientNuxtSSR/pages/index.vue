@@ -1,3 +1,20 @@
+<script setup lang="ts">
+    import { useCurrentTodo } from '~~/store/currentTodo';
+    import Todo               from '~~/components/TodoList/Todo.vue';
+
+    const store = useCurrentTodo();
+    const currentTodo = store.currentTodo;
+
+    useHead({
+        title: "Index",
+        meta: [
+            { name: "description",    content: "Cool index page description" },
+            { name: "og:title",       content: "Cool site | Index" },
+            { name: "og:description", content: "Cool index page description" }
+        ]
+    });
+</script>
+
 <template>
     <div class=" grid grid-flow-row gap-y-2 m-2">
         <div class=" p-4 rounded bg-slate-500">
@@ -22,11 +39,3 @@
         </div>
     </div>
 </template>
-
-<script setup lang="ts">
-    import { useCurrentTodo } from '~~/store/currentTodo';
-    import Todo               from '~~/components/TodoList/Todo.vue';
-
-    const store = useCurrentTodo();
-    const currentTodo = store.currentTodo;
-</script>

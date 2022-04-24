@@ -1,17 +1,3 @@
-<template>
-    <div class="grid grid-flow-row gap-y-3 m-4">
-        <TodoListComponent v-if="todolist" :todo-list="todolist" />
-
-        <div class="">
-            <h1>Random todo</h1>
-            <Todo :todo="randomTodo" /> 
-            <!-- <button @click="setRandomTodo">random</button> -->
-            <CustomButton @click="setRandomTodo">random</CustomButton>
-        </div>
-
-        <nuxt-link to="/">home</nuxt-link>
-    </div>
-</template>
 
 <script setup lang="ts">
     import { useCurrentTodo } from '~~/store/currentTodo';
@@ -37,4 +23,25 @@
         store.setTodo(todolist.value[Math.round(Math.random() * todolist.value.length)]);
     }
 
+    useHead({
+        title: "Todolist",
+        meta: [
+            { name: "description", content: "Todo list page" } 
+        ]
+    });
 </script>
+
+<template>
+    <div class="grid grid-flow-row gap-y-3 m-4">
+        <TodoListComponent v-if="todolist" :todo-list="todolist" />
+
+        <div class="">
+            <h1>Random todo</h1>
+            <Todo :todo="randomTodo" /> 
+            <!-- <button @click="setRandomTodo">random</button> -->
+            <CustomButton @click="setRandomTodo">random</CustomButton>
+        </div>
+
+        <nuxt-link to="/">home</nuxt-link>
+    </div>
+</template>
