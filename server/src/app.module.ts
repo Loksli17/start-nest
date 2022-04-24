@@ -3,6 +3,7 @@ import database          from './config/database';
 import { TaskModule }    from './modules/task.module';
 import { ArticleModule } from './modules/article.module';
 import { ChatModule }    from './modules/chat.module';
+import { AuthModule } from './modules/auth.module';
 
 
 @Module({
@@ -10,6 +11,7 @@ import { ChatModule }    from './modules/chat.module';
         database,
         TaskModule,
         ArticleModule,
+        AuthModule,
         ChatModule,
     ],
 })
