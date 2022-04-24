@@ -48,14 +48,18 @@
                 e.stopPropagation();
                 e.preventDefault();
 
-                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}).then((response: AxiosResponse) => {
-                    if(response.data.error != undefined) {
-                        Toast.error(response.data.error);
+                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value})
+                .then((response: AxiosResponse) => {
+                    Toast.success('Success auth');
+                    store.edit(response.data.accessToken);
+                })
+                .catch((reason) => {
+                    if(reason.response.status == 422) {
+                        Toast.warning(reason.response.data.message);
                     } else {
-                        Toast.success('Success auth');
-                        store.edit(response.data.accessToken);
+                        Toast.error('Server error');
                     }
-                });
+                })
             };
 
             return {
