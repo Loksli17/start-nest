@@ -3,7 +3,7 @@ import { Store } from "pinia";
 
 
 const main = (
-    store: any 
+    storeToken: any,
 ) => {
 
     axios.interceptors.response.use(
@@ -24,12 +24,12 @@ const main = (
                 if(res.status === 200){
 
                     if(res.data.msg !== "refreshToken expired"){
-                        store.edit(res.data.accessToken);
+                        storeToken.edit(res.data.accessToken);
                         request.headers!['Authorization'] = "Bearer " + res.data.accessToken;
                         request.withCredentials = true;
                         return axios.request(request);
                     }else{
-                        store.edit('');
+                        storeToken.edit('');
                         return Promise.reject(error);
                     }
                 }else{

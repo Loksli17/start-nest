@@ -1,13 +1,14 @@
-import { createApp, ref } from 'vue';
-import App                from './App.vue';
-import router             from './router';
-import VueToast           from 'vue-toast-notification';
-import { createPinia }    from 'pinia';
+import { createApp, ref }    from 'vue';
+import App                   from './App.vue';
+import router                from './router';
+import VueToast              from 'vue-toast-notification';
+import { createPinia }       from 'pinia';
+import axios                 from './axios';
+import { useTokenStore }     from './store/token';
 
 import './assets/css/input.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
-import axios from './axios';
-import { useTokenStore } from './store/token';
+
 
 
 

@@ -28,6 +28,7 @@
     import axios, { AxiosResponse }              from 'axios';
     import { ToastPluginApi }                    from 'vue-toast-notification';
     import { useTokenStore }                     from './../store/token';
+    import { useUserLoginStore }                 from './../store/userLogin';
 
 
     export default defineComponent({
@@ -35,6 +36,7 @@
         setup(){
 
             const
+                loginStore            = useUserLoginStore(),
                 store                 = useTokenStore(),
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi, 
                 basicUrl              = "127.0.0.1:3000";
@@ -53,6 +55,7 @@
                     if(response != undefined){
                         Toast.success('Success auth');
                         store.edit(response.data.accessToken);
+                        loginStore.edit(login.value);
                     } else {
                         Toast.warning('Login or password is not correct!');
                     }
