@@ -12,7 +12,7 @@ const main = () => {
 
             if(error && error.response && error.response.status == 401){
 
-                const res = await axios.post('/auth/create-tokens');
+                const res = await axios.post('http://127.0.0.1:3000/auth/create-tokens');
 
                 if(res.status === 200){
 

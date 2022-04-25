@@ -1,6 +1,6 @@
 import { Controller, Put, Request, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "src/services/auth/jwt-auth.guard";
 
+import { JwtAuthGuard }   from "src/services/auth/jwt-auth.guard";
 import { MessageService } from "src/services/chat/message.servise";
 import { RoomService }    from "src/services/chat/room.service";
 import { UserService }    from "src/services/user.service";

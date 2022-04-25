@@ -1,4 +1,5 @@
-import { Column, Min, Model, Table } from "sequelize-typescript";
+import { Column, HasMany, Min, Model, Table } from "sequelize-typescript";
+import Token from "./Token";
 
 
 @Table({tableName: 'user', timestamps: false})
@@ -14,4 +15,7 @@ export default class User extends Model {
     @Min(5)
     @Column
     public password: string;
+
+    @HasMany(() => Token)
+    public tokens: Array<Token>;
 }
