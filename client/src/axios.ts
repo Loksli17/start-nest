@@ -1,7 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { Store } from "pinia";
 
 
-const main = () => {
+const main = (
+    store: any 
+) => {
+
     axios.interceptors.response.use(
 
         (res: AxiosResponse) => {
@@ -20,9 +24,7 @@ const main = () => {
                 if(res.status === 200){
 
                     if(res.data.msg !== "refreshToken expired"){
-                        console.log('NEW TOKEN:', res.data.accessToken);
-                        localStorage.setItem('accessToken', res.data.accessToken);
-                        // axios.defaults.headers.common['Authorization'] = res.data.accessToken;
+                        store.edit(res.data.accessToken);
                         request.headers!['Authorization'] = "Bearer " + res.data.accessToken;
                         request.withCredentials = true;
                         return axios.request(request);

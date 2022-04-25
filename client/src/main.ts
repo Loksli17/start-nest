@@ -7,6 +7,7 @@ import { createPinia }    from 'pinia';
 import './assets/css/input.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import axios from './axios';
+import { useTokenStore } from './store/token';
 
 
 
@@ -25,4 +26,4 @@ app.use(createPinia());
 
 
 app.provide('Toast', app.config.globalProperties.$toast);
-axios();
+axios(useTokenStore());
