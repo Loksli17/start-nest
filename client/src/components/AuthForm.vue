@@ -50,15 +50,15 @@
 
                 axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}, {withCredentials: true})
                 .then((response: AxiosResponse) => {
-                    Toast.success('Success auth');
-                    store.edit(response.data.accessToken);
+                    if(response != undefined){
+                        Toast.success('Success auth');
+                        store.edit(response.data.accessToken);
+                    } else {
+                        Toast.warning('Login or password is not correct!');
+                    }
                 })
                 .catch((reason) => {
-                    if(reason.response.status == 422) {
-                        Toast.warning(reason.response.data.message);
-                    } else {
-                        Toast.error('Server error');
-                    }
+                    Toast.error('Server error');
                 })
             };
 

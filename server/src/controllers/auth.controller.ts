@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Request, Res} from "@nestjs/common";
+import { Controller, Post, Request, Res } from "@nestjs/common";
 import Token from "src/models/Token";
 import { AuthService } from "src/services/auth/auth.service";
 
@@ -6,7 +6,6 @@ import { AuthService } from "src/services/auth/auth.service";
 
 @Controller('auth')
 export default class AuthController {
-
 
     constructor(
         private readonly authService: AuthService
@@ -28,12 +27,10 @@ export default class AuthController {
                 sameSite: 'none', 
                 secure  : true 
             }
-        )
-
-        console.log('login', tokens.refreshToken);
+        );
         
         res.code(200).send({
-            accessToken: tokens.accessToken
+            accessToken: tokens.accessToken,
         })
     }
 
@@ -53,8 +50,6 @@ export default class AuthController {
                 secure  : true 
             }
         )
-
-        console.log('update', result.refreshToken);
         
         res.code(200).send({
             accessToken: result.accessToken,

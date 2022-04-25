@@ -29,8 +29,7 @@ const main = (
                         request.withCredentials = true;
                         return axios.request(request);
                     }else{
-                        // store.commit('setUserIdentity', null);
-                        localStorage.setItem('accessToken', '');
+                        store.edit('');
                         return Promise.reject(error);
                     }
                 }else{

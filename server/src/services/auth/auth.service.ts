@@ -16,7 +16,11 @@ export class AuthService {
     ) { }
 
 
-    public async login(login: string, password: string, userAgent: string): Promise<{accessToken: string, refreshToken: string, token: Token}> {
+    public async login(login: string, password: string, userAgent: string): Promise<{
+        accessToken : string, 
+        refreshToken: string, 
+        token       : Token
+    }> {
         
         const user = await this.validateUser(login, password);
 
@@ -98,8 +102,6 @@ export class AuthService {
         
         const newTokens = await this.createJwt(user);
 
-        console.log(newTokens);
-
         token.set('expiredIn', token.get('expiredIn') - 1000 * 60);
         token.set('token', newTokens.refreshToken);
 
@@ -120,8 +122,6 @@ export class AuthService {
 
 
     private async createJwt(user: User): Promise<{accessToken: string, refreshToken: string}> {
-
-        console.log(user);
         
         const payload: {login: string, id: number} = {
             login: user.get('login'),
