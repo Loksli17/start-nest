@@ -48,7 +48,7 @@
                 e.stopPropagation();
                 e.preventDefault();
 
-                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value})
+                axios.post(`http://${basicUrl}/auth/login`, {password: password.value, login: login.value}, {withCredentials: true})
                 .then((response: AxiosResponse) => {
                     Toast.success('Success auth');
                     store.edit(response.data.accessToken);

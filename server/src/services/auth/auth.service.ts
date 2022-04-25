@@ -60,23 +60,68 @@ export class AuthService {
         };
     }
 
+
     public async updateToken(userAgent: string, cookieToken: string) {
 
+        const result: Record<string, any> = {};
+
         const payload: {id: number, login: string} = this.jwtService.decode(cookieToken) as {id: number, login: string};
-
-        console.log(payload);
-
-        const token: Token = await Token.findOne({where: {
+        
+        const token: Token | undefined = await Token.findOne({where: {
             userId: payload.id,
             client: userAgent,
         }});
 
+        if(token == undefined){
+            result.msg = "refreshToken expired";
+            return result;
+        }
 
-        token.set('expiredIn', token.get('expiredIn') - 1000 * 60)
+        if(token.get('token') !== cookieToken){
+            result.msg = "refreshToken expired";
+            return result;
+        }
+
+        try {
+            this.jwtService.verify(cookieToken);
+        } catch (error) {
+            result.msg = "refreshToken expired";
+            return result;    
+        }
+
+        let user: User;
+        try {
+            user = await User.findOne({where: {id: payload.id}});
+        } catch (error) {
+            console.error(error);
+        }
+        
+        const newTokens = await this.createJwt(user);
+
+        console.log(newTokens);
+
+        token.set('expiredIn', token.get('expiredIn') - 1000 * 60);
+        token.set('token', newTokens.refreshToken);
+
+        try {
+            await token.save();
+        } catch (error) {
+            console.error(error);
+        }
+        
+        result.msg = "success";
+        result.accessToken  = newTokens.accessToken;
+        result.refreshToken = newTokens.refreshToken;
+        
+        result.refreshTokenExpiredIn = token.get('expiredIn') - 1000 * 60;
+        
+        return result;
     }
 
 
     private async createJwt(user: User): Promise<{accessToken: string, refreshToken: string}> {
+
+        console.log(user);
         
         const payload: {login: string, id: number} = {
             login: user.get('login'),

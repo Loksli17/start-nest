@@ -53,7 +53,8 @@
                     axios.put(`http://${basicUrl}/chat/create-room`, {name: name.value}, {
                         headers: {
                             Authorization: `Bearer ${store.accessToken}`
-                        }
+                        },
+                        withCredentials: true,
                     }).then((response: AxiosResponse) => {
                         console.log(response);
                     })
