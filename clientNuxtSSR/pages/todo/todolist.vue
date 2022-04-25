@@ -7,7 +7,7 @@
     import CustomButton       from "~~/components/CustomButton.vue";
     
     const store = useCurrentTodo();
-    const todolist = ref([] as Array<ITodo>);
+    const todolist = useState<Array<ITodo>>("todolist", () => []);
 
     const randomTodo = computed(() => store.currentTodo);
 

@@ -18,7 +18,7 @@
 <template>
     <div class=" grid grid-flow-row gap-y-2 m-2">
         <div class=" p-4 rounded bg-slate-500">
-            <h1 class="font-medium">Test</h1>
+            <h1 class="font-medium text-[20px]">Test</h1>
 
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">
                 <nuxt-link class="hover:text-teal-800" to="/about">about</nuxt-link>
@@ -31,7 +31,7 @@
 
 
         <div class=" p-4 rounded bg-slate-500">
-            <h1 class="font-medium">Current todo</h1>
+            <h1 class="font-medium text-[20px]">Current todo</h1>
 
             <div class=" grid grid-flow-row gap-y-1 p-3 rounded">
                 <Todo :todo="currentTodo" />
