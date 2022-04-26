@@ -1,4 +1,4 @@
-import { Controller, Put, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Put, Request, UseGuards } from "@nestjs/common";
 
 import Room               from "src/models/Room";
 import { JwtAuthGuard }   from "src/services/auth/jwt-auth.guard";
@@ -19,7 +19,7 @@ export default class ChatController {
 
     @UseGuards(JwtAuthGuard)
     @Put('create-room')
-    public async createRoom(@Request() req): Promise<any> {
+    public async createRoom(@Request() req): Promise<{room: Room}> {
 
         const name: string = req.body.name;
 
@@ -28,5 +28,12 @@ export default class ChatController {
         return {
             room: room,
         }
+    }
+
+
+    @Get('get-all')
+    public async getAll(@Param() params): Promise<Array<Room>> {
+
+        return [];
     }
 }

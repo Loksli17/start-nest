@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
         gridTemplateColumns: {
-            'todo'        : 'repeat(4, 1fr) max-content',
-            'article-wrap': '350px auto',
+            'todo'     : 'repeat(4, 1fr) max-content',
+            'chat-wrap': '350px auto',
         },
     },
   },
