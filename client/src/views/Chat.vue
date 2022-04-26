@@ -38,11 +38,15 @@
                 </div>
 
                 <div>
-                    <div v-if="roomActInd != -1" class=" p-4 bg-blue-200 rounded grid grid-flow-col items-center">
+                    <div v-if="roomActInd != -1" class=" p-4 bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-4">
                         <div class="text-2xl">{{rooms[roomActInd].name}}</div>
 
-                        <div v-if="rooms[roomActInd].user.login == login">
-                            <button class=" bg-white rounded p-3">Settings</button>
+                        <div class="text-xl text-blue-700">
+                            [ {{rooms[roomActInd].user.login}} ]
+                        </div>
+
+                        <div>
+                            <button class=" bg-white rounded p-2" @click="modalShowRoomToggle = true">Info</button>
                         </div>
                     </div>
 
@@ -72,7 +76,57 @@
 
         </div>
     </div>
+
+
+    <div v-if="roomActInd != -1" @click.self="modalShowRoomToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-900 opacity-90 top-0 left-0" :class="{'hidden': !modalShowRoomToggle}">
+
+        <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
+
+            <div>
+                <h2 class=" text-3xl">{{rooms[roomActInd].name}}</h2>
+                <div class=" bg-cover w-50 rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
+            </div>
+
+            <div class="grid grid-flow-col auto-cols-max items-center gap-5">
+                <div class=" text-xl">
+                    Author: {{rooms[roomActInd].user.login}}
+                </div>
+
+                <div v-if="rooms[roomActInd].user.login == login">
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="uploadImg()">Edit room image</button>
+                </div>
+
+                <div v-if="rooms[roomActInd].user.login == login">
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all  text-white rounded" @click="addUserInRoom()">Add user</button>
+                </div>
+
+                <div v-if="rooms[roomActInd].user.login == login">
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all  text-white rounded" @click="editName()">Edit room's name</button>
+                </div>
+            </div>
+
+            <div class="grid gap-4">
+                <h2 class=" text-2xl">Users</h2>
+                
+                <div class="grid gap-2">
+                    <div v-for="user in rooms[roomActInd].users" :key="user.id">
+                        <div class=" px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user ">
+                            
+                            <div class="text-lg">
+                                {{user.login}}
+                            </div>
+                        
+                            <div v-if="rooms[roomActInd].user.login == login">
+                                <button class="p-2 w-max bg-red-500 hover:bg-red-700 transition-all text-md text-white rounded" @click="removeUserFormRoom(user)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
+
 
 <script lang="ts">
     import axios, { AxiosResponse }              from 'axios';
@@ -97,7 +151,9 @@
                 rooms      : Ref<Array<Record<string, any>>> = ref([]),
                 messages   : Ref<Array<Record<string, any>>> = ref([]),
                 name       : Ref<string>                     = ref(''),
-                modalToggle: Ref<boolean>                    = ref(false);
+                modalToggle: Ref<boolean>                    = ref(false),
+
+                modalShowRoomToggle: Ref<boolean>            = ref(false);
             
 
             const 
@@ -167,6 +223,8 @@
 
                 accessToken: storeToken.accessToken,
                 login      : storeUser.user.login,
+
+                modalShowRoomToggle,
             }
         }
     })

@@ -6,7 +6,13 @@ module.exports = {
         gridTemplateColumns: {
             'todo'     : 'repeat(4, 1fr) max-content',
             'chat-wrap': '350px auto',
+
+            'chat-current-room-wrap': 'max-content 1fr max-content',
+            'chat-room-user'        : '1fr max-content',
         },
+        minWidth: {
+            'modal': '600px',
+        }
     },
   },
   variants: {
