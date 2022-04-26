@@ -134,10 +134,10 @@
             <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalAddUserToggle = false; modalShowRoomToggle = true">Back</button>
 
             <form class=" bg-white grid gap-10 opacity-100">
-                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser">
+                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser(rooms[roomActInd])">
             </form>
 
-            <div class="mt-5 grid gap-4">
+            <div v-if="searhedUsers.length > 0" class="mt-5 grid gap-4">
                 <div class="px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user" v-for="user in searhedUsers" :key="user.id">
                     <div>{{user.login}}</div>
                     
@@ -236,19 +236,29 @@
                     modalAddUserToggle.value  = true;
                 },
 
-                searchUser = () => {
+                searchUser = (room: any) => {
 
                     if(searchLogin.value == "") {
                         searhedUsers.value = [];
                         return;
                     }
 
-                    axios.get(`http://${basicUrl}/chat/search-user/${searchLogin.value}`, {
-                        headers: {
-                            Authorization: `Bearer ${storeToken.accessToken}`
-                        },
-                        withCredentials: true,
-                    }).then((response: AxiosResponse) => {
+                    let ids: Array<number> = []; 
+                    
+                    room.users.forEach((user: any) => ids.push(user.id));
+
+                    axios.post(`http://${basicUrl}/chat/search-user`, 
+                        {
+                            searchLogin: searchLogin.value,
+                            userIds    : ids,
+                        }, 
+                        {
+                            headers: {
+                                Authorization: `Bearer ${storeToken.accessToken}`
+                            },
+                            withCredentials: true,
+                        }
+                    ).then((response: AxiosResponse) => {
                         console.log(response.data);
                         searhedUsers.value = response.data;
                         // Toast.success(`${response.data.room.name} was created successfully!`);
@@ -263,7 +273,7 @@
                         },
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
-                        console.log(response.data);
+                        searhedUsers.value = searhedUsers.value.filter((user: any) => user.id != response.data.id);
                         getRooms();
                         // Toast.success(`${response.data.room.name} was created successfully!`);
                     });

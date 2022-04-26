@@ -48,9 +48,9 @@ export default class ChatController {
     }
 
 
-    @Get('search-user/:searchLogin')
-    public async searchUser(@Param() params): Promise<Array<User>> {
-        return this.userService.getOneBySearchLogin(params.searchLogin);
+    @Post('search-user')
+    public async searchUser(@Body() body): Promise<Array<User>> {
+        return this.userService.getOneBySearchLogin(body.searchLogin, body.userIds);
     }
 
     

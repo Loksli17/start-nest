@@ -11,13 +11,18 @@ export class UserService {
     }
 
 
-    public async getOneBySearchLogin(login: string): Promise<Array<User>> {
+    public async getOneBySearchLogin(login: string, ids: Array<number>): Promise<Array<User>> {
+        
         return await User.findAll({
             where: {
                 login: { 
                     [Op.startsWith]: login
+                },
+                id: {
+                    [Op.notIn]: ids,
                 } 
             },
+
             attributes: ['id', 'login'],
         });
     }
