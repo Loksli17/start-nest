@@ -19,7 +19,8 @@ export class AuthService {
     public async login(login: string, password: string, userAgent: string): Promise<{
         accessToken : string, 
         refreshToken: string, 
-        token       : Token
+        token       : Token,
+        userId      : number,
     }> {
         
         const user = await this.validateUser(login, password);
@@ -61,6 +62,7 @@ export class AuthService {
             accessToken : tokens.accessToken,
             refreshToken: tokens.refreshToken,
             token       : token,
+            userId      : user.id,
         };
     }
 

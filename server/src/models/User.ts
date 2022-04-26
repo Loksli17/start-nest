@@ -1,5 +1,9 @@
-import { Column, HasMany, Min, Model, Table } from "sequelize-typescript";
-import Token from "./Token";
+import { BelongsToMany, Column, HasMany, Min, Model, Table } from "sequelize-typescript";
+
+import Message     from "./Message";
+import Room        from "./Room";
+import RoomHasUser from "./RoomHasUser";
+import Token       from "./Token";
 
 
 @Table({tableName: 'user', timestamps: false})
@@ -18,4 +22,19 @@ export default class User extends Model {
 
     @HasMany(() => Token)
     public tokens: Array<Token>;
+
+
+    @BelongsToMany(() => Room, {
+        through: { model: () => RoomHasUser },
+    })
+    public rooms: Array<Room>
+
+    @HasMany(() => RoomHasUser)
+    public roomHasUsers: Array<RoomHasUser>
+
+    @HasMany(() => Message)
+    public messages: Array<Message>;
+
+    @HasMany(() => Room)
+    public ownRooms: Array<Room>;
 }
