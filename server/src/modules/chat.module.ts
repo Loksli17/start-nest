@@ -1,6 +1,6 @@
 import { Module }         from "@nestjs/common";
 import ChatController     from "src/controllers/chat.controller";
-import { MessageService } from "src/services/chat/message.servise";
+import { MessageService } from "src/services/chat/message.service";
 import { RoomService }    from "src/services/chat/room.service";
 import { UserService }    from "src/services/user.service";
 import { AuthModule } from "./auth.module";
