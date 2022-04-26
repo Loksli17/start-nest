@@ -13,6 +13,13 @@ export default class Message extends Model {
     @Column(DataType.STRING(500))
     public content: string;
 
+    @Column(DataType.DATE)
+    public date: Date;
+
+    @Column(DataType.TIME)
+    public time: string;
+
+
     @ForeignKey(() => User)
     public userId: number;
 

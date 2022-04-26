@@ -3,7 +3,7 @@ import Message from "src/models/Message";
 
 import Room               from "src/models/Room";
 import { JwtAuthGuard }   from "src/services/auth/jwt-auth.guard";
-import { MessageService } from "src/services/chat/message.servise";
+import { MessageService } from "src/services/chat/message.service";
 import { RoomService }    from "src/services/chat/room.service";
 import { UserService }    from "src/services/user.service";
 
