@@ -72,6 +72,11 @@ export class AuthService {
         const result: Record<string, any> = {};
 
         const payload: {id: number, login: string} = this.jwtService.decode(cookieToken) as {id: number, login: string};
+
+        if(payload == null) {
+            result.msg = "refreshToken expired";
+            return result;
+        }
         
         const token: Token | undefined = await Token.findOne({where: {
             userId: payload.id,
