@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Put, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
 import Message from "src/models/Message";
 
 import Room               from "src/models/Room";
+import User               from "src/models/User";
 import { JwtAuthGuard }   from "src/services/auth/jwt-auth.guard";
 import { MessageService } from "src/services/chat/message.service";
 import { RoomService }    from "src/services/chat/room.service";
@@ -41,8 +42,30 @@ export default class ChatController {
     }
 
 
+    @UseGuards(JwtAuthGuard)
     @Get('get-messages/:roomId')
     public async getRoomMessages(@Param() params): Promise<Array<Message>> {
         return await this.messageService.getAll(params.roomId);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Post('search-user')
+    public async searchUser(@Body() body): Promise<Array<User>> {
+        return this.userService.getOneBySearchLogin(body.searchLogin, body.userIds);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Put('add-user-in-room')
+    public async addUserInRoom(@Body() body): Promise<{id: number, login: string}>{
+        return this.roomService.addUserInRoom(body.user, body.roomId); 
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Post('remove-user-from-room')
+    public async removeUserFromRoom(@Body() body): Promise<{id: number, login: string}>{
+        return this.roomService.removeUserFromRoom(body.user, body.roomId); 
     }
 }
