@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import ITodo from '~~/types/Todo';
-    import Todo  from "./Todo.vue";
 
     defineProps<{
         todoList: Array<ITodo>

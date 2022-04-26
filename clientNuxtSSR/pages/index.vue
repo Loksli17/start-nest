@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { useCurrentTodo } from '~~/store/currentTodo';
-    import Todo               from '~~/components/TodoList/Todo.vue';
 
     const store = useCurrentTodo();
     const currentTodo = store.currentTodo;
