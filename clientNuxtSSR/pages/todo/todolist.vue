@@ -22,6 +22,16 @@
         console.error(err);
     }
 
+    if (process.client) {
+        console.log("client");
+        console.log(document);
+    }
+
+    if (process.server) {
+        console.log("server");
+        // console.log(document);
+    }
+
     const setRandomTodo = () => {
         store.setTodo(todoArr.value[Math.round(Math.random() * todoArr.value.length)]);
 
