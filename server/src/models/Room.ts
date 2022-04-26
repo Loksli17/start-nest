@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 
 import Message     from "./Message";
 import RoomHasUser from "./RoomHasUser";
@@ -14,6 +14,12 @@ export default class Room extends Model {
 
     @Column
     public name: string;
+
+    @ForeignKey(() => User)
+    public userId: number;
+
+    @BelongsTo(() => User)
+    public user: User;
 
 
     @BelongsToMany(() => User, {

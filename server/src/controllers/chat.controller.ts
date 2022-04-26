@@ -1,5 +1,6 @@
 import { Controller, Put, Request, UseGuards } from "@nestjs/common";
 
+import Room               from "src/models/Room";
 import { JwtAuthGuard }   from "src/services/auth/jwt-auth.guard";
 import { MessageService } from "src/services/chat/message.servise";
 import { RoomService }    from "src/services/chat/room.service";
@@ -22,10 +23,10 @@ export default class ChatController {
 
         const name: string = req.body.name;
 
-        console.log(name, req.headers);
+        const room: Room = await this.roomService.createRoom({name});
         
         return {
-
+            room: room,
         }
     }
 }

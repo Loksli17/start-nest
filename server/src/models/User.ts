@@ -32,7 +32,9 @@ export default class User extends Model {
     @HasMany(() => RoomHasUser)
     public roomHasUsers: Array<RoomHasUser>
 
-
     @HasMany(() => Message)
     public messages: Array<Message>;
+
+    @HasMany(() => Room)
+    public ownRooms: Array<Room>;
 }
