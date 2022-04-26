@@ -17,27 +17,19 @@
 
         todoArr.value = res.data.value as Array<ITodo>;
 
-        onMounted(() => {
-            if (process.client) {
-                const { $toast } = useNuxtApp();
-
-                $toast.success("Fetched");
-            }
-        });
-
     } catch (err) {
 
-        onMounted(() => {
-            if (process.client) {
-                const { $toast } = useNuxtApp();
-
-                $toast.error(`Error during fetch: ${err}`);
-            }
-        });
+        console.error(err);
     }
 
     const setRandomTodo = () => {
         store.setTodo(todoArr.value[Math.round(Math.random() * todoArr.value.length)]);
+
+        if (process.client) {
+            const { $toast } = useNuxtApp();
+
+            $toast.info("Set random todo");
+        }
     }
 
     useHead({
@@ -55,7 +47,7 @@
         <div class="">
             <h1>Random todo</h1>
             <Todo :todo="randomTodo" /> 
-            <!-- <button @click="setRandomTodo">random</button> -->
+            
             <CustomButton @click="setRandomTodo">random</CustomButton>
         </div>
 
