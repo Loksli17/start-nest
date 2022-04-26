@@ -1,4 +1,5 @@
 import { HttpCode, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import Message from "src/models/Message";
 import Room from "src/models/Room";
 import RoomHasUser from "src/models/RoomHasUser";
 import User from "src/models/User";
@@ -36,13 +37,10 @@ export class RoomService {
 
         const rooms: Array<Room> = await Room.findAll({
             include: [
-                {model: User, as: 'users'}, 
-                {model: RoomHasUser, where: {userId: userId}, attributes: []}
+                {model: User, as: 'users', attributes: ['id', 'login']}, 
+                {model: RoomHasUser, where: {userId: userId}, attributes: []},
+                {model: Message, order: [['id', 'desc']], limit: 1, include: [{model: User, attributes: ['login']}]},
             ]
-        });
-
-        rooms.map((room: Room) => {
-            delete room['roomHasUser'];
         });
 
         return rooms;

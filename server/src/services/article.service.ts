@@ -7,6 +7,7 @@ export default class ArticleService {
 
     public async getAll(tagIds: Array<number>): Promise<Array<Article>> {
 
+        //! try another way here!!!
         return await Article.findAll({
             include: [Tag],
             where: tagIds.length ? Sequelize.literal(`Article.id in (SELECT a.id FROM article a 

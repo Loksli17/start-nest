@@ -28,7 +28,7 @@
                                 {{room.name}}
                             </div>
                             <div>
-                                Last message..
+                                [{{room.messages[0].user.login}}]: {{room.messages[0].content}}
                             </div>
                         </div>
                     </div>
