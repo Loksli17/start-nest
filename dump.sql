@@ -83,6 +83,8 @@ CREATE TABLE `message` (
   `content` varchar(500) NOT NULL,
   `roomId` int NOT NULL,
   `userId` int NOT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_message_room1_idx` (`roomId`),
   KEY `fk_message_user1_idx` (`userId`),
@@ -97,7 +99,7 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (1,'message 123',3,1),(2,'message 123',1,1),(3,'message text',2,1),(4,'new message',3,1);
+INSERT INTO `message` VALUES (1,'message 123',3,1,'2022-04-26','11:00:00'),(2,'message 123',1,1,'2022-04-26','11:00:00'),(3,'message text',2,1,'2022-04-26','11:00:00'),(4,'new message',3,1,'2022-04-26','11:00:00');
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +118,7 @@ CREATE TABLE `room` (
   PRIMARY KEY (`id`),
   KEY `fk_room_user1_idx` (`userId`),
   CONSTRAINT `fk_room_user1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +127,7 @@ CREATE TABLE `room` (
 
 LOCK TABLES `room` WRITE;
 /*!40000 ALTER TABLE `room` DISABLE KEYS */;
-INSERT INTO `room` VALUES (1,'New name',1,'default.png'),(2,'Another room',1,'default.png'),(3,'Room',2,'default.png'),(4,'Big room',3,'default.png');
+INSERT INTO `room` VALUES (1,'New name',1,'default.png'),(2,'Another room',1,'default.png'),(3,'Room',2,'default.png'),(4,'Big room',3,'default.png'),(5,'test',1,'default.png'),(6,'lol',1,'default.png');
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +147,7 @@ CREATE TABLE `room_has_user` (
   KEY `fk_room_has_user_room1_idx` (`roomId`),
   CONSTRAINT `fk_room_has_user_room1` FOREIGN KEY (`roomId`) REFERENCES `room` (`id`),
   CONSTRAINT `fk_room_has_user_user1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +156,7 @@ CREATE TABLE `room_has_user` (
 
 LOCK TABLES `room_has_user` WRITE;
 /*!40000 ALTER TABLE `room_has_user` DISABLE KEYS */;
-INSERT INTO `room_has_user` VALUES (1,1,1),(2,2,1),(3,1,2),(5,3,2),(6,3,1),(7,4,3);
+INSERT INTO `room_has_user` VALUES (1,1,1),(2,2,1),(3,1,2),(5,3,2),(6,3,1),(7,4,3),(8,5,1),(9,6,1);
 /*!40000 ALTER TABLE `room_has_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +262,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
-INSERT INTO `token` VALUES (1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Imxva3NsaSIsImlkIjoxLCJpYXQiOjE2NTA5NDQyNjEsImV4cCI6MTY1MTAzMDY2MX0.j3YooGd8PqRSnhz7xifj-4-O3ZsGTfW6yKpJBoq2-W0','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36',1,2940000),(2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Imxva3NsaSIsImlkIjoxLCJpYXQiOjE2NTA4ODkxNjMsImV4cCI6MTY1MDk3NTU2M30.Eb0rY-KxrGNlktBROMZUjCd7GS7iFPMal7_zKQHkomc','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.72',1,3600000);
+INSERT INTO `token` VALUES (1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Imxva3NsaSIsImlkIjoxLCJpYXQiOjE2NTA5NzI3NjcsImV4cCI6MTY1MTA1OTE2N30.tB4daKjGz53nFTfm7oA0zfDSPijba0HJbv7KyoD1rmg','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36',1,1200000),(2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Imxva3NsaSIsImlkIjoxLCJpYXQiOjE2NTA4ODkxNjMsImV4cCI6MTY1MDk3NTU2M30.Eb0rY-KxrGNlktBROMZUjCd7GS7iFPMal7_zKQHkomc','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.72',1,3600000);
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,4 +300,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-26 13:41:52
+-- Dump completed on 2022-04-26 21:33:46
