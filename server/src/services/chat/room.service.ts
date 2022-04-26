@@ -8,7 +8,9 @@ import User from "src/models/User";
 export class RoomService {
     
 
-    public async createRoom(roomDto: {name: string}): Promise<Room> {
+    public async createRoom(roomDto: {name: string, userId: number, img?: string}): Promise<Room> {
+
+        roomDto.img = "default.png";
 
         const room: Room = Room.build(roomDto);
 
@@ -40,8 +42,16 @@ export class RoomService {
                 {model: User, as: 'users', attributes: ['id', 'login']}, 
                 {model: RoomHasUser, where: {userId: userId}, attributes: []},
                 {model: Message, order: [['id', 'desc']], limit: 1, include: [{model: User, attributes: ['login']}]},
-            ]
+                {model: User, as: 'user', attributes: ['login', 'id']},
+            ],
         });
+
+        console.log(rooms[0]);
+
+        // rooms.sort((a: Room, b: Room) => {
+            
+        //     return 0;
+        // });
 
         return rooms;
     }
