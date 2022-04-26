@@ -49,7 +49,7 @@
     import axios, { AxiosResponse }              from 'axios';
     import { defineComponent, inject, Ref, ref } from 'vue';
     import { ToastPluginApi }                    from 'vue-toast-notification';
-    import { useUserLoginStore }                 from '../store/userLogin';
+    import { useUserStore }                      from '../store/user';
     import { useTokenStore }                     from './../store/token';
 
 
@@ -60,7 +60,7 @@
             const
                 basicUrl              = "127.0.0.1:3000",
                 storeToken            = useTokenStore(),
-                storeLogin            = useUserLoginStore(),
+                storeUser             = useUserStore(),
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
             let
@@ -99,7 +99,7 @@
                 sendRoom,
 
                 accessToken: storeToken.accessToken,
-                login      : storeLogin.userLogin,
+                login      : storeUser.user.login,
             }
         }
     })

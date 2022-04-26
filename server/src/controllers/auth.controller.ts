@@ -15,14 +15,14 @@ export default class AuthController {
     @Post('login')
     public async login(@Request() req, @Res() res){
         
-        const tokens: { accessToken: string, refreshToken: string, token: Token } = 
+        const serviceResult: { accessToken: string, refreshToken: string, token: Token, userId: number } = 
         await this.authService.login(req.body.login, req.body.password, req.headers['user-agent']);
     
         res.setCookie(
             'refreshToken', 
-            tokens.refreshToken,
+            serviceResult.refreshToken,
             { 
-                maxAge  : tokens.token.get('expiredIn'), 
+                maxAge  : serviceResult.token.get('expiredIn'), 
                 httpOnly: true, 
                 sameSite: 'none', 
                 secure  : true 
@@ -30,7 +30,8 @@ export default class AuthController {
         );
         
         res.code(200).send({
-            accessToken: tokens.accessToken,
+            accessToken: serviceResult.accessToken,
+            userId     : serviceResult.userId,
         })
     }
 

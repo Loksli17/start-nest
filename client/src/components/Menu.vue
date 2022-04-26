@@ -26,7 +26,7 @@
 <script lang="ts">
 
     import { defineComponent, Ref, ref, watch } from 'vue';
-    import { useUserLoginStore } from '../store/userLogin';
+    import { useUserStore }                     from '../store/user';
     import { useTokenStore }                    from './../store/token';
     import AuthForm                             from './AuthForm.vue';
 
