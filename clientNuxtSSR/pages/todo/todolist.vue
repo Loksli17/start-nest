@@ -9,13 +9,19 @@
     const randomTodo = computed(() => store.currentTodo);
 
     try {
-        const res = await useFetch("https://jsonplaceholder.typicode.com/todos");
+        const { data } = await useFetch("https://jsonplaceholder.typicode.com/todos");
 
-        if (!res.data.value) {
+        if (!data.value) {
             throw new Error("fuck");
         }
 
-        todoArr.value = res.data.value as Array<ITodo>;
+        todoArr.value = data.value as Array<ITodo>;
+
+        if (process.client) {
+            const { $toast } = useNuxtApp();
+
+            $toast.success("Received data from API");
+        }
 
     } catch (err) {
 
