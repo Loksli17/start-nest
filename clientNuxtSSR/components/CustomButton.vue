@@ -7,7 +7,7 @@
 <template>
     <button 
         @click="$emit('click', $event)"
-        class=" p-2 my-4 rounded-md border border-green-300 hover:bg-emerald-500 hover:text-white"
+        class="py-2 px-4 my-4 rounded-md border border-green-600 bg-emerald-900 hover:bg-emerald-500 hover:text-white"
         >
         <slot></slot>
     </button>

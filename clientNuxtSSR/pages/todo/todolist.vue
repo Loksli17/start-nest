@@ -10,10 +10,30 @@
 
     try {
         const res = await useFetch("https://jsonplaceholder.typicode.com/todos");
-        todoArr.value = (res.data.value as any);
+
+        if (!res.data.value) {
+            throw new Error("fuck");
+        }
+
+        todoArr.value = res.data.value as Array<ITodo>;
+
+        onMounted(() => {
+            if (process.client) {
+                const { $toast } = useNuxtApp();
+
+                $toast.success("Fetched");
+            }
+        });
 
     } catch (err) {
-        console.error(err);
+
+        onMounted(() => {
+            if (process.client) {
+                const { $toast } = useNuxtApp();
+
+                $toast.error(`Error during fetch: ${err}`);
+            }
+        });
     }
 
     const setRandomTodo = () => {

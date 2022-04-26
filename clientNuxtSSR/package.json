@@ -12,6 +12,7 @@
     "@nuxtjs/tailwindcss": "latest",
     "@pinia/nuxt": "^0.1.8",
     "pinia": "latest",
-    "pinia-plugin-persistedstate": "^1.5.1"
+    "pinia-plugin-persistedstate": "^1.5.1",
+    "vue-toast-notification": "^3.0.0"
   }
 }

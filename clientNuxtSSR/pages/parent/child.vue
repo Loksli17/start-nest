@@ -11,6 +11,13 @@
             <button @click="randNumber++">increment</button>
         </div>
 
+        <!-- Client-side render only -->
+        <client-only>
+            <div>
+                number: {{ randNumber }}
+            </div>
+        </client-only>
+
         <nuxt-link to="/parent">to parent</nuxt-link>
     </div>
 </template>
