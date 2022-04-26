@@ -35,8 +35,9 @@ export class RoomService {
     }
 
 
+    //! refactor!!
     public async getRooms(userId: number): Promise<Array<Room>> {
-
+        
         const rooms: Array<Room> = await Room.findAll({
             include: [
                 {model: User, as: 'users', attributes: ['id', 'login']}, 
@@ -46,13 +47,29 @@ export class RoomService {
             ],
         });
 
-        console.log(rooms[0]);
-
         // rooms.sort((a: Room, b: Room) => {
             
         //     return 0;
         // });
 
         return rooms;
+    }
+
+    
+    public async addUserInRoom(user: {id: number, login: string}, roomId: number): Promise<{id: number, login: string}> {
+
+        const roomHasUser: RoomHasUser = RoomHasUser.build({
+            userId: user.id,
+            roomId: roomId,
+        });
+
+        try {
+            roomHasUser.save()
+        } catch (error) {
+            throw new HttpException('Error with saving user in room', HttpStatus.BAD_REQUEST);
+        }
+
+
+        return user;
     }
 }

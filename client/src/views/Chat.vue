@@ -18,7 +18,7 @@
         <div class="mt-10 px-10">
             <div class="grid grid-cols-chat-wrap gap-6">
                 
-                <div class="grid gap-6">
+                <div class="grid gap-4">
                     <div class="grid gap-4 grid-flow-col auto-cols-max cursor-pointer bg-gray-100 hover:bg-red-100 rounded" v-for="(room, index) in rooms" :key="room.id" :class="{'bg-green-100': room.current}" @click="getMessages(room, index)">
                         <div class=" bg-cover w-20 rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
 
@@ -93,11 +93,11 @@
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
-                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="uploadImg()">Edit room image</button>
+                    <button class="p-2 w-max bg-green-500 hover:bg-green-700 transition-all  text-white rounded" @click="showAddUserModal()">Add user</button>
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
-                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all  text-white rounded" @click="addUserInRoom()">Add user</button>
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="uploadImg()">Edit room image</button>
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
@@ -125,6 +125,30 @@
             </div>
         </div>
     </div>
+
+
+    <div @click.self="modalAddUserToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalAddUserToggle}">
+            
+        <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
+
+            <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalAddUserToggle = false; modalShowRoomToggle = true">Back</button>
+
+            <form class=" bg-white grid gap-10 opacity-100">
+                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser">
+            </form>
+
+            <div class="mt-5 grid gap-4">
+                <div class="px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user" v-for="user in searhedUsers" :key="user.id">
+                    <div>{{user.login}}</div>
+                    
+                    <div>
+                        <button class="p-2 w-max bg-green-500 hover:bg-green-700 transition-all text-md text-white rounded" @click="addUserInRoom(user, rooms[roomActInd].id)">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </template>
 
 
@@ -147,13 +171,17 @@
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
             let
-                roomActInd : Ref<number>                     = ref(-1),
-                rooms      : Ref<Array<Record<string, any>>> = ref([]),
-                messages   : Ref<Array<Record<string, any>>> = ref([]),
-                name       : Ref<string>                     = ref(''),
-                modalToggle: Ref<boolean>                    = ref(false),
-
-                modalShowRoomToggle: Ref<boolean>            = ref(false);
+                searhedUsers: Ref<Array<Record<string, any>>> = ref([]),
+                roomActInd  : Ref<number>                     = ref(-1),
+                rooms       : Ref<Array<Record<string, any>>> = ref([]),
+                messages    : Ref<Array<Record<string, any>>> = ref([]),
+                searchLogin : Ref<string>                     = ref(''),
+                name        : Ref<string>                     = ref(''),
+                modalToggle : Ref<boolean>                    = ref(false);
+            
+            let
+                modalAddUserToggle : Ref<boolean> = ref(false),
+                modalShowRoomToggle: Ref<boolean> = ref(false);
             
 
             const 
@@ -188,8 +216,6 @@
                     }).then((response: AxiosResponse) => {
                         console.log(response)
                         messages.value = response.data;
-                        // Toast.success(`${response.data.room.name} was created successfully!`);
-                        // rooms.value.push(response.data.room);
                     })
                 },
 
@@ -200,11 +226,47 @@
                         },
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
-                        console.log(response)
+
                         rooms.value = response.data;
-                        // Toast.success(`${response.data.room.name} was created successfully!`);
-                        // rooms.value.push(response.data.room);
                     })
+                },
+
+                showAddUserModal = () => {
+                    modalShowRoomToggle.value = false;
+                    modalAddUserToggle.value  = true;
+                },
+
+                searchUser = () => {
+
+                    if(searchLogin.value == "") {
+                        searhedUsers.value = [];
+                        return;
+                    }
+
+                    axios.get(`http://${basicUrl}/chat/search-user/${searchLogin.value}`, {
+                        headers: {
+                            Authorization: `Bearer ${storeToken.accessToken}`
+                        },
+                        withCredentials: true,
+                    }).then((response: AxiosResponse) => {
+                        console.log(response.data);
+                        searhedUsers.value = response.data;
+                        // Toast.success(`${response.data.room.name} was created successfully!`);
+                    });
+                },
+
+                addUserInRoom = (user: {id: number, login: string}, roomId: number) => {
+
+                    axios.put(`http://${basicUrl}/chat/add-user-in-room`, {user: user, roomId: roomId}, {
+                        headers: {
+                            Authorization: `Bearer ${storeToken.accessToken}`
+                        },
+                        withCredentials: true,
+                    }).then((response: AxiosResponse) => {
+                        console.log(response.data);
+                        getRooms();
+                        // Toast.success(`${response.data.room.name} was created successfully!`);
+                    });
                 };
 
             getRooms();
@@ -225,6 +287,13 @@
                 login      : storeUser.user.login,
 
                 modalShowRoomToggle,
+                showAddUserModal,
+                modalAddUserToggle,
+
+                searchLogin,
+                searchUser,
+                searhedUsers,
+                addUserInRoom,
             }
         }
     })
