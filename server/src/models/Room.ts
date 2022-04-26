@@ -15,6 +15,9 @@ export default class Room extends Model {
     @Column
     public name: string;
 
+    @Column
+    public img: string;
+
     @ForeignKey(() => User)
     public userId: number;
 
