@@ -64,12 +64,28 @@ export class RoomService {
         });
 
         try {
-            roomHasUser.save()
+            await roomHasUser.save()
         } catch (error) {
             throw new HttpException('Error with saving user in room', HttpStatus.BAD_REQUEST);
         }
 
 
+        return user;
+    }
+
+
+    public async removeUserFromRoom(user: {id: number, login: string}, roomId: number): Promise<{id: number, login: string}> {
+        
+        try {
+            await RoomHasUser.destroy({where: {
+                userId: user.id,
+                roomId: roomId,
+            }});
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('Error with removing user in room', HttpStatus.BAD_REQUEST);
+        }
+        
         return user;
     }
 }

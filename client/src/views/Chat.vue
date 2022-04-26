@@ -117,7 +117,7 @@
                             </div>
                         
                             <div v-if="rooms[roomActInd].user.login == login">
-                                <button class="p-2 w-max bg-red-500 hover:bg-red-700 transition-all text-md text-white rounded" @click="removeUserFormRoom(user)">Remove</button>
+                                <button class="p-2 w-max bg-red-500 hover:bg-red-700 transition-all text-md text-white rounded" @click="removeUserFromRoom(user, rooms[roomActInd].id)">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -265,6 +265,19 @@
                     });
                 },
 
+                removeUserFromRoom = (user: {id: number, login: string}, roomId: number) => {
+
+                    axios.post(`http://${basicUrl}/chat/remove-user-from-room`, {user: user, roomId: roomId}, {
+                        headers: {
+                            Authorization: `Bearer ${storeToken.accessToken}`
+                        },
+                        withCredentials: true,
+                    }).then((response: AxiosResponse) => {
+                        getRooms();
+                        Toast.success(`${response.data.login} was removed successfully!`);
+                    });
+                },
+
                 addUserInRoom = (user: {id: number, login: string}, roomId: number) => {
 
                     axios.put(`http://${basicUrl}/chat/add-user-in-room`, {user: user, roomId: roomId}, {
@@ -275,7 +288,7 @@
                     }).then((response: AxiosResponse) => {
                         searhedUsers.value = searhedUsers.value.filter((user: any) => user.id != response.data.id);
                         getRooms();
-                        // Toast.success(`${response.data.room.name} was created successfully!`);
+                        Toast.success(`${response.data.login} was added successfully!`);
                     });
                 };
 
@@ -304,6 +317,7 @@
                 searchUser,
                 searhedUsers,
                 addUserInRoom,
+                removeUserFromRoom,
             }
         }
     })
