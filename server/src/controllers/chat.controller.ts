@@ -31,9 +31,11 @@ export default class ChatController {
     }
 
 
-    @Get('get-all')
+    // @UseGuards(JwtAuthGuard)
+    @Get('get-rooms/:userId')
     public async getAll(@Param() params): Promise<Array<Room>> {
 
-        return [];
+        const rooms: Array<Room> = await this.roomService.getRooms(params.userId);
+        return rooms;
     }
 }

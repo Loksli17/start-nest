@@ -1,6 +1,7 @@
 import { HttpCode, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import Room from "src/models/Room";
 import RoomHasUser from "src/models/RoomHasUser";
+import User from "src/models/User";
 
 @Injectable()
 export class RoomService {
@@ -28,5 +29,22 @@ export class RoomService {
         }
 
         return room;
+    }
+
+
+    public async getRooms(userId: number): Promise<Array<Room>> {
+
+        const rooms: Array<Room> = await Room.findAll({
+            include: [
+                {model: User, as: 'users'}, 
+                {model: RoomHasUser, where: {userId: userId}, attributes: []}
+            ]
+        });
+
+        rooms.map((room: Room) => {
+            delete room['roomHasUser'];
+        });
+
+        return rooms;
     }
 }

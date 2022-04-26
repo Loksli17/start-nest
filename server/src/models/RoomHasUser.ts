@@ -12,11 +12,11 @@ export default class RoomHasUser extends Model {
 
     @ForeignKey(() => User)
     @Column
-    public articleId?: number;
+    public userId?: number;
 
     @ForeignKey(() => Room)
     @Column
-    public tagId?: number;
+    public roomId?: number;
 
     
     @BelongsTo(() => User)

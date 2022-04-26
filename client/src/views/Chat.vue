@@ -17,19 +17,27 @@
 
         <div class="mt-6 px-10">
             <div class="grid grid-cols-chat-wrap gap-8">
-                <div class="grid gap-4 grid-flow-col auto-cols-max" v-for="room in rooms" :key="room.id">
-                    <div>
+                
+                <div class="grid gap-6">
+                    <div class="grid gap-4 grid-flow-col auto-cols-max" v-for="room in rooms" :key="room.id">
+                        <div>
 
-                    </div>
-                    <div class="grid">
-                        <div>
-                            {{room.name}}
                         </div>
-                        <div>
-                            Last message..
+                        <div class="grid">
+                            <div>
+                                {{room.name}}
+                            </div>
+                            <div>
+                                Last message..
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div>
+
+                </div>
+                
             </div>
         </div>
 
@@ -85,9 +93,23 @@
                         Toast.success(`${response.data.room.name} was created successfully!`);
                         rooms.value.push(response.data.room);
                     })
+                },
+
+                getRooms = () => {
+                    axios.get(`http://${basicUrl}/chat/get-rooms/${storeUser.user.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${storeToken.accessToken}`
+                        },
+                        withCredentials: true,
+                    }).then((response: AxiosResponse) => {
+                        console.log(response)
+                        rooms.value = response.data;
+                        // Toast.success(`${response.data.room.name} was created successfully!`);
+                        // rooms.value.push(response.data.room);
+                    })
                 };
-            
-            // Toast.success("ZAZAZA");
+
+            getRooms();
 
             return {
                 modalToggle,
