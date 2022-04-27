@@ -38,15 +38,18 @@
                 </div>
 
                 <div>
-                    <div v-if="roomActInd != -1" class=" p-4 bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-4">
-                        <div class="text-2xl">{{rooms[roomActInd].name}}</div>
+                    <div v-if="roomActInd != -1" class=" bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-5">
+                        
+                        <div class=" bg-cover rounded-l h-full py-5" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
+                        
+                        <div class="text-2xl py-5">{{rooms[roomActInd].name}}</div>
 
-                        <div class="text-xl text-blue-700">
+                        <div class="text-xl text-blue-700 py-5">
                             [ {{rooms[roomActInd].user.login}} ]
                         </div>
 
-                        <div>
-                            <button class=" bg-white rounded p-2" @click="modalShowRoomToggle = true">Info</button>
+                        <div class="py-5 pr-5">
+                            <button class=" bg-white rounded p-2 text-lg hover:bg-gray-50 transition-all" @click="modalShowRoomToggle = true">Info</button>
                         </div>
                     </div>
 
@@ -67,7 +70,7 @@
         </div>
 
 
-        <div @click.self="modalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalToggle}">
+        <div @click.self="modalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalToggle}">
             
             <form class=" bg-white p-8 grid gap-10 opacity-100">
                 <input class="cursor-pointer border-2 border-gray-600 p-3" type="text" name="name" v-model="name">
@@ -78,9 +81,9 @@
     </div>
 
 
-    <div v-if="roomActInd != -1" @click.self="modalShowRoomToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-900 opacity-90 top-0 left-0" :class="{'hidden': !modalShowRoomToggle}">
+    <div v-if="roomActInd != -1" @click.self="modalShowRoomToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-900 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalShowRoomToggle}">
 
-        <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
+        <div class="p-8 bg-white rounded grid gap-6 min-w-moda">
 
             <div>
                 <h2 class=" text-3xl">{{rooms[roomActInd].name}}</h2>
@@ -112,11 +115,11 @@
                     <div v-for="user in rooms[roomActInd].users" :key="user.id">
                         <div class=" px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user ">
                             
-                            <div class="text-lg">
-                                {{user.login}}
+                            <div class="text-lg h-10 grid items-center">
+                                <span>{{user.login}}</span>
                             </div>
                         
-                            <div v-if="rooms[roomActInd].user.login == login">
+                            <div v-if="rooms[roomActInd].user.login == login && login != user.login">
                                 <button class="p-2 w-max bg-red-500 hover:bg-red-700 transition-all text-md text-white rounded" @click="removeUserFromRoom(user, rooms[roomActInd].id)">Remove</button>
                             </div>
                         </div>
@@ -127,7 +130,28 @@
     </div>
 
 
-    <div @click.self="modalAddUserToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 opacity-90 top-0 left-0" :class="{'hidden': !modalAddUserToggle}">
+    <div @click.self="modalAddUserToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalAddUserToggle}">
+            
+        <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
+
+            <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalAddUserToggle = false; modalShowRoomToggle = true">Back</button>
+
+            <form class=" bg-white grid gap-10 opacity-100">
+                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser(rooms[roomActInd])">
+            </form>
+
+            <div v-if="searhedUsers.length > 0" class="mt-5 grid gap-4">
+                <div class="px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user" v-for="user in searhedUsers" :key="user.id">
+                    <div>{{user.login}}</div>
+                    
+                    <div>
+                        <button class="p-2 w-max bg-green-500 hover:bg-green-700 transition-all text-md text-white rounded" @click="addUserInRoom(user, rooms[roomActInd].id)">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div @click.self="modalAddUserToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalAddUserToggle}">
             
         <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
 
@@ -261,7 +285,6 @@
                     ).then((response: AxiosResponse) => {
                         console.log(response.data);
                         searhedUsers.value = response.data;
-                        // Toast.success(`${response.data.room.name} was created successfully!`);
                     });
                 },
 
