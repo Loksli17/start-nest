@@ -174,7 +174,7 @@
 
     <div v-if="roomActInd > -1" @click.self="modalEditRoomImageToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalEditRoomImageToggle}">
             
-        <div class="p-8 bg-white rounded grid gap-6 min-w-modal max-h-modal max-w-modal">
+        <div class="p-8 bg-white rounded grid gap-6 h-max min-w-modal max-h-modal max-w-modal">
 
             <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalEditRoomImageToggle = false; modalShowRoomToggle = true">Back</button>
 

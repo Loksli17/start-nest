@@ -84,7 +84,7 @@
                     return props.fileAddedStatus;
                 },
                 set(val: boolean): void {
-                    if(!val) progressMessage.value = "Новая фотография загружается";
+                    if(!val) progressMessage.value = "New image is uploading";
                     emit("update:file-added-status", val);
                 }
             });
@@ -250,6 +250,30 @@
 
 
 <style lang="scss" scoped>
+
+    .btn {
+        padding: 15px 25px;
+        text-decoration: none;
+        color: #000;
+        background-color: #D8E9FD;
+        border-radius: 10px;
+        box-sizing: border-box;
+        text-align: center;
+        cursor: pointer;
+        font-size: 20px;
+        border: 0;
+
+        &:hover{
+            transition: 0.4s;
+            background-color: #b4cce7;
+        }
+    }
+
+    .btn-small {
+        @extend .btn;
+        padding: 10px 20px;
+        font-size: 17.5px; 
+    }
     
     @mixin progress{
         display: block;
@@ -294,13 +318,13 @@
 
     .file-single-upload-wrapper{
         
-        height: 450px;
+        max-height: 570px;
 
         .upload-row{
             width: 100%;
             grid-template-columns: 300px auto;
             column-gap: 40px;
-            height: 100%;
+            max-height: 570px;
             overflow-y: hidden;
 
             img{
@@ -308,14 +332,15 @@
             }
 
             .img-column {
-                height: 100%;
+                margin-top: 20px;
                 overflow-y: auto;
                 row-gap: 0px;
+                max-height: 570px;
             }
 
             .content-column {
-                
-                row-gap: 40px;
+                display: grid;
+                row-gap: 15px;
 
                 span{
                     font-size: 24px;

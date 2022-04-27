@@ -17,7 +17,7 @@ module.exports = {
             'modal': '1000px',
         },
         maxHeight: {
-            'modal': '700px',
+            'modal': '800px',
         }
     },
   },
