@@ -15,5 +15,7 @@ export default defineEventHandler(async (event) => {
 
     const { accessToken, userId } = (res as any);
 
+    setCookie(event, "jwt", accessToken);
+
     return { jwt: accessToken, userId }
 });
