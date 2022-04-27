@@ -4,7 +4,7 @@
 
     const randNumber = ref(0);
 
-    const genNumber = () => Math.random() * 100;
+    const chatRooms = ref([] as Array<any>);
     
     const login = async () => {
         try {
@@ -24,6 +24,20 @@
         }
     }
     
+    const getChatRooms = async () => {
+        try {
+            // await $useApiFetch("kek");
+
+            const { data } = await useFetch("/api/chat-rooms", { headers: {
+                Authorization: `Bearer ${store.jwt}`
+            } });
+            
+            // console.log(data.value.chatRooms);
+            chatRooms.value = data.value.chatRooms;
+        } catch (err) {
+            console.error(err)
+        }
+    }
 </script>
 
 <template>
@@ -34,6 +48,19 @@
             <p>{{ randNumber }}</p>
             <CustomButton @click="randNumber++">increment</CustomButton>
             <CustomButton @click="login">Login</CustomButton>
+            <CustomButton @click="getChatRooms">Chats</CustomButton>
+        </div>
+
+        <span>Chatrooms: {{ chatRooms.length }}</span>
+        <div class=" bg-slate-900 text-gray-300 p-4 rounded">
+            <ul class=" list-none grid grid-flow-row gap-y-2">
+                <li 
+                    class="px-4 py-2 rounded bg-green-800 hover:bg-green-500"
+                    v-for="chat in chatRooms" 
+                    :key="chat.id">
+                    <h1>{{ chat.name }}</h1>
+                </li>
+            </ul>
         </div>
 
         <!-- Client-side render only -->

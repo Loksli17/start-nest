@@ -1,9 +1,9 @@
-import { useUserStore } from "~~/store/user";
+import { splitCookiesString, parse } from "set-cookie-parser";
 
 export default defineEventHandler(async (event) => {
     const body = await useBody(event);
 
-    const res = await $fetch("http://localhost:3000/auth/login", {
+    const res = await $fetch.raw("http://localhost:3000/auth/login", {
         method: "POST",
         mode: "no-cors",
         headers: {
@@ -12,10 +12,20 @@ export default defineEventHandler(async (event) => {
         credentials: "include",
         body: body
     });
+   
+    const cookies = parse(splitCookiesString(res.headers.get("set-cookie")!));
 
-    const { accessToken, userId } = (res as any);
+    const { accessToken, userId } = (res._data as any);
 
-    setCookie(event, "jwt", accessToken);
+    for (const cookie of cookies) {
+        setCookie(event, cookie.name, cookie.value, 
+            {
+                maxAge:   cookie.maxAge, 
+                sameSite: cookie.sameSite as any,
+                httpOnly: cookie.httpOnly,
+                secure:   cookie.secure
+            });
+    }
 
     return { jwt: accessToken, userId }
 });
