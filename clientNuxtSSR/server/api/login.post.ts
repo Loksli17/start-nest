@@ -1,7 +1,8 @@
 import { splitCookiesString, parse } from "set-cookie-parser";
 
 export default defineEventHandler(async (event) => {
-    const body = await useBody(event);
+    const config = useRuntimeConfig();
+    const body   = await useBody(event);
 
     const res = await $fetch.raw("http://localhost:3000/auth/login", {
         method: "POST",

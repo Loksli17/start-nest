@@ -19,23 +19,33 @@
             const { userId, jwt } = res.data.value;
 
             store.setUser(userId, jwt);
+
+            const { $toast } = useNuxtApp();
+
+            $toast.success("Logged in");
         } catch (err) {
-            console.error(err);
+            const { $toast } = useNuxtApp();
+
+            $toast.error(`Error: ${err}`);
         }
     }
     
     const getChatRooms = async () => {
         try {
+
+            // const { $useApiFetch } = useNuxtApp();
             // await $useApiFetch("kek");
 
             const { data } = await useFetch("/api/chat-rooms", { headers: {
                 Authorization: `Bearer ${store.jwt}`
             } });
             
-            // console.log(data.value.chatRooms);
             chatRooms.value = data.value.chatRooms;
         } catch (err) {
-            console.error(err)
+            // console.error(err)
+            const { $toast } = useNuxtApp();
+
+            $toast.error(`Error: ${err}`);
         }
     }
 </script>
