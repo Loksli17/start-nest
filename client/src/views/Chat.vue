@@ -289,6 +289,7 @@
                         }
                     ).then((response: AxiosResponse) => {
                         searhedUsers.value = response.data;
+                        searchLogin.value  = "";
                     });
                 },
 
@@ -306,8 +307,8 @@
                             withCredentials: true,
                         }
                     ).then((response: AxiosResponse) => {
-                        console.log(response.data);
-                        room.name = response.data.name;
+                        room.name         = response.data.name;
+                        newRoomName.value = "";
                     });
                 },
 
