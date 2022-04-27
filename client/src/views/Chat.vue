@@ -83,7 +83,7 @@
 
     <div v-if="roomActInd != -1" @click.self="modalShowRoomToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-900 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalShowRoomToggle}">
 
-        <div class="p-8 bg-white rounded grid gap-6 min-w-moda">
+        <div class="p-8 bg-white rounded grid gap-6 min-w-modal">
 
             <div>
                 <h2 class=" text-3xl">{{rooms[roomActInd].name}}</h2>
@@ -104,7 +104,7 @@
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
-                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all  text-white rounded" @click="editName()">Edit room's name</button>
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all  text-white rounded" @click="showEditNameModal()">Edit room's name</button>
                 </div>
             </div>
 
@@ -136,8 +136,10 @@
 
             <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalAddUserToggle = false; modalShowRoomToggle = true">Back</button>
 
+            <h2 class="text-xl"> Add user in Room</h2>
+
             <form class=" bg-white grid gap-10 opacity-100">
-                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser(rooms[roomActInd])">
+                <input placeholder="Write user login.." class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser(rooms[roomActInd])">
             </form>
 
             <div v-if="searhedUsers.length > 0" class="mt-5 grid gap-4">
@@ -150,28 +152,23 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div @click.self="modalAddUserToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalAddUserToggle}">
+
+    <div v-if="roomActInd > -1" @click.self="modalEditRoomNameToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalEditRoomNameToggle}">
             
         <div class="p-8 bg-white rounded grid gap-6 min-w-modal ">
 
-            <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalAddUserToggle = false; modalShowRoomToggle = true">Back</button>
+            <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalEditRoomNameToggle = false; modalShowRoomToggle = true">Back</button>
 
-            <form class=" bg-white grid gap-10 opacity-100">
-                <input class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="searchLogin" v-model="searchLogin" @input="searchUser(rooms[roomActInd])">
+            <h1 class="text-xl">Edit Room name <span class=" text-green-400">[ {{rooms[roomActInd].name}} ]</span></h1>
+
+            <form class=" bg-white grid gap-10 opacity-100" @submit.prevent="editRoomName(rooms[roomActInd])">
+                <input placeholder="Edit new room name" class="cursor-pointer border-2 rounded border-gray-600 p-3" type="text" name="roomName" v-model="newRoomName">
+                <input class="p-3 bg-blue-500 hover:bg-blue-700 text-white rounded w-32" type="submit" value="Edit name">
             </form>
 
-            <div v-if="searhedUsers.length > 0" class="mt-5 grid gap-4">
-                <div class="px-4 py-2  bg-gray-200 grid grid-flow-col items-center grid-cols-chat-room-user" v-for="user in searhedUsers" :key="user.id">
-                    <div>{{user.login}}</div>
-                    
-                    <div>
-                        <button class="p-2 w-max bg-green-500 hover:bg-green-700 transition-all text-md text-white rounded" @click="addUserInRoom(user, rooms[roomActInd].id)">Add</button>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 </template>
 
@@ -199,13 +196,16 @@
                 roomActInd  : Ref<number>                     = ref(-1),
                 rooms       : Ref<Array<Record<string, any>>> = ref([]),
                 messages    : Ref<Array<Record<string, any>>> = ref([]),
+                newRoomName : Ref<string>                     = ref(''),
                 searchLogin : Ref<string>                     = ref(''),
                 name        : Ref<string>                     = ref(''),
                 modalToggle : Ref<boolean>                    = ref(false);
             
             let
-                modalAddUserToggle : Ref<boolean> = ref(false),
-                modalShowRoomToggle: Ref<boolean> = ref(false);
+                modalEditRoomImageToggle: Ref<boolean> = ref(false),
+                modalEditRoomNameToggle : Ref<boolean> = ref(false),
+                modalAddUserToggle      : Ref<boolean> = ref(false),
+                modalShowRoomToggle     : Ref<boolean> = ref(false);
             
 
             const 
@@ -260,6 +260,11 @@
                     modalAddUserToggle.value  = true;
                 },
 
+                showEditNameModal = () => {
+                    modalShowRoomToggle.value      = false;
+                    modalEditRoomNameToggle.value  = true;
+                },
+
                 searchUser = (room: any) => {
 
                     if(searchLogin.value == "") {
@@ -283,8 +288,26 @@
                             withCredentials: true,
                         }
                     ).then((response: AxiosResponse) => {
-                        console.log(response.data);
                         searhedUsers.value = response.data;
+                    });
+                },
+
+                editRoomName = (room: any) => {
+
+                    axios.put(`http://${basicUrl}/chat/edit-room-name`, 
+                        {
+                            name: newRoomName.value,
+                            id  : room.id,
+                        }, 
+                        {
+                            headers: {
+                                Authorization: `Bearer ${storeToken.accessToken}`
+                            },
+                            withCredentials: true,
+                        }
+                    ).then((response: AxiosResponse) => {
+                        console.log(response.data);
+                        room.name = response.data.name;
                     });
                 },
 
@@ -334,13 +357,20 @@
 
                 modalShowRoomToggle,
                 showAddUserModal,
+                showEditNameModal,
+
                 modalAddUserToggle,
+                modalEditRoomNameToggle,
+                modalEditRoomImageToggle,
 
                 searchLogin,
                 searchUser,
                 searhedUsers,
                 addUserInRoom,
                 removeUserFromRoom,
+
+                editRoomName,
+                newRoomName, 
             }
         }
     })

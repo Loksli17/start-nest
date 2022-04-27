@@ -68,4 +68,12 @@ export default class ChatController {
     public async removeUserFromRoom(@Body() body): Promise<{id: number, login: string}>{
         return this.roomService.removeUserFromRoom(body.user, body.roomId); 
     }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Put('edit-room-name')
+    public async editRoomName(@Body() body): Promise<Room> {
+        console.log(body);
+        return this.roomService.editRoomName(body.name, body.id); 
+    }
 }

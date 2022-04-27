@@ -88,4 +88,21 @@ export class RoomService {
         
         return user;
     }
+
+
+    public async editRoomName(name: string, id: number) {
+
+        let room: Room;
+
+        try {
+            room = await Room.findByPk(id);
+            room.set('name', name);
+            await room.save();
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('Error with removing user in room', HttpStatus.BAD_REQUEST);
+        }
+
+        return room;
+    }
 }
