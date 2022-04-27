@@ -12,6 +12,12 @@ module.exports = {
         },
         minWidth: {
             'modal': '600px',
+        },
+        maxWidth: {
+            'modal': '1000px',
+        },
+        maxHeight: {
+            'modal': '700px',
         }
     },
   },

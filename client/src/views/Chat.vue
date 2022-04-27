@@ -100,7 +100,7 @@
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
-                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="uploadImg()">Edit room image</button>
+                    <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="showEditImageModal()">Edit room's image</button>
                 </div>
 
                 <div v-if="rooms[roomActInd].user.login == login">
@@ -170,6 +170,33 @@
 
         </div>
     </div>
+
+
+    <div v-if="roomActInd > -1" @click.self="modalEditRoomImageToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !modalEditRoomImageToggle}">
+            
+        <div class="p-8 bg-white rounded grid gap-6 min-w-modal max-h-modal max-w-modal">
+
+            <button class="p-2 w-max bg-blue-500 hover:bg-blue-700 transition-all text-white rounded" @click="modalEditRoomImageToggle = false; modalShowRoomToggle = true">Back</button>
+
+            <h1 class="text-xl">Edit Room image <span class=" text-green-400">[ {{rooms[roomActInd].name}} ]</span></h1>
+            
+            <div>
+                <SingleFileUpload
+                    :types="fileTypes"
+                    :uploadFieldClass="'file-single-upload-field'"
+                    :max-file-size="1024 * 1024 * 10"
+                    v-model:file-added-status="fileAddedStatus"
+
+                    @load-handler="imageLoad"
+                    @type-error-handler="fileTypeError"
+                    @size-error-handler="fileSizeError"
+                    @not-drag-and-drop-capable-error="dragAndDropCapableError"
+                    
+                />
+            </div>
+
+        </div>
+    </div>
 </template>
 
 
@@ -179,9 +206,16 @@
     import { ToastPluginApi }                    from 'vue-toast-notification';
     import { useUserStore }                      from '../store/user';
     import { useTokenStore }                     from './../store/token';
+    
+    import SingleFileUpload                      from './../components/FileUpload/SingleFileUpload.vue';
+    import { AddFile, LoadingSingleFile }        from "./../components/FileUpload/types";
 
 
     export default defineComponent({
+
+        components: {
+            SingleFileUpload
+        },
         
         setup(){
             
@@ -206,6 +240,12 @@
                 modalEditRoomNameToggle : Ref<boolean> = ref(false),
                 modalAddUserToggle      : Ref<boolean> = ref(false),
                 modalShowRoomToggle     : Ref<boolean> = ref(false);
+
+            const
+                fileLoadedStatus: Ref<boolean>   = ref(false), 
+                fileAddedStatus : Ref<boolean>   = ref(false),
+                files           : Array<AddFile> = [],
+                fileTypes       : Array<string>  = ['jpeg', 'png', 'jpg'];
             
 
             const 
@@ -261,8 +301,13 @@
                 },
 
                 showEditNameModal = () => {
+                    modalShowRoomToggle.value     = false;
+                    modalEditRoomNameToggle.value = true;
+                },
+
+                showEditImageModal = () => {
                     modalShowRoomToggle.value      = false;
-                    modalEditRoomNameToggle.value  = true;
+                    modalEditRoomImageToggle.value = true;
                 },
 
                 searchUser = (room: any) => {
@@ -337,6 +382,26 @@
                         getRooms();
                         Toast.success(`${response.data.login} was added successfully!`);
                     });
+                },
+
+                imageLoad = async (loadingFile: LoadingSingleFile) => {
+                    
+                    const data: FormData = new FormData();
+                    data.append("image",    loadingFile.file);
+                    data.append('filename', loadingFile.file.name)
+                    
+                },
+
+                fileTypeError = (file: File, msg: string) => {
+                    Toast.warning(`File must be: '${fileTypes.join("', '")}'`)
+                },
+                
+                fileSizeError = (file: File, msg: string) => {
+                    Toast.warning(`Size of file must be less then 10mb!`)
+                },
+                
+                dragAndDropCapableError = (file: File, msg: string) => {
+                    Toast.warning('Your browser don`t added drag & drop!')
                 };
 
             getRooms();
@@ -359,6 +424,7 @@
                 modalShowRoomToggle,
                 showAddUserModal,
                 showEditNameModal,
+                showEditImageModal,
 
                 modalAddUserToggle,
                 modalEditRoomNameToggle,
@@ -371,7 +437,16 @@
                 removeUserFromRoom,
 
                 editRoomName,
-                newRoomName, 
+                newRoomName,
+
+                fileTypes,
+                files,
+                fileAddedStatus,
+                fileLoadedStatus,
+                imageLoad,
+                dragAndDropCapableError,
+                fileSizeError,
+                fileTypeError
             }
         }
     })
