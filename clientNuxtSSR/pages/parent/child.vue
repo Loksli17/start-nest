@@ -7,6 +7,8 @@
     const chatRooms = ref([] as Array<any>);
     
     const login = async () => {
+        // ! we make a request to the front-end server, which, in turn,
+        // ! makes a request to out backend API
         try {
             const res = await useFetch("/api/login", {
                 method: "POST",
@@ -29,20 +31,24 @@
             $toast.error(`Error: ${err}`);
         }
     }
+
+    let refresher = ref(null as any | null);
     
     const getChatRooms = async () => {
         try {
 
-            // const { $useApiFetch } = useNuxtApp();
-            // await $useApiFetch("kek");
-
-            const { data } = await useFetch("/api/chat-rooms", { headers: {
+            // ! making additional request doesn't do anything, in order to repeate these
+            // ! requests we need to use 'refresh'
+            const { data, refresh } = await useFetch("/api/chat-rooms", { headers: {
                 Authorization: `Bearer ${store.jwt}`
             } });
+
+            
+            refresher.value = refresh;
             
             chatRooms.value = data.value.chatRooms;
         } catch (err) {
-            // console.error(err)
+            
             const { $toast } = useNuxtApp();
 
             $toast.error(`Error: ${err}`);
@@ -59,6 +65,7 @@
             <CustomButton @click="randNumber++">increment</CustomButton>
             <CustomButton @click="login">Login</CustomButton>
             <CustomButton @click="getChatRooms">Chats</CustomButton>
+            <CustomButton v-show="refresher" @click="refresher">refresh</CustomButton>
         </div>
 
         <span>Chatrooms: {{ chatRooms.length }}</span>
