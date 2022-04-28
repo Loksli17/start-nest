@@ -334,7 +334,6 @@
                         }
                     ).then((response: AxiosResponse) => {
                         searhedUsers.value = response.data;
-                        searchLogin.value  = "";
                     });
                 },
 
