@@ -387,8 +387,22 @@
                     
                     const data: FormData = new FormData();
                     data.append("image",    loadingFile.file);
-                    data.append('filename', loadingFile.file.name)
+                    data.append('filename', loadingFile.file.name);
+                    data.append("roomId",   rooms.value[roomActInd.value].id);
                     
+                    axios.post(`http://${basicUrl}/chat/edit-room-image`, data, {
+                        headers: {
+                            Authorization: `Bearer ${storeToken.accessToken}`
+                        },
+                        onUploadProgress: (e) => {
+                            loadingFile.progress = Math.floor(e.loaded * 100 / e.total);
+                        },
+                        withCredentials: true,
+                    }).then((response: AxiosResponse) => {
+                        searhedUsers.value = searhedUsers.value.filter((user: any) => user.id != response.data.id);
+                        getRooms();
+                        Toast.success(`${response.data.login} was added successfully!`);
+                    });
                 },
 
                 fileTypeError = (file: File, msg: string) => {

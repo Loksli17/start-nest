@@ -1,11 +1,18 @@
-import { HttpCode, HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import Message from "src/models/Message";
-import Room from "src/models/Room";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+
+import Message     from "src/models/Message";
+import Room        from "src/models/Room";
 import RoomHasUser from "src/models/RoomHasUser";
-import User from "src/models/User";
+import User        from "src/models/User";
+import { FileService } from "./file.service";
+
 
 @Injectable()
 export class RoomService {
+
+    constructor(
+        private fileService: FileService,
+    ) {}
     
 
     public async createRoom(roomDto: {name: string, userId: number, img?: string}): Promise<Room> {
@@ -104,5 +111,18 @@ export class RoomService {
         }
 
         return room;
+    }
+
+
+    public async imageUpload(req): Promise<any> {
+
+        if(!req.isMultipart()){
+            new HttpException('No files', HttpStatus.BAD_REQUEST);
+        }
+
+        await this.fileService.saveFile(req);
+
+        console.log(req.body);
+        
     }
 }

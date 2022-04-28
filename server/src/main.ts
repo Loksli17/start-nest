@@ -4,6 +4,7 @@ import config                                     from './config';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import AppClusterService                          from './services/cluster.service';
 import fastifyCookie                              from 'fastify-cookie';
+import fastifyMultipart                           from 'fastify-multipart';
 
 
 const bootstrap = async (): Promise<void> => {
@@ -19,6 +20,8 @@ const bootstrap = async (): Promise<void> => {
             secret: 'opa', 
         }
     );
+
+    app.register(fastifyMultipart);
 
     app.enableCors({
         origin        : config.cors.origin,

@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Request, UseGuards } from "@nestjs/common";
+import { FastifyAdapter } from "@nestjs/platform-fastify";
 import Message from "src/models/Message";
 
 import Room               from "src/models/Room";
@@ -73,6 +74,13 @@ export default class ChatController {
     public async editRoomName(@Body() body): Promise<Room> {
         console.log(body);
         return this.roomService.editRoomName(body.name, body.id); 
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Post('edit-room-image')
+    public async roomImageUpload(@Req() req): Promise<any> {
+       this.roomService.imageUpload(req); 
     }
  
 }
