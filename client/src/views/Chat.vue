@@ -386,11 +386,9 @@
                 imageLoad = async (loadingFile: LoadingSingleFile) => {
                     
                     const data: FormData = new FormData();
-                    data.append("image",    loadingFile.file);
-                    data.append('filename', loadingFile.file.name);
-                    data.append("roomId",   rooms.value[roomActInd.value].id);
+                    data.append("image", loadingFile.file);
                     
-                    axios.post(`http://${basicUrl}/chat/edit-room-image`, data, {
+                    axios.post(`http://${basicUrl}/chat/edit-room-image?roomId=${rooms.value[roomActInd.value].id}&filename=${loadingFile.file.name}`, data, {
                         headers: {
                             Authorization: `Bearer ${storeToken.accessToken}`
                         },

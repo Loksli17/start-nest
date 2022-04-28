@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Request, UseGuards } from "@nestjs/common";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import Message from "src/models/Message";
 
@@ -72,15 +72,14 @@ export default class ChatController {
     @UseGuards(JwtAuthGuard)
     @Put('edit-room-name')
     public async editRoomName(@Body() body): Promise<Room> {
-        console.log(body);
         return this.roomService.editRoomName(body.name, body.id); 
     }
 
 
     @UseGuards(JwtAuthGuard)
     @Post('edit-room-image')
-    public async roomImageUpload(@Req() req): Promise<any> {
-       this.roomService.imageUpload(req); 
+    public async roomImageUpload(@Req() req, @Query() query): Promise<any> {
+       this.roomService.imageUpload(req, query); 
     }
  
 }

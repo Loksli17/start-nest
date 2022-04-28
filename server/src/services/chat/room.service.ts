@@ -114,15 +114,22 @@ export class RoomService {
     }
 
 
-    public async imageUpload(req): Promise<any> {
+    public async imageUpload(req, query): Promise<any> {
 
         if(!req.isMultipart()){
             new HttpException('No files', HttpStatus.BAD_REQUEST);
         }
 
-        await this.fileService.saveFile(req);
+        const filename: string = await this.fileService.saveFile(req, query.filename, query.roomId);
 
-        console.log(req.body);
-        
+        const room: Room = await Room.findByPk(query.roomId);
+
+        room.set('img', filename);
+
+        try {
+            room.save();
+        } catch (error) {
+            new HttpException('Error with file saving', HttpStatus.BAD_REQUEST);
+        }
     }
 }

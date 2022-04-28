@@ -31,6 +31,6 @@ export default SequelizeModule.forRoot({
         RoomHasUser,
         Message,
     ],
-    // logging : true,
+    logging : false,
 });
 
