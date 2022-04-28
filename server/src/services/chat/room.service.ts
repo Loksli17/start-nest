@@ -21,7 +21,7 @@ export class RoomService {
         }
         
         const roomHasUser: RoomHasUser = RoomHasUser.build({
-            userId: 1,
+            userId: room.userId,
             roomId: room.id,
         });
 

@@ -24,9 +24,7 @@ export default class ChatController {
     public async createRoom(@Request() req, @Param() params): Promise<{room: Room}> {
 
         const name: string = req.body.name;
-
         const room: Room = await this.roomService.createRoom({name, userId: params.userId});
-        
         return {
             room: room,
         }
@@ -76,4 +74,5 @@ export default class ChatController {
         console.log(body);
         return this.roomService.editRoomName(body.name, body.id); 
     }
+ 
 }
