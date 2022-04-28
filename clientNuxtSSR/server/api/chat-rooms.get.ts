@@ -3,8 +3,18 @@ export default defineEventHandler(async event => {
 
     const res = await $fetch("http://localhost:3000/chat/get-rooms/1", {
         headers: headers as any,
-        async onResponseError({ request, response, options }) {
-            console.log("error:", request, response.status, response.body);
+        async onResponseError(context) {
+            // context.options.headers
+            // console.log("error:", context.request);
+            // try {
+            //     const res = await $fetch("http://localhost:3000/auth/create-tokens", {
+            //         credentials: "include"
+            //     });
+
+            //     console.log(res);
+            // } catch (err) {
+            //     console.error(err);
+            // }
         }
     });
 

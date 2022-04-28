@@ -1,23 +1,22 @@
 import { splitCookiesString, parse } from "set-cookie-parser";
 
+// ! So when we make a request from the client-side, we get a CORS error,
+// ! but when we do it on the server-side, it just works
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const body   = await useBody(event);
+    const body = await useBody(event);
 
     const res = await $fetch.raw("http://localhost:3000/auth/login", {
         method: "POST",
-        mode: "no-cors",
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost' 
-        },
-        credentials: "include",
-        body: body
+        body: body,
     });
    
+    // here we need to retreive the cookie from the response from the backend
     const cookies = parse(splitCookiesString(res.headers.get("set-cookie")!));
 
+    // get data
     const { accessToken, userId } = (res._data as any);
 
+    // and set the cookie that we have retreived
     for (const cookie of cookies) {
         setCookie(event, cookie.name, cookie.value, 
             {
@@ -28,5 +27,8 @@ export default defineEventHandler(async (event) => {
             });
     }
 
-    return { jwt: accessToken, userId }
+    return { 
+        jwt: accessToken as string, 
+        userId: userId as number 
+    }
 });
