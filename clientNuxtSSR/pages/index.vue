@@ -20,13 +20,7 @@ import CustomLink from '~~/components/CustomLink.vue';
         <div class=" p-4 rounded bg-slate-500">
             <h1 class="font-medium text-[20px]">Test</h1>
 
-            <div class=" grid grid-flow-col gap-x-1 grid-cols-5">
-                <!-- <nuxt-link class="hover:text-teal-800" to="/about">about</nuxt-link>
-                <nuxt-link class="hover:text-teal-800" to="/parent/child">child</nuxt-link>
-                <nuxt-link class="hover:text-red-800" to="/todo/todolist">todolist</nuxt-link>
-                <nuxt-link class="hover:text-teal-800" to="/list">list</nuxt-link>
-                <nuxt-link class="hover:text-teal-800" to="/users/admins/69">test</nuxt-link> -->
-            
+            <div class=" grid grid-flow-col gap-x-1 grid-cols-5">            
                 <CustomLink to="/about">about</CustomLink>
                 <CustomLink to="/parent/child">child</CustomLink>
                 <CustomLink to="/todo/todolist">todolist</CustomLink>
