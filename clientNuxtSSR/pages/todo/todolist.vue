@@ -12,7 +12,7 @@
         const { data } = await useFetch("https://jsonplaceholder.typicode.com/todos");
 
         if (!data.value) {
-            throw new Error("fuck");
+            throw new Error("API is not available");
         }
 
         todoArr.value = data.value as Array<ITodo>;
@@ -24,18 +24,15 @@
         }
 
     } catch (err) {
+        // ! this gets executed in the browser
+        if (process.client) {
+            const { $toast } = useNuxtApp();
 
+            $toast.error(`An error has occured ${err}`);
+        }
+
+        // ! this executes on the server
         console.error(err);
-    }
-
-    if (process.client) {
-        console.log("client");
-        console.log(document);
-    }
-
-    if (process.server) {
-        console.log("server");
-        // console.log(document);
     }
 
     const setRandomTodo = () => {
@@ -67,6 +64,6 @@
             <CustomButton @click="setRandomTodo">random</CustomButton>
         </div>
 
-        <nuxt-link to="/">home</nuxt-link>
+        <CustomLink to="/">home</CustomLink>
     </div>
 </template>

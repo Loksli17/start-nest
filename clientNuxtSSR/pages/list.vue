@@ -5,7 +5,7 @@
                 <span>{{ el.text }}</span>
             </div>
         </div>
-        <nuxt-link to="/">home</nuxt-link>
+        <CustomLink to="/">home</CustomLink>
     </div>
 </template>
 

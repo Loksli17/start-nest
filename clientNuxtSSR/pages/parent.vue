@@ -5,7 +5,7 @@
         </template>
         <template #content>
             <NuxtPage />
-            <nuxt-link to="/">home</nuxt-link>
+            <CustomLink to="/">home</CustomLink>
         </template>
     </NuxtLayout>
 </template>

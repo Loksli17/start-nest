@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { useCurrentTodo } from '~~/store/currentTodo';
+import CustomLink from '~~/components/CustomLink.vue';
 
     const store = useCurrentTodo();
     const currentTodo = store.currentTodo;
@@ -20,11 +21,18 @@
             <h1 class="font-medium text-[20px]">Test</h1>
 
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">
-                <nuxt-link class="hover:text-teal-800" to="/about">about</nuxt-link>
+                <!-- <nuxt-link class="hover:text-teal-800" to="/about">about</nuxt-link>
                 <nuxt-link class="hover:text-teal-800" to="/parent/child">child</nuxt-link>
                 <nuxt-link class="hover:text-red-800" to="/todo/todolist">todolist</nuxt-link>
                 <nuxt-link class="hover:text-teal-800" to="/list">list</nuxt-link>
-                <nuxt-link class="hover:text-teal-800" to="/users/admins/69">test</nuxt-link>
+                <nuxt-link class="hover:text-teal-800" to="/users/admins/69">test</nuxt-link> -->
+            
+                <CustomLink to="/about">about</CustomLink>
+                <CustomLink to="/parent/child">child</CustomLink>
+                <CustomLink to="/todo/todolist">todolist</CustomLink>
+                <CustomLink to="/list">list</CustomLink>
+                <CustomLink to="/users/admins/69">test</CustomLink>
+            
             </div>
         </div>
 

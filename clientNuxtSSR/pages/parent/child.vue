@@ -92,6 +92,6 @@
             </div>
         </client-only>
 
-        <nuxt-link to="/parent">to parent</nuxt-link>
+        <CustomLink to="/parent">to parent</CustomLink>
     </div>
 </template>
