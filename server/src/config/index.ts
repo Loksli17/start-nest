@@ -15,7 +15,8 @@ export default {
         origin : [
             "http://localhost:8080", 
             'http://192.168.43.17:8080', 
-            'http://192.168.1.35:8080'
+            'http://192.168.1.35:8080',
+            "http://localhost:8000"
         ],
         methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"]
     },
