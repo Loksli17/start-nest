@@ -5,7 +5,8 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import AppClusterService                          from './services/cluster.service';
 import fastifyCookie                              from 'fastify-cookie';
 import fastifyMultipart                           from 'fastify-multipart';
-import {join}                                       from 'path';
+import { join }                                   from 'path';
+import { SocketAdapter }                          from './adapters/socket.adapter';
 
 
 const bootstrap = async (): Promise<void> => {
@@ -22,10 +23,7 @@ const bootstrap = async (): Promise<void> => {
         }
     );
 
-    // app.register(fastifyStatic, {
-    //     root    : join(__dirname, "public"),
-    //     wildcard: false,
-    // });
+    app.useWebSocketAdapter(new SocketAdapter(app));
 
     app.register(fastifyMultipart, {preservePath: true});
 
@@ -45,5 +43,5 @@ const bootstrap = async (): Promise<void> => {
 }
 
 
-// AppClusterService.clisterize(bootstrap);
-bootstrap();
+AppClusterService.clisterize(bootstrap);
+// bootstrap();

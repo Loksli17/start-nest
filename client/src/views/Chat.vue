@@ -209,6 +209,7 @@
     
     import SingleFileUpload                      from './../components/FileUpload/SingleFileUpload.vue';
     import { AddFile, LoadingSingleFile }        from "./../components/FileUpload/types";
+    import { Socket, io }                        from 'socket.io-client';
 
 
     export default defineComponent({
@@ -246,6 +247,14 @@
                 fileAddedStatus : Ref<boolean>   = ref(false),
                 files           : Array<AddFile> = [],
                 fileTypes       : Array<string>  = ['jpeg', 'png', 'jpg'];
+
+            
+            const socket: Socket = io('http://127.0.0.1:3000', {
+                autoConnect    : true,
+                withCredentials: true,
+            });
+            
+            socket.emit('addToRoom', {foo: 'bar'});
             
 
             const 
