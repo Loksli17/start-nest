@@ -2,25 +2,25 @@
     import { useUserStore } from '~~/store/user';
     const store = useUserStore();
 
-    const randNumber = ref(0);
+    const counter = ref(0);
 
     const chatRooms = ref([] as Array<any>);
     
     const login = async () => {
-        // ! we make a request to the front-end server, which, in turn,
-        // ! makes a request to out backend API
+
         try {
-            const res = await useFetch("/api/login", {
+            const { data } = await useFetch<{ userId: number; accessToken: string }>("http://localhost:3000/auth/login", {
                 method: "POST",
                 body: {
                     login: "loksli",
                     password: "123"
-                }
+                },
+                credentials: "include"
             });
 
-            const { userId, jwt } = res.data.value;
+            const { userId, accessToken } = data.value;
 
-            store.setUser(userId, jwt);
+            store.setUser(userId, accessToken);
 
             const { $toast } = useNuxtApp();
 
@@ -31,22 +31,33 @@
             $toast.error(`Error: ${err}`);
         }
     }
-
-    let refresher = ref(null as any | null);
     
     const getChatRooms = async () => {
         try {
 
-            // ! making additional request doesn't do anything, in order to repeate these
-            // ! requests we need to use 'refresh'
-            const { data, refresh } = await useFetch("/api/chat-rooms", { headers: {
-                Authorization: `Bearer ${store.jwt}`
-            } });
+            const { data } = await useFetch("http://localhost:3000/chat/get-rooms/1", { 
+                headers: {
+                    Authorization: `Bearer ${store.jwt}`,
+                    credentials: "include"
+                },
+                async onResponseError(context) {
+                    try {
+                        const { data } = await useFetch<{ accessToken: string }>("http://localhost:3000/auth/create-tokens", {
+                            method: "POST",
+                            credentials: "include",
+                            pick: ["accessToken"]
+                        });
 
+                        store.setJwt(data.value.accessToken);
+                    } catch (error) {
+                        console.error(error)
+                    }
+                },
+                retry: 2
+            });
             
-            refresher.value = refresh;
-            
-            chatRooms.value = data.value.chatRooms;
+            chatRooms.value = data.value as any ?? [];
+
         } catch (err) {
             
             const { $toast } = useNuxtApp();
@@ -61,11 +72,10 @@
         <h1>Hi</h1>
 
         <div>
-            <p>{{ randNumber }}</p>
-            <CustomButton @click="randNumber++">increment</CustomButton>
+            <p>{{ counter }}</p>
+            <CustomButton @click="counter++">increment</CustomButton>
             <CustomButton @click="login">Login</CustomButton>
             <CustomButton @click="getChatRooms">Chats</CustomButton>
-            <CustomButton v-show="refresher" @click="refresher">refresh</CustomButton>
         </div>
 
         <span>Chatrooms: {{ chatRooms.length }}</span>
@@ -85,7 +95,7 @@
             <div class=" bg-blue-900">
                 <h1>This is client only</h1>
 
-                <p>number: {{ randNumber }}</p>
+                <p>number: {{ counter }}</p>
             </div>
 
             <div>
