@@ -1,7 +1,7 @@
 import { SequelizeModule } from "@nestjs/sequelize"
 import Article             from "src/models/Article";
 import ArticleHasTag       from "src/models/ArticleHasTag";
-import Message from "src/models/Message";
+import Message             from "src/models/Message";
 import Room                from "src/models/Room";
 import RoomHasUser         from "src/models/RoomHasUser";
 import Tag                 from "src/models/Tag";

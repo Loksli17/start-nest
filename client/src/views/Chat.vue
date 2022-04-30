@@ -20,7 +20,7 @@
                 
                 <div class="grid gap-4">
                     <div class="grid gap-4 grid-flow-col auto-cols-max cursor-pointer bg-gray-100 hover:bg-red-100 rounded" v-for="(room, index) in rooms" :key="room.id" :class="{'bg-green-100': room.current}" @click="getMessages(room, index)">
-                        <div class=" bg-cover w-20 rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
+                        <div class=" bg-cover w-20 bg-center rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
 
                         </div>
                         <div class="grid p-4">
@@ -40,7 +40,7 @@
                 <div>
                     <div v-if="roomActInd != -1" class=" bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-5">
                         
-                        <div class=" bg-cover rounded-l h-full py-5" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
+                        <div class=" bg-cover bg-center rounded-l h-full py-5" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
                         
                         <div class="text-2xl py-5">{{rooms[roomActInd].name}}</div>
 
@@ -87,7 +87,7 @@
 
             <div>
                 <h2 class=" text-3xl">{{rooms[roomActInd].name}}</h2>
-                <div class=" bg-cover w-50 rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
+                <!-- <div class=" bg-cover bg-center w-50 rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div> -->
             </div>
 
             <div class="grid grid-flow-col auto-cols-max items-center gap-5">

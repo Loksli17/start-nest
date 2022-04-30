@@ -5,6 +5,8 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import AppClusterService                          from './services/cluster.service';
 import fastifyCookie                              from 'fastify-cookie';
 import fastifyMultipart                           from 'fastify-multipart';
+import fastifyStatic                              from 'fastify-static';
+import { join }                                   from 'path';
 
 
 const bootstrap = async (): Promise<void> => {
@@ -17,11 +19,17 @@ const bootstrap = async (): Promise<void> => {
     await app.register(
         fastifyCookie, 
         {
-            secret: 'opa', 
+            secret: 'opa',
         }
     );
 
-    app.register(fastifyMultipart);
+    // app.register(fastifyStatic, {
+
+    //     root    : join(__dirname, "public"),
+    //     // wildcard: false,
+    // });
+
+    app.register(fastifyMultipart, {preservePath: true});
 
     app.enableCors({
         origin        : config.cors.origin,
@@ -34,5 +42,5 @@ const bootstrap = async (): Promise<void> => {
 }
 
 
-AppClusterService.clisterize(bootstrap);
-// bootstrap();
+// AppClusterService.clisterize(bootstrap);
+bootstrap();

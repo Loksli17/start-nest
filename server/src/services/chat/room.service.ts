@@ -124,6 +124,10 @@ export class RoomService {
 
         const room: Room = await Room.findByPk(query.roomId);
 
+        if(await this.fileService.fileExist(`/room-img/${room.get('img')}`)){
+            await this.fileService.removeFile(`/room-img/${room.get('img')}`);
+        }
+
         room.set('img', filename);
 
         try {

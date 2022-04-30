@@ -12,7 +12,6 @@ import { AuthModule }     from "./auth.module";
 
     imports: [
         AuthModule,
-        FileService,
     ],
 
     providers: [
