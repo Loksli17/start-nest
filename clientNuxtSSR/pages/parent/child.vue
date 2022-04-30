@@ -35,6 +35,7 @@
     const getChatRooms = async () => {
         try {
 
+            // ! this works but not quite right
             const { data } = await useFetch("http://localhost:3000/chat/get-rooms/1", { 
                 headers: {
                     Authorization: `Bearer ${store.jwt}`,
@@ -49,11 +50,14 @@
                         });
 
                         store.setJwt(data.value.accessToken);
-                    } catch (error) {
-                        console.error(error)
+                    } catch (err) {
+                        const { $toast } = useNuxtApp();
+
+                        $toast.error(`Error: ${err}`);
                     }
                 },
-                retry: 2
+                // ! this doesn't do shit
+                retry: 1
             });
             
             chatRooms.value = data.value as any ?? [];
