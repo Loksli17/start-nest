@@ -5,8 +5,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import AppClusterService                          from './services/cluster.service';
 import fastifyCookie                              from 'fastify-cookie';
 import fastifyMultipart                           from 'fastify-multipart';
-import fastifyStatic                              from 'fastify-static';
-import { join }                                   from 'path';
+import {join}                                       from 'path';
 
 
 const bootstrap = async (): Promise<void> => {
@@ -24,9 +23,8 @@ const bootstrap = async (): Promise<void> => {
     );
 
     // app.register(fastifyStatic, {
-
     //     root    : join(__dirname, "public"),
-    //     // wildcard: false,
+    //     wildcard: false,
     // });
 
     app.register(fastifyMultipart, {preservePath: true});
@@ -36,6 +34,11 @@ const bootstrap = async (): Promise<void> => {
         methods       : config.cors.methods,
         credentials   : true,
         exposedHeaders: ['set-cookie'],
+    });
+
+    app.useStaticAssets({
+        root: join(__dirname, '..', "public"),
+        wildcard: true,
     });
     
     await app.listen(config.app.port);

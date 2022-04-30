@@ -397,9 +397,8 @@
                         },
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
-                        searhedUsers.value = searhedUsers.value.filter((user: any) => user.id != response.data.id);
                         getRooms();
-                        Toast.success(`${response.data.login} was added successfully!`);
+                        Toast.success(`${response.data.filename} was uploaded successfully!`);
                     });
                 },
 

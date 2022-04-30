@@ -14,8 +14,9 @@ export class FileService {
     private fileName  : string = ""; //! fix this!
     private unlink    : any    = util.promisify(fs.unlink);
     private exist     : any    = util.promisify(fs.access);
+    private res       : any;
 
-    
+
     public async fileExist(path: string): Promise<boolean> {
 
         let result: boolean = true;
@@ -37,13 +38,18 @@ export class FileService {
     } 
 
 
-    public async saveFile(req, filename: string, secret: string): Promise<string> {
+    public async saveFile(req, filename: string, secret: string, res): Promise<string> {
         
         this.hashSecret = secret;
+        this.res        = res;
 
         this.fileName = this.createFileName(filename);
 
-        await req.multipart(this.handler.bind(this), this.end);
+        const mp = await req.multipart(this.handler.bind(this), this.end.bind(this));
+
+        mp.on('field', function(key: any, value: any) {
+            console.log('form-data', key, value);
+        });
     
         return this.fileName;
     }
@@ -78,17 +84,15 @@ export class FileService {
         } catch (error) {
             throw new HttpException('Error with file upload', HttpStatus.BAD_REQUEST);
         }
-
-        return;
     }
 
 
     private async end(error): Promise<void> {
         
         if(error){
-            throw new HttpException('Error with file', HttpStatus.BAD_REQUEST);
+            this.res.send(new HttpException('Error with file', HttpStatus.BAD_REQUEST));
         }
 
-        return;
+        this.res.code(200).send({filename: this.fileName});
     }
 }
