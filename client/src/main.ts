@@ -6,10 +6,9 @@ import { createPinia }       from 'pinia';
 import axios                 from './axios';
 import { useTokenStore }     from './store/token';
 
+
 import './assets/css/input.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
-
-
 
 
 declare module '@vue/runtime-core'{
@@ -17,7 +16,6 @@ declare module '@vue/runtime-core'{
         $Toast: typeof VueToast;
     }
 }
-
 
 const app = createApp(App);
 
