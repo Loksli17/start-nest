@@ -4,7 +4,7 @@
         <h1 class=" text-2xl font-bold">You are not authorized. You should do it before chating! </h1>
     </div>
 
-    <div v-else class=" pt-24 pb-14 h-screen box-border">
+    <div v-else class=" pt-24 pb-14 h-screen box-border grid grid-rows-chat-page-wrap">
 
         <div class="px-10 grid grid-flow-col auto-cols-max gap-8 items-center">
             <h1 class=" text-5xl font-bold">Chat</h1>
@@ -16,9 +16,9 @@
         </div>
 
         <div class="mt-10 px-10">
-            <div class="grid grid-cols-chat-wrap gap-6">
+            <div class="grid grid-cols-chat-wrap gap-6 h-full">
                 
-                <div class="grid gap-4">
+                <div class="grid gap-4 auto-rows-max">
                     <div class="grid gap-4 grid-flow-col auto-cols-max cursor-pointer bg-gray-100 hover:bg-red-100 rounded" v-for="(room, index) in rooms" :key="room.id" :class="{'bg-green-100': room.current}" @click="getMessages(room, index)">
                         <div class=" bg-cover w-20 bg-center rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
 
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="grid grid-rows-chat-section-wrap">
                     <div v-if="roomActInd != -1" class=" bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-5">
                         
                         <div class=" bg-cover bg-center rounded-l h-full py-5" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 mt-7">
+                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 mt-7 auto-rows-max">
                         <div v-for="message in messages" :key="message" class=" bg-gray-200 p-3 rounded">
                             <div>
                                 {{message.user.login}} [ {{message.date}}  {{message.time}}] - {{message.content}}
@@ -63,6 +63,12 @@
 
                     <div class=" text-xl mt-7" v-else-if="roomActInd != -1">
                         NO MESSANGES IN THIS CHAT
+                    </div>
+
+                    <div v-if="roomActInd != -1" class="">
+                        <form @submit.prevent="sendMessage">
+                            <input class="border-2 box-border w-full p-4 text-lg" type="text" v-model="message">
+                        </form>
                     </div>
                 </div>
                 
@@ -234,6 +240,7 @@
                 newRoomName : Ref<string>                     = ref(''),
                 searchLogin : Ref<string>                     = ref(''),
                 name        : Ref<string>                     = ref(''),
+                message     : Ref<string>                     = ref(''),
                 modalToggle : Ref<boolean>                    = ref(false);
             
             let
@@ -253,9 +260,7 @@
                 autoConnect    : true,
                 withCredentials: true,
             });
-            
-            socket.emit('addToRoom', {foo: 'bar'});
-            
+             
 
             const 
 
@@ -421,6 +426,14 @@
                 
                 dragAndDropCapableError = (file: File, msg: string) => {
                     Toast.warning('Your browser don`t added drag & drop!')
+                },
+
+                sendMessage = () => {
+                    socket.emit('message', {
+                        content: message.value,
+                        userId : storeUser.user.id,
+                        roomId : rooms.value[roomActInd.value].id,
+                    });
                 };
 
             getRooms();
@@ -465,7 +478,10 @@
                 imageLoad,
                 dragAndDropCapableError,
                 fileSizeError,
-                fileTypeError
+                fileTypeError,
+
+                sendMessage,
+                message,
             }
         }
     })

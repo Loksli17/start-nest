@@ -17,7 +17,6 @@ export class MessageService {
                     roomId: roomId,
                 }, 
                 include: [{model: User, attributes: ['login']}],
-                order  : [['id', 'desc']],
             });
         } catch (error) {
             throw new HttpException('Db error', HttpStatus.BAD_REQUEST);
