@@ -4,8 +4,10 @@ import { splitCookiesString, parse } from "set-cookie-parser";
 // ! but when we do it on the server-side, it just works
 export default defineEventHandler(async (event) => {
     const body = await useBody(event);
+    const headers = event.req.headers;
 
     const res = await $fetch.raw("http://localhost:3000/auth/login", {
+        headers: headers as any,
         method: "POST",
         body: body,
     });

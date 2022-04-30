@@ -9,11 +9,14 @@ export const useUserStore = defineStore("user", {
         setUser(userId: number, jwt: string) {
             this.userId = userId;
             this.jwt = jwt;
+        },
+        setJwt(jwt: string) {
+            this.jwt = jwt;
         }
     },
     persist: true
 });
 
-if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
-}
+// if (import.meta.hot) {
+//     import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
+// }
