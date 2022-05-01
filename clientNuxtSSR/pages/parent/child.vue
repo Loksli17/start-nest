@@ -2,8 +2,10 @@
     import { useUserStore } from '~~/store/user';
     const store = useUserStore();
 
-    const counter = ref(0);
+    // ! we can create a plugin fetch, based on regular fetch 
+    const { $useApiFetch } = useNuxtApp();
 
+    const counter = ref(0);
     const chatRooms = ref([] as Array<any>);
     
     const login = async () => {
@@ -35,30 +37,41 @@
     const getChatRooms = async () => {
         try {
 
-            // ! this works but not quite right
-            const { data } = await useFetch("http://localhost:3000/chat/get-rooms/1", { 
-                headers: {
-                    Authorization: `Bearer ${store.jwt}`,
-                    credentials: "include"
-                },
-                async onResponseError(context) {
-                    try {
-                        const { data } = await useFetch<{ accessToken: string }>("http://localhost:3000/auth/create-tokens", {
-                            method: "POST",
-                            credentials: "include",
-                            pick: ["accessToken"]
-                        });
-
-                        store.setJwt(data.value.accessToken);
-                    } catch (err) {
-                        const { $toast } = useNuxtApp();
-
-                        $toast.error(`Error: ${err}`);
+            // ! then we can use that fetch to get data with all the retries and error handling
+            const { data } = await $useApiFetch("http://localhost:3000/chat/get-rooms/1", 
+                {
+                    headers: {
+                        Authorization: `Bearer ${store.jwt}`,
+                        credentials: "include"
                     }
                 },
-                // ! this doesn't do shit
-                retry: 1
-            });
+                getChatRooms
+            );
+
+            // const { data } = await useFetch("http://localhost:3000/chat/get-rooms/1", { 
+            //     headers: {
+            //         Authorization: `Bearer ${store.jwt}`,
+            //         credentials: "include"
+            //     },
+            //     async onResponseError() {
+            //         try {
+            //             const { data } = await useFetch<{ accessToken: string }>("http://localhost:3000/auth/create-tokens", {
+            //                 method: "POST",
+            //                 credentials: "include",
+            //                 pick: ["accessToken"]
+            //             });
+
+            //             store.setJwt(data.value.accessToken);
+
+            //             // ! a hacky solution, but hey, it works for now
+            //             getChatRooms();
+            //         } catch (err) {
+            //             const { $toast } = useNuxtApp();
+
+            //             $toast.error(`Error: ${err}`);
+            //         }
+            //     }
+            // });
             
             chatRooms.value = data.value as any ?? [];
 
@@ -68,6 +81,17 @@
 
             $toast.error(`Error: ${err}`);
         }
+    }
+
+    const getMessages = async () => {
+        const { data } = await $useApiFetch("http://localhost:3000/chat/get-messages/1", {
+            headers: {
+                Authorization: `Bearer ${store.jwt}`,
+                credentials: "include"
+            }
+        }, getMessages);
+
+        console.log(data.value)
     }
 </script>
 
@@ -80,6 +104,7 @@
             <CustomButton @click="counter++">increment</CustomButton>
             <CustomButton @click="login">Login</CustomButton>
             <CustomButton @click="getChatRooms">Chats</CustomButton>
+            <CustomButton @click="getMessages">Get messages</CustomButton>
         </div>
 
         <span>Chatrooms: {{ chatRooms.length }}</span>
