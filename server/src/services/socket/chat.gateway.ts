@@ -24,11 +24,16 @@ export class ChatGateway {
     }
 
 
-    @SubscribeMessage('joinInRoom')
-    public async joinInRoom(client, data: {roomId: string, userId: number}){
-        console.log(client);
-        client.join(`room:${data.roomId}`);
-        this.server.to(`room:${data.roomId}`).emit('joinInRoom', 'Success join to chat!');
+    @SubscribeMessage('joinInRooms')
+    public async joinInRoom(client, data: {roomsIds: Array<number>}){
+        
+        data.roomsIds.forEach((id: number) => {
+            client.join(`room:${id}`);
+        });
+
+        console.log(client.adapter.rooms);
+        
+        // this.server.to(`room:${data.roomId}`).emit('joinInRooms', 'Success join to chat!');
     }
 
 

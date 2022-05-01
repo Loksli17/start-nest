@@ -261,16 +261,6 @@
                 withCredentials: true,
             });
 
-            socket.on('message', (data: any) => {
-                console.log(data);
-                Toast.success(data.content);
-            });
-
-            socket.on('joinInRoom', (data: any) => {
-                console.log(data);
-                Toast.success(data);
-            })
-
             console.log(socket);
 
             const 
@@ -297,8 +287,6 @@
                     room.current = true;
                     roomActInd.value = index;
 
-                    joinToChat();
-
                     axios.get(`http://${basicUrl}/chat/get-messages/${room.id}`, {
                         headers: {
                             Authorization: `Bearer ${storeToken.accessToken}`
@@ -310,21 +298,26 @@
                     })
                 },
 
-                joinToChat = () => {
-                    socket.emit('joinInRoom', {
-                        userId: storeUser.user.id,
-                        roomId: rooms.value[roomActInd.value].id,
+                joinToChats = () => {
+
+                    let roomsIds: Array<number> = [];
+
+                    rooms.value.forEach((room: Record<string, any>) => {
+                        roomsIds.push(room.id);
+                    });
+
+                    socket.emit('joinInRooms', {
+                        roomsIds: roomsIds,
                     });
                 },
 
-                getRooms = () => {
-                    axios.get(`http://${basicUrl}/chat/get-rooms/${storeUser.user.id}`, {
+                getRooms = (): Promise<void | Promise<AxiosResponse<any, any>>> => {
+                    return axios.get(`http://${basicUrl}/chat/get-rooms/${storeUser.user.id}`, {
                         headers: {
                             Authorization: `Bearer ${storeToken.accessToken}`
                         },
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
-
                         rooms.value = response.data;
                     })
                 },
@@ -456,7 +449,13 @@
                     });
                 };
 
-            getRooms();
+
+            socket.on('message', (data: any) => {
+                Toast.success(data.content);
+            });
+
+
+            getRooms().then(() => joinToChats());
 
             return {
                 modalToggle,
