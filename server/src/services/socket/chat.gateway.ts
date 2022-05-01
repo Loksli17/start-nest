@@ -30,10 +30,6 @@ export class ChatGateway {
         data.roomsIds.forEach((id: number) => {
             client.join(`room:${id}`);
         });
-
-        console.log(client.adapter.rooms);
-        
-        // this.server.to(`room:${data.roomId}`).emit('joinInRooms', 'Success join to chat!');
     }
 
 

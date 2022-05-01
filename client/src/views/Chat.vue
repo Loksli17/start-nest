@@ -18,7 +18,7 @@
         <div class="mt-10 px-10">
             <div class="grid grid-cols-chat-wrap gap-6 h-full">
                 
-                <div class="grid gap-4 auto-rows-max">
+                <div class="grid gap-4 auto-rows-max ">
                     <div class="grid gap-4 grid-flow-col auto-cols-max cursor-pointer bg-gray-100 hover:bg-red-100 rounded" v-for="(room, index) in rooms" :key="room.id" :class="{'bg-green-100': room.current}" @click="getMessages(room, index)">
                         <div class=" bg-cover w-20 bg-center rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
 
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-rows-chat-section-wrap">
+                <div class="grid grid-rows-chat-section-wrap gap-5">
                     <div v-if="roomActInd != -1" class=" bg-blue-100 rounded grid grid-flow-col items-center grid-cols-chat-current-room-wrap gap-5">
                         
                         <div class=" bg-cover bg-center rounded-l h-full py-5" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${rooms[roomActInd].img})` }"></div>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 mt-7 auto-rows-max">
+                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 auto-rows-max max-h-full overflow-auto">
                         <div v-for="message in messages" :key="message" class=" bg-gray-200 p-3 rounded">
                             <div>
                                 {{message.user.login}} [ {{message.date}}  {{message.time}}] - {{message.content}}
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class=" text-xl mt-7" v-else-if="roomActInd != -1">
+                    <div class=" text-xl " v-else-if="roomActInd != -1">
                         NO MESSANGES IN THIS CHAT
                     </div>
 
@@ -451,6 +451,12 @@
 
 
             socket.on('message', (data: any) => {
+               
+                data.user = {
+                    login: "kek",
+                }
+
+                messages.value.push(data);
                 Toast.success(data.content);
             });
 
