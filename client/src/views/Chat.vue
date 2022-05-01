@@ -260,7 +260,18 @@
                 autoConnect    : true,
                 withCredentials: true,
             });
-             
+
+            socket.on('message', (data: any) => {
+                console.log(data);
+                Toast.success(data.content);
+            });
+
+            socket.on('joinInRoom', (data: any) => {
+                console.log(data);
+                Toast.success(data);
+            })
+
+            console.log(socket);
 
             const 
 
@@ -286,6 +297,8 @@
                     room.current = true;
                     roomActInd.value = index;
 
+                    joinToChat();
+
                     axios.get(`http://${basicUrl}/chat/get-messages/${room.id}`, {
                         headers: {
                             Authorization: `Bearer ${storeToken.accessToken}`
@@ -295,6 +308,13 @@
                         console.log(response)
                         messages.value = response.data;
                     })
+                },
+
+                joinToChat = () => {
+                    socket.emit('joinInRoom', {
+                        userId: storeUser.user.id,
+                        roomId: rooms.value[roomActInd.value].id,
+                    });
                 },
 
                 getRooms = () => {
