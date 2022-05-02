@@ -37,7 +37,6 @@ export class MessageService {
         let message: Message = Message.build(data);
 
         message.set('date', moment().format('YYYY-MM-DD'));
-        message.set('time', moment().format('HH:MM:SS'));
 
         try {
             await message.save()

@@ -53,10 +53,13 @@
                         </div>
                     </div>
 
-                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 auto-rows-max max-h-full overflow-auto">
-                        <div v-for="message in messages" :key="message" class=" bg-gray-200 p-3 rounded">
-                            <div>
-                                {{message.user.login}} [ {{message.date}}  {{message.time}}] - {{message.content}}
+                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 auto-rows-max max-h-full overflow-auto" ref="messagesWrapRef">
+                        <div v-for="message in messages" :key="message" class=" bg-gray-200 p-3 rounded grid gap-2 box-border mr-2">
+                            <div class=" text-lg">
+                                {{message.content}}
+                            </div>
+                            <div class=" text-xs">
+                                {{message.user.login}} [ {{message.date}}  {{message.time}}] 
                             </div>
                         </div>
                     </div>
@@ -208,7 +211,7 @@
 
 <script lang="ts">
     import axios, { AxiosResponse }              from 'axios';
-    import { computed, defineComponent, inject, Ref, ref } from 'vue';
+    import { computed, defineComponent, inject, nextTick, Ref, ref } from 'vue';
     import { ToastPluginApi }                    from 'vue-toast-notification';
     import { useUserStore }                      from '../store/user';
     import { useTokenStore }                     from './../store/token';
@@ -249,6 +252,10 @@
                 modalAddUserToggle      : Ref<boolean> = ref(false),
                 modalShowRoomToggle     : Ref<boolean> = ref(false);
 
+            let 
+                messagesWrap: HTMLDivElement,
+                messagesWrapRef = ref(null);
+
             const
                 fileLoadedStatus: Ref<boolean>   = ref(false), 
                 fileAddedStatus : Ref<boolean>   = ref(false),
@@ -261,7 +268,7 @@
                 withCredentials: true,
             });
 
-            console.log(socket);
+
 
             const 
 
@@ -293,9 +300,13 @@
                         },
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
-                        console.log(response)
                         messages.value = response.data;
-                    })
+                        
+                        nextTick(() => {
+                            messagesWrap           = messagesWrapRef.value as any;                    
+                            messagesWrap.scrollTop = messagesWrap.scrollHeight;
+                        });
+                    });  
                 },
 
                 joinToChats = () => {
@@ -319,7 +330,12 @@
                         withCredentials: true,
                     }).then((response: AxiosResponse) => {
                         rooms.value = response.data;
-                    })
+
+                        rooms.value.map((room: Record<string, any>) => {
+                        
+                           if(room.messages.length > 0 && room.messages[0].content.length > 15) room.messages[0].content = room.messages[0].content.substr(0, 15) + "..."; 
+                        });
+                    });
                 },
 
                 showAddUserModal = () => {
@@ -455,14 +471,28 @@
                 Toast.info(data.content);
 
                 rooms.value.forEach((room: Record<string, any>) => {
-                    if(room.id === data.roomId) room.messages[0] = Object.assign({}, data);
+                    
+                    if(room.id === data.roomId) {
+                        if(room.messages.length == 0 || room.messages == undefined) {
+                            room.messages = [];
+                            room.messages.push(data);
+                        } else {
+                            room.messages[0] = Object.assign({}, data);
+                        }
 
-                    if(room.messages[0].content.length > 40) 
-                        room.messages[0].content = room.messages[0].content.substr(0, 40) + "...";
+                        if(room.messages[0].content.length > 15) 
+                            room.messages[0].content = room.messages[0].content.substr(0, 15) + "...";
+                    } 
+                    
                 });
 
                 if(data.roomId !== rooms.value[roomActInd.value].id) return;
                 messages.value.push(data);
+
+                nextTick(() => {
+                    messagesWrap           = messagesWrapRef.value as any;                    
+                    messagesWrap.scrollTop = messagesWrap.scrollHeight;
+                });
             });
 
             // computed(messages.value)
@@ -514,6 +544,8 @@
 
                 sendMessage,
                 message,
+
+                messagesWrapRef,
             }
         }
     })
