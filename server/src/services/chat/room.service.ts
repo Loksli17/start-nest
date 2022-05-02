@@ -42,7 +42,6 @@ export class RoomService {
     }
 
 
-    //! refactor!!
     public async getRooms(userId: number): Promise<Array<Room>> {
         
         const rooms: Array<Room> = await Room.findAll({
@@ -53,11 +52,6 @@ export class RoomService {
                 {model: User, as: 'user', attributes: ['login', 'id']},
             ],
         });
-
-        // rooms.sort((a: Room, b: Room) => {
-            
-        //     return 0;
-        // });
 
         return rooms;
     }

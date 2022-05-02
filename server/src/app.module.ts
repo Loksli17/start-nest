@@ -15,5 +15,4 @@ import { AuthModule }        from './modules/auth.module';
         ChatModule,
     ],
 })
-
 export class AppModule {}
