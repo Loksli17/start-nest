@@ -1,9 +1,11 @@
 <script setup lang="ts">
+    import useLogin           from '~~/composables/login';
     import { useCurrentTodo } from '~~/store/currentTodo';
-import CustomLink from '~~/components/CustomLink.vue';
+    import { useUserStore }   from '~~/store/user';
 
-    const store = useCurrentTodo();
-    const currentTodo = store.currentTodo;
+    const todoStore = useCurrentTodo();
+    const userStore = useUserStore();
+    const currentTodo = todoStore.currentTodo;
 
     useHead({
         title: "Index",
@@ -13,6 +15,38 @@ import CustomLink from '~~/components/CustomLink.vue';
             { name: "og:description", content: "Cool index page description" }
         ]
     });
+
+    const showModal = ref(false);
+
+    const toggleModal = () => {
+        showModal.value = !showModal.value;
+    }
+
+    const loginInfo = {
+        login: "lol",
+        password: "123"
+    }
+
+    const login = async () => {
+        const { data, error } = await useLogin(loginInfo);
+
+        if (error.value != null) {
+            const { $toast } = useNuxtApp();
+            $toast.error(`Error: ${error.value}`);
+
+            return;
+        }
+
+        if (data.value != null) {
+            const { userId, accessToken } = data.value;
+            userStore.setUser(userId, accessToken);
+
+            const { $toast } = useNuxtApp();
+            $toast.success("Logged in");
+
+            navigateTo("/parent");
+        }
+    }
 </script>
 
 <template>
@@ -26,7 +60,6 @@ import CustomLink from '~~/components/CustomLink.vue';
                 <CustomLink to="/todo/todolist">todolist</CustomLink>
                 <CustomLink to="/list">list</CustomLink>
                 <CustomLink to="/users/admins/69">test</CustomLink>
-            
             </div>
         </div>
 
@@ -37,6 +70,21 @@ import CustomLink from '~~/components/CustomLink.vue';
             <div class=" grid grid-flow-row gap-y-1 p-3 rounded">
                 <Todo :todo="currentTodo" />
             </div>
+
+            <CustomButton @click="toggleModal">show modal</CustomButton>
         </div>
+
+        <Modal 
+            :show-modal="showModal"
+            :close-modal="() => { showModal = false }"
+            >
+            <!-- 'ModalComponents' part is because of auto-import -->
+            <ModalComponentsAuthModal 
+                v-if="loginInfo" 
+                v-model="loginInfo" 
+                @submit="login"
+                />
+            <CustomButton @click="login">Login</CustomButton>
+        </Modal>
     </div>
 </template>

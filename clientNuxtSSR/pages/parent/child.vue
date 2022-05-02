@@ -47,31 +47,6 @@
                 },
                 getChatRooms
             );
-
-            // const { data } = await useFetch("http://localhost:3000/chat/get-rooms/1", { 
-            //     headers: {
-            //         Authorization: `Bearer ${store.jwt}`,
-            //         credentials: "include"
-            //     },
-            //     async onResponseError() {
-            //         try {
-            //             const { data } = await useFetch<{ accessToken: string }>("http://localhost:3000/auth/create-tokens", {
-            //                 method: "POST",
-            //                 credentials: "include",
-            //                 pick: ["accessToken"]
-            //             });
-
-            //             store.setJwt(data.value.accessToken);
-
-            //             // ! a hacky solution, but hey, it works for now
-            //             getChatRooms();
-            //         } catch (err) {
-            //             const { $toast } = useNuxtApp();
-
-            //             $toast.error(`Error: ${err}`);
-            //         }
-            //     }
-            // });
             
             chatRooms.value = data.value as any ?? [];
 
