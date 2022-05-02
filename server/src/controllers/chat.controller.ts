@@ -43,8 +43,8 @@ export default class ChatController {
 
     @UseGuards(JwtAuthGuard)
     @Get('get-messages/:roomId')
-    public async getRoomMessages(@Param() params): Promise<Array<Message>> {
-        return await this.messageService.getAll(params.roomId);
+    public async getRoomMessages(@Param() params, @Query() query): Promise<Array<Message>> {
+        return await this.messageService.getAll(params.roomId, Number(query.limit));
     }
 
 

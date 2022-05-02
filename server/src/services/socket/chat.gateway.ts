@@ -44,7 +44,6 @@ export class ChatGateway {
         const message: Message = await this.messageService.addOneInRoom(data);
 
         message.setDataValue('user', await this.userService.getOneById(message.get('userId')))
-
         message.set('date', moment(),)
 
         this.server.to(`room:${data.roomId}`).emit('message', message);

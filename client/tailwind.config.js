@@ -22,7 +22,7 @@ module.exports = {
         gridTemplateRows: {
             'chat-page-wrap'   : 'max-content max-content 1fr',
             'chat-section-wrap': 'max-content minmax(320px, 480px) 50px',
-        }
+        },
     },
   },
   variants: {

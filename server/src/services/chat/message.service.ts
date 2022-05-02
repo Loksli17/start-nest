@@ -9,18 +9,29 @@ import * as moment from 'moment'
 export class MessageService {
     
 
-    public async getAll(roomId: number): Promise<Array<Message>> {
+    public async getAll(roomId: number, limit: number): Promise<Array<Message>> {
 
         let messages: Array<Message> = [];
         
         try {
+
+            const count: number = await Message.count({where: {
+                    roomId: roomId,
+                }, 
+            });
+
+            const skip: number = (count > limit) ? count - limit : 0;
+
             messages = await Message.findAll({
                 where: {
                     roomId: roomId,
                 }, 
                 include: [{model: User, attributes: ['login']}],
+                limit: limit,
+                offset: skip
             });
         } catch (error) {
+            console.error(error);
             throw new HttpException('Db error', HttpStatus.BAD_REQUEST);
         }
 
@@ -37,6 +48,7 @@ export class MessageService {
         let message: Message = Message.build(data);
 
         message.set('date', moment().format('YYYY-MM-DD'));
+        message.set('time', moment().format('HH:mm:ss'));
 
         try {
             await message.save()

@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 auto-rows-max max-h-full overflow-auto" ref="messagesWrapRef">
+                    <div v-if="(messages.length > 0) && roomActInd != -1" class="grid gap-3 auto-rows-max max-h-full overflow-auto" style="scroll-behavior: smooth" ref="messagesWrapRef">
                         <div v-for="message in messages" :key="message" class=" bg-gray-200 p-3 rounded grid gap-2 box-border mr-2">
                             <div class=" text-lg">
                                 {{message.content}}
@@ -237,6 +237,7 @@
 
             let
                 searhedUsers: Ref<Array<Record<string, any>>> = ref([]),
+                currentId   : Ref<number>                     = ref(-1),
                 roomActInd  : Ref<number>                     = ref(-1),
                 rooms       : Ref<Array<Record<string, any>>> = ref([]),
                 messages    : Ref<Array<Record<string, any>>> = ref([]),
@@ -257,6 +258,7 @@
                 messagesWrapRef = ref(null);
 
             const
+                limit                            = 40,
                 fileLoadedStatus: Ref<boolean>   = ref(false), 
                 fileAddedStatus : Ref<boolean>   = ref(false),
                 files           : Array<AddFile> = [],
@@ -274,6 +276,42 @@
 
                 showNewModal = () => {
                     modalToggle.value = true;
+                },
+
+                scrollMessageWrap = () => {
+                    messagesWrap           = messagesWrapRef.value as any;                    
+                    messagesWrap.scrollTop = messagesWrap.scrollHeight;
+                },
+
+                sortRooms = () => {
+
+                    rooms.value.sort((a: Record<string, any>, b: Record<string, any>): 0 | -1 | 1 => {
+                        
+                        const messageA: Record<string, any> | undefined = a.messages[0];
+                        const messageB: Record<string, any> | undefined = b.messages[0];
+
+                        if     ((messageA == undefined && messageB != undefined) || (messageA == undefined && messageB == undefined)) return 1;
+                        else if((messageA != undefined) && (messageB == undefined)) return -1;
+
+                        if     (new Date(messageA!.date) > new Date(messageB!.date)) return -1;
+                        else if(new Date(messageA!.date) < new Date(messageB!.date)) return 1;
+                        else {
+                            if(messageA!.time < messageB!.date) return 1;
+                            else return -1;
+
+                            // let
+                            //     h: number = Number(messageA.time.slice(0, 2)),
+                                
+                            // return -1;   
+                        }
+                    });
+                },
+
+                setCurrentInd = () => {
+                    
+                    rooms.value.forEach((room: Record<string, any>, index: number) => {
+                        if(room.id === currentId.value) roomActInd.value = index;
+                    });
                 },
 
                 sendRoom = () => {
@@ -294,7 +332,7 @@
                     room.current = true;
                     roomActInd.value = index;
 
-                    axios.get(`http://${basicUrl}/chat/get-messages/${room.id}`, {
+                    axios.get(`http://${basicUrl}/chat/get-messages/${room.id}?limit=${limit}`, {
                         headers: {
                             Authorization: `Bearer ${storeToken.accessToken}`
                         },
@@ -302,10 +340,7 @@
                     }).then((response: AxiosResponse) => {
                         messages.value = response.data;
                         
-                        nextTick(() => {
-                            messagesWrap           = messagesWrapRef.value as any;                    
-                            messagesWrap.scrollTop = messagesWrap.scrollHeight;
-                        });
+                        nextTick(() => scrollMessageWrap());
                     });  
                 },
 
@@ -335,6 +370,8 @@
                         
                            if(room.messages.length > 0 && room.messages[0].content.length > 15) room.messages[0].content = room.messages[0].content.substr(0, 15) + "..."; 
                         });
+
+                        sortRooms();
                     });
                 },
 
@@ -485,14 +522,15 @@
                     } 
                     
                 });
+                
+                currentId.value = rooms.value[roomActInd.value].id;
+                sortRooms();
+                setCurrentInd();
 
                 if(data.roomId !== rooms.value[roomActInd.value].id) return;
                 messages.value.push(data);
 
-                nextTick(() => {
-                    messagesWrap           = messagesWrapRef.value as any;                    
-                    messagesWrap.scrollTop = messagesWrap.scrollHeight;
-                });
+                nextTick(() => scrollMessageWrap());
             });
 
             // computed(messages.value)
