@@ -208,7 +208,7 @@
 
 <script lang="ts">
     import axios, { AxiosResponse }              from 'axios';
-    import { defineComponent, inject, Ref, ref } from 'vue';
+    import { computed, defineComponent, inject, Ref, ref } from 'vue';
     import { ToastPluginApi }                    from 'vue-toast-notification';
     import { useUserStore }                      from '../store/user';
     import { useTokenStore }                     from './../store/token';
@@ -451,14 +451,21 @@
 
 
             socket.on('message', (data: any) => {
-               
-                data.user = {
-                    login: "kek",
-                }
 
+                Toast.info(data.content);
+
+                rooms.value.forEach((room: Record<string, any>) => {
+                    if(room.id === data.roomId) room.messages[0] = Object.assign({}, data);
+
+                    if(room.messages[0].content.length > 40) 
+                        room.messages[0].content = room.messages[0].content.substr(0, 40) + "...";
+                });
+
+                if(data.roomId !== rooms.value[roomActInd.value].id) return;
                 messages.value.push(data);
-                Toast.success(data.content);
             });
+
+            // computed(messages.value)
 
 
             getRooms().then(() => joinToChats());

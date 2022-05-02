@@ -10,6 +10,10 @@ export class UserService {
         return await User.findOne({where: {login: login}});
     }
 
+    public async getOneById(id: number): Promise<User | undefined> {
+        return await User.findByPk(id);
+    }
+
 
     public async getOneBySearchLogin(login: string, ids: Array<number>): Promise<Array<User>> {
         

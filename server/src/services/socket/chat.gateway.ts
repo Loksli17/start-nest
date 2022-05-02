@@ -1,7 +1,9 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import Message from "src/models/Message";
+
+import * as moment        from 'moment'
+import Message            from "src/models/Message";
 import { MessageService } from "../chat/message.service";
-import { UserService } from "../user.service";
+import { UserService }    from "../user.service";
 
 
 @WebSocketGateway({crossOriginIsolated: true})
@@ -39,17 +41,12 @@ export class ChatGateway {
 
         client.join(`room:${data.roomId}`);
         
-        let message: Message = Message.build(data);
+        const message: Message = await this.messageService.addOneInRoom(data);
 
-        message.set('date', '2022-04-30'); //! i need in moment
-        message.set('time', '22:20');
+        message.setDataValue('user', await this.userService.getOneById(message.get('userId')))
 
-        try {
-            await message.save()
-        } catch (error) {
-            console.error(error);    
-        }
+        message.set('date', moment(),)
 
-        this.server.to(`room:${data.roomId}`).emit('message', data);
+        this.server.to(`room:${data.roomId}`).emit('message', message);
     }
 }
