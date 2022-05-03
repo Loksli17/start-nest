@@ -18,6 +18,7 @@ module.exports = {
         },
         maxHeight: {
             'modal': '800px',
+            'rooms': '670px',
         },
         gridTemplateRows: {
             'chat-page-wrap'   : 'max-content max-content 1fr',

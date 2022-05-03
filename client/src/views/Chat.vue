@@ -11,14 +11,14 @@
             <span class="text-3xl text-blue-500">[ {{login}} ]</span>
         </div>
 
-        <div class="mt-6 px-10">
+        <div class="mt-6 px-10 ">
             <button class="p-4 w-max bg-blue-500  text-white text-lg rounded" @click="showNewModal()">Create room</button>
         </div>
 
-        <div class="mt-10 px-10">
+        <div class="mt-10 px-10 max-h-full">
             <div class="grid grid-cols-chat-wrap gap-6 h-full">
                 
-                <div class="grid gap-4 auto-rows-max ">
+                <div class="grid gap-4 auto-rows-max overflow-y-auto max-h-rooms">
                     <div class="grid gap-4 grid-flow-col auto-cols-max cursor-pointer bg-gray-100 hover:bg-red-100 rounded" v-for="(room, index) in rooms" :key="room.id" :class="{'bg-green-100': room.current}" @click="getMessages(room, index)">
                         <div class=" bg-cover w-20 bg-center rounded-l" :style="{ backgroundImage: `url(http://localhost:3000/room-img/${room.img})` }">
 
@@ -296,13 +296,8 @@
                         if     (new Date(messageA!.date) > new Date(messageB!.date)) return -1;
                         else if(new Date(messageA!.date) < new Date(messageB!.date)) return 1;
                         else {
-                            if(messageA!.time < messageB!.date) return 1;
+                            if(messageA!.time < messageB!.time) return 1;
                             else return -1;
-
-                            // let
-                            //     h: number = Number(messageA.time.slice(0, 2)),
-                                
-                            // return -1;   
                         }
                     });
                 },
