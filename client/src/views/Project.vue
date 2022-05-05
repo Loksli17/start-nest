@@ -15,6 +15,10 @@
         <div class="mt-6 px-10 ">
             <button class="p-4 w-max bg-blue-500  text-white text-lg rounded" @click="newModalToggle = true">Create project</button>
         </div>
+
+        <div class="mt-6 px-10 ">
+            <ProjectView v-for="project in projects" :key="project.id" :data="project"></ProjectView>
+        </div>
     </div>
 
     <div @click.self="newModalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !newModalToggle}">
@@ -32,6 +36,7 @@
 
     import { computed, defineComponent, inject, nextTick, Ref, ref } from 'vue';
 
+    import ProjectView            from '../components/ProjectView.vue';
     import { io, Socket }     from 'socket.io-client';
     import { ToastPluginApi } from 'vue-toast-notification';
 
@@ -40,6 +45,10 @@
 
 
     export default defineComponent({
+
+        components: {
+            ProjectView,
+        },
         
         setup() {
 
@@ -60,12 +69,14 @@
                 };
 
             socket.on('createProject', (data: any) => {
+                projects.value.unshift(data);
                 Toast.success(`project with ${name.value} has been created`); 
             });
 
             let 
-                name          : Ref<string>  = ref(""),
-                newModalToggle: Ref<boolean> = ref(false);
+                projects      : Ref<Array<Record<string, any>>> = ref([]),
+                name          : Ref<string>                     = ref(""),
+                newModalToggle: Ref<boolean>                    = ref(false);
 
 
             return {
@@ -73,6 +84,8 @@
                 newModalToggle,
 
                 sendProject,
+
+                projects,
 
                 login      : storeUser.user.login,
                 accessToken: storeToken.accessToken,
