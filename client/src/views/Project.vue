@@ -16,7 +16,7 @@
             <button class="p-4 w-max bg-blue-500  text-white text-lg rounded" @click="newModalToggle = true">Create project</button>
         </div>
 
-        <div class="mt-6 px-10 ">
+        <div class="mt-6 px-10 grid gap-5 grid-cols-project-wrap auto-rows-max">
             <ProjectView v-for="project in projects" :key="project.id" :data="project"></ProjectView>
         </div>
     </div>
@@ -71,6 +71,12 @@
             socket.on('createProject', (data: any) => {
                 projects.value.unshift(data);
                 Toast.success(`project with ${name.value} has been created`); 
+            });
+
+            socket.emit('getProjects', {userId: storeUser.user.id});
+
+            socket.on('getProjects', (data: any) => {
+                projects.value = data.projects;
             });
 
             let 

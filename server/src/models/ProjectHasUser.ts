@@ -1,26 +1,26 @@
 import { Model, Column, Table, ForeignKey, BelongsTo } from "sequelize-typescript";
-import Article from "./Article";
-import Tag from "./Tag";
+import Project from "./Project";
+import User from "./User";
 
 
 @Table({tableName: 'project_has_user', timestamps: false})
-export default class ArticleHasTag extends Model {
+export default class ProjectHasUser extends Model {
 
     @Column({primaryKey: true, autoIncrement: true})
     public id?: number;
 
-    @ForeignKey(() => Article)
+    @ForeignKey(() => User)
     @Column
-    public articleId?: number;
+    public userId?: number;
 
-    @ForeignKey(() => Tag)
+    @ForeignKey(() => Project)
     @Column
-    public tagId?: number;
+    public projectId?: number;
 
     
-    @BelongsTo(() => Tag)
-    public tags: Array<Tag>;
+    @BelongsTo(() => Project)
+    public projects: Array<Project>;
 
-    @BelongsTo(() => Article)
-    public articles: Array<Article>;
+    @BelongsTo(() => User)
+    public users: Array<User>;
 }

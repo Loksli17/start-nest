@@ -9,6 +9,8 @@ module.exports = {
 
             'chat-current-room-wrap': '80px max-content 1fr max-content',
             'chat-room-user'        : '1fr max-content',
+
+            'project-wrap': 'repeat(auto-fit, minmax(320px, 1fr))',
         },
         minWidth: {
             'modal': '600px',
@@ -19,6 +21,9 @@ module.exports = {
         maxHeight: {
             'modal': '800px',
             'rooms': '670px',
+        },
+        height: {
+            'max-content': 'max-content',
         },
         gridTemplateRows: {
             'chat-page-wrap'   : 'max-content max-content 1fr',

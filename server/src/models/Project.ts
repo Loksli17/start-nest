@@ -1,5 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import User from "./User";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import ProjectHasUser from "./ProjectHasUser";
+import User           from "./User";
 
 
 @Table({timestamps: false, tableName: 'project'})
@@ -20,4 +21,7 @@ export default class Project extends Model {
 
     @Column(DataType.STRING(100))
     public filename: string;
+
+    @HasMany(() => ProjectHasUser)
+    public roomHasUser: Array<ProjectHasUser>
 }

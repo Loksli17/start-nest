@@ -5,7 +5,7 @@
 
         </div>
 
-        <div>
+        <div class=" h-max-content">
             <h2>{{data.name}}</h2>
         </div>
     </div>
