@@ -20,15 +20,19 @@
 <script lang="ts">
     import { defineComponent } from 'vue';
     import { useUserStore }    from '../store/user';
+    import { useTokenStore }   from './../store/token';
+
 
     export default defineComponent({
         
         setup() {
 
-            const storeUser = useUserStore();
+            const storeUser  = useUserStore();
+            const storeToken = useTokenStore();
             
             return {
-                login: storeUser.user.login
+                login      : storeUser.user.login,
+                accessToken: storeToken.accessToken,
             }
         },
     })

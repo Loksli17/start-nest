@@ -29,7 +29,6 @@
     import { ToastPluginApi } from 'vue-toast-notification';
 
     import { useUserStore }  from '../../store/user';
-    import { useTokenStore } from './../../store/token';
 
 
     export default defineComponent({
@@ -42,7 +41,6 @@
 
             const
                 basicUrl              = "http://127.0.0.1:3000",
-                storeToken            = useTokenStore(),
                 storeUser             = useUserStore(),
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
@@ -80,8 +78,6 @@
                 sendProject,
 
                 projects,
-                
-                accessToken: storeToken.accessToken,
             }
         },
     })

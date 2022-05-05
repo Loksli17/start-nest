@@ -19,7 +19,8 @@
     "tw-elements": "^1.0.0-alpha11",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vue-toast-notification": "^3.0.0"
+    "vue-toast-notification": "^3.0.0",
+    "vue3-click-away": "^1.2.4"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.6",
