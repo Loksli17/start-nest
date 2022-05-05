@@ -3,8 +3,7 @@
     import { useCurrentTodo } from '~~/store/currentTodo';
     import { useUserStore }   from '~~/store/user';
 
-    const todoStore = useCurrentTodo();
-    const userStore = useUserStore();
+    const todoStore   = useCurrentTodo();
     const currentTodo = todoStore.currentTodo;
 
     useHead({
@@ -21,32 +20,6 @@
     const toggleModal = () => {
         showModal.value = !showModal.value;
     }
-
-    const loginInfo = {
-        login: "lol",
-        password: "123"
-    }
-
-    const login = async () => {
-        const { data, error } = await useLogin(loginInfo);
-
-        if (error.value != null) {
-            const { $toast } = useNuxtApp();
-            $toast.error(`Error: ${error.value}`);
-
-            return;
-        }
-
-        if (data.value != null) {
-            const { userId, accessToken } = data.value;
-            userStore.setUser(userId, accessToken);
-
-            const { $toast } = useNuxtApp();
-            $toast.success("Logged in");
-
-            navigateTo("/parent");
-        }
-    }
 </script>
 
 <template>
@@ -56,6 +29,7 @@
 
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">            
                 <CustomLink to="/about">about</CustomLink>
+                <CustomLink to="/chats">chats</CustomLink>
                 <CustomLink to="/parent/child">child</CustomLink>
                 <CustomLink to="/todo/todolist">todolist</CustomLink>
                 <CustomLink to="/list">list</CustomLink>
@@ -79,12 +53,7 @@
             :close-modal="() => { showModal = false }"
             >
             <!-- 'ModalComponents' part is because of auto-import -->
-            <ModalComponentsAuthModal 
-                v-if="loginInfo" 
-                v-model="loginInfo" 
-                @submit="login"
-                />
-            <CustomButton @click="login">Login</CustomButton>
+            <ModalComponentsAuthModal />
         </Modal>
     </div>
 </template>
