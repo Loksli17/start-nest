@@ -34,8 +34,7 @@ export class ChatGateway {
         });
     }
 
-
-    //!use message service!!
+    
     @SubscribeMessage('message')
     public async sendMessage(client, data: {content: string, roomId: string, userId: number}): Promise<void> {
 

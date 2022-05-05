@@ -29,9 +29,11 @@
 
 
 <script lang="ts">
-    import axios, { AxiosResponse }              from 'axios';
+
     import { computed, defineComponent, inject, nextTick, Ref, ref } from 'vue';
-    import { ToastPluginApi }                    from 'vue-toast-notification';
+
+    import { io, Socket }     from 'socket.io-client';
+    import { ToastPluginApi } from 'vue-toast-notification';
 
     import { useUserStore }  from '../store/user';
     import { useTokenStore } from './../store/token';
@@ -47,24 +49,19 @@
                 storeUser             = useUserStore(),
                 Toast: ToastPluginApi = inject('Toast') as ToastPluginApi;
 
+            const socket: Socket = io(basicUrl, {
+                autoConnect    : true,
+                withCredentials: true,
+            });
+
             const 
                 sendProject = () => {
-
-                    axios.put(`${basicUrl}/project/add`, 
-                        {
-                            name: name.value, 
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${storeToken.accessToken}`
-                            },
-                            withCredentials: true,
-                        }
-                    ).then((response: AxiosResponse) => {
-                        console.log(response);
-                    })
+                    socket.emit('createProject', {userId: storeUser.user.id, name: name.value});
                 };
-        
+
+            socket.on('createProject', (data: any) => {
+                Toast.success(`project with ${name.value} has been created`); 
+            });
 
             let 
                 name          : Ref<string>  = ref(""),
@@ -77,7 +74,8 @@
 
                 sendProject,
 
-                login: storeUser.user.login,
+                login      : storeUser.user.login,
+                accessToken: storeToken.accessToken,
             }
         },
     })
