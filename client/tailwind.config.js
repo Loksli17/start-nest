@@ -24,6 +24,7 @@ module.exports = {
         },
         height: {
             'max-content': 'max-content',
+            'canvas': '700px',
         },
         gridTemplateRows: {
             'chat-page-wrap'   : 'max-content max-content 1fr',
