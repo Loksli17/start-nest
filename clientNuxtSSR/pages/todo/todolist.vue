@@ -9,10 +9,10 @@
     const randomTodo = computed(() => store.currentTodo);
 
     try {
-        const { data } = await useFetch("https://jsonplaceholder.typicode.com/todos");
+        const { data, error } = await useFetch("https://jsonplaceholder.typicode.com/todos");
 
-        if (!data.value) {
-            throw new Error("API is not available");
+        if (error.value) {
+            throw new Error(`${error.value}`);
         }
 
         todoArr.value = data.value as Array<ITodo>;
