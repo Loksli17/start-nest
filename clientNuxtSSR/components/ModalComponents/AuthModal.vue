@@ -1,43 +1,72 @@
 <script setup lang="ts">
+    import { FormKitSchema } from "@formkit/vue";
+    import useLogin          from '~~/composables/login';
+    import { useUserStore }  from '~~/store/user';
+
+    const userStore = useUserStore();
+
+    const schema = [
+        {
+            $formkit: "text",
+            name: "login",
+            label: "Login",
+            help: "This is a login field, hi"
+        },
+        {
+            $formkit: "password",
+            name: "password",
+            label: "Password"
+        }
+    ];
 
     interface LoginInfo {
         login:    string;
         password: string;
     }
-    
-    const props = defineProps<{
-        modelValue: LoginInfo
-    }>();
 
-    const emit = defineEmits<{
-        (e: 'update:modelValue', val: LoginInfo): void
-    }>();
+    const submit = async () => {
 
-    const loginInfoComputed = computed({
-        get(): LoginInfo {
-            return props.modelValue;
-        },
-        set(val: LoginInfo) {
-            emit("update:modelValue", val);
+        const loginInfo: LoginInfo = {
+            login: (formData as any).login,
+            password: (formData as any).password
         }
-    })
+
+        const { data, error } = await useLogin(loginInfo);
+
+        if (error.value != null) {
+            if (process.client) {
+                const { $toast } = useNuxtApp();
+                $toast.error(`Error: ${error.value}`);
+            }
+
+            return;
+        }
+
+        if (data.value != null) {
+            const { userId, accessToken } = data.value;
+            userStore.setUser(userId, accessToken);
+
+            if (process.client) {
+                const { $toast } = useNuxtApp();
+                $toast.success("Logged in");
+            }
+
+            navigateTo("/chats?active=2");
+        }
+    }
+
+    const formData = {};
 </script>
 
 <template>
-    <div>
+    <FormKit 
+        type="form"
+        v-model="formData"
+        @submit="submit"
+        >
         <h1 class=" text-[20px]">Login</h1>
-        <form 
-            class=" grid grid-flow-row gap-y-2"
-            >
-            <div class=" grid grid-flow-col gap-x-2">
-                <label for="login">Login</label>
-                <input id="login" type="text" v-model="loginInfoComputed.login">
-            </div>
-            <div class="grid grid-flow-col gap-x-2">
-                <label for="password">Password</label>
-                <input id="password" type="password" v-model="loginInfoComputed.password">
-            </div>
-        </form>
-    </div>
+
+        <FormKitSchema :schema="schema" />
+    </FormKit>
 </template>
 

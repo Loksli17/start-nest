@@ -6,6 +6,9 @@ export default defineNuxtConfig({
         strict:    true,
         typeCheck: true
     },
+    modules: [
+        '@formkit/nuxt'
+    ],
     buildModules: [
         "@pinia/nuxt",
         "@nuxtjs/tailwindcss"

@@ -10,6 +10,8 @@
     "nuxt": "npm:nuxt3@latest"
   },
   "dependencies": {
+    "@formkit/nuxt": "^1.0.0-beta.6",
+    "@formkit/tailwindcss": "^1.0.0-beta.6",
     "@nuxtjs/tailwindcss": "latest",
     "@pinia/nuxt": "^0.1.8",
     "pinia": "latest",
