@@ -10,7 +10,7 @@ module.exports = {
             'chat-current-room-wrap': '80px max-content 1fr max-content',
             'chat-room-user'        : '1fr max-content',
 
-            'project-wrap': 'repeat(auto-fit, minmax(320px, 1fr))',
+            'project-wrap': 'repeat(auto-fill, minmax(360px, 1fr))',
         },
         minWidth: {
             'modal': '600px',
@@ -28,6 +28,8 @@ module.exports = {
         gridTemplateRows: {
             'chat-page-wrap'   : 'max-content max-content 1fr',
             'chat-section-wrap': 'max-content minmax(320px, 480px) 50px',
+
+            'project-wrap': '250px max-content',
         },
     },
   },

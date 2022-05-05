@@ -1,14 +1,14 @@
 
 <template>
-    <div class="rounded p-5 bg-gray-300 grid auto-rows-fr">
-        <div>
+    <router-link :to="{path: `/project/one/${data.id}`}" class="rounded bg-gray-300 grid grid-cols-project-wrap p-1 hover:bg-blue-200 transition-all">
+        <div class=" bg-white h-56">
 
         </div>
 
-        <div class=" h-max-content">
+        <div class=" h-max-content p-5 ">
             <h2>{{data.name}}</h2>
         </div>
-    </div>
+    </router-link>
 </template>
 
 

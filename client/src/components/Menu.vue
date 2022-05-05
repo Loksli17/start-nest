@@ -45,11 +45,11 @@
             let toggle: Ref<boolean> = ref(false);
 
             const links: Ref<Array<{to: string, text: string}>> = ref([
-                {to: "/",        text: 'Todolist'},
-                {to: "/about",   text: 'About'},
-                {to: "/article", text: 'Article'},
-                {to: "/chat",    text: 'Chat'},
-                {to: "/project",    text: 'Project'},
+                {to: "/",            text: 'Todolist'},
+                {to: "/about",       text: 'About'},
+                {to: "/article",     text: 'Article'},
+                {to: "/chat",        text: 'Chat'},
+                {to: "/project/all", text: 'Project'},
             ]);
 
             watch(toggle, (value: boolean) => {
