@@ -490,17 +490,20 @@
                 },
 
                 sendMessage = () => {
+
                     socket.emit('message', {
                         content: message.value,
                         userId : storeUser.user.id,
                         roomId : rooms.value[roomActInd.value].id,
                     });
+
+                    message.value = "";
                 };
 
 
             socket.on('message', (data: any) => {
 
-                Toast.info(data.content);
+                if(data.userId != storeUser.user.id) Toast.info(`${data.content}`);
 
                 rooms.value.forEach((room: Record<string, any>) => {
                     
