@@ -19,9 +19,9 @@
 
     <div @click.self="newModalToggle = false" class="grid justify-center items-center fixed z-50 w-full h-full z-1 bg-gray-800 bg-opacity-80 top-0 left-0" :class="{'hidden': !newModalToggle}">
             
-        <form class=" bg-white p-8 grid gap-10 opacity-100">
-            <input class="cursor-pointer border-2 border-gray-600 p-3" type="text" name="name" v-model="name">
-            <input class=" p-4 bg-blue-500 text-white cursor-pointer" type="submit" @click.prevent="sendProject" value="Create room">
+        <form class=" bg-white p-8 grid gap-10 opacity-100 rounded">
+            <input class="cursor-pointer border-2 border-gray-600 p-3" type="text" name="name" v-model="name" placeholder="write project name here..">
+            <input class=" p-4 bg-blue-500 text-white cursor-pointer rounded" type="submit" @click.prevent="sendProject" value="Create project">
         </form>
     </div>
 
@@ -76,6 +76,8 @@
                 newModalToggle,
 
                 sendProject,
+
+                login: storeUser.user.login,
             }
         },
     })
