@@ -49,6 +49,7 @@
                 {to: "/about",   text: 'About'},
                 {to: "/article", text: 'Article'},
                 {to: "/chat",    text: 'Chat'},
+                {to: "/project",    text: 'Project'},
             ]);
 
             watch(toggle, (value: boolean) => {
