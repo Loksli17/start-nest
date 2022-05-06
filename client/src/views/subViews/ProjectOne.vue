@@ -29,12 +29,44 @@
 <script lang="ts">
 
     import { defineComponent, Ref, ref, onMounted } from 'vue';
+    import methodDecoratorFactory                   from '@/utils/methodDecoratorFactory';
 
 
     interface ActionButton {
         action: string;
         icon  : string;
     }
+
+
+    const 
+        drawSystemPoints = () => {
+            return methodDecoratorFactory.createDecoratorAfter((data: {systemPoints: Array<SystemPoint>, ctx: any}) => {
+                
+                data.systemPoints.forEach((point: SystemPoint) => {
+                    point.render();
+                });
+
+                return data;
+            });
+        },
+
+        drawSystemBorderRect = () => {
+            return methodDecoratorFactory.createDecoratorAfter((data: {systemPoints: Array<SystemPoint>, ctx: CanvasRenderingContext2D}) => {
+
+                if(data.systemPoints.length == 0) return data;
+                
+                data.ctx.strokeStyle = "#0e0efe";
+
+                data.ctx.strokeRect(
+                    data.systemPoints[0].x, 
+                    data.systemPoints[0].y,
+                    data.systemPoints[1].x - data.systemPoints[0].x,
+                    data.systemPoints[1].y - data.systemPoints[0].y,
+                );
+
+                return data;
+            });
+        }
 
 
     class Point {
@@ -48,24 +80,43 @@
         public y = 0;
     }
 
+
+    class SystemPoint extends Point {
+
+        private ctx;
+        private gap = 6;
+
+        constructor(x: number, y: number, ctx: any){
+            super(x, y);
+            this.ctx = ctx;
+        }
+
+        public render(){
+            this.ctx.fillStyle = "#fff";
+            this.ctx.fillRect(this.x - this.gap / 2, this.y - this.gap / 2, this.gap, this.gap);
+            this.ctx.strokeStyle = "#0e0efe";
+            this.ctx.strokeRect(this.x - (this.gap / 2) - 1, this.y - (this.gap / 2) - 1, this.gap + 1, this.gap + 1);
+        }
+    }
+
+
     abstract class Shape {
-
+        public drawSystemPoint = false;
         protected points: Array<Point> = [];
-
         public abstract render(ctx: any): void;
     }
+
 
     
     class Rect extends Shape {
 
-        public isFill = false;
+        public isFill = true;
 
 
         public setFirstPoint(p: Point) {
             if(this.points[0] != undefined) this.points[0] = p;
             this.points.push(p);
         }
-
 
         public setSecondPoint(p: Point) {
             if(this.points[0] == undefined) throw new Error('not use setSecondPoint before setFirstPoint')
@@ -74,7 +125,9 @@
         }
 
 
-        public render(ctx: any): void {
+        @drawSystemPoints()
+        @drawSystemBorderRect()
+        public render(ctx: any): {systemPoints: Array<SystemPoint>, ctx: any} {
             
             if(ctx == undefined){
                 throw new Error("CTX is null. Why?");
@@ -86,7 +139,18 @@
             }else{
                 ctx.strokeStyle = "#ccc";
                 ctx.strokeRect(this.points[0].x, this.points[0].y, this.points[1].x - this.points[0].x, this.points[1].y - this.points[0].y);
-            } 
+            }
+
+            let systemPoints: SystemPoint[] = [];
+
+            if(this.drawSystemPoint) {
+                systemPoints.push(new SystemPoint(this.points[0].x, this.points[0].y, ctx));
+                systemPoints.push(new SystemPoint(this.points[1].x, this.points[1].y, ctx));
+                systemPoints.push(new SystemPoint(this.points[0].x, this.points[1].y, ctx));
+                systemPoints.push(new SystemPoint(this.points[1].x, this.points[0].y, ctx));
+            }
+
+            return {systemPoints, ctx: ctx};
         }
     }
 
@@ -99,7 +163,7 @@
             this.ctx = ctx;
         }
 
-        public render(scaleCoef: number, shapes: Array<Shape>) {
+        public render(scaleCoef: number, shapes: Array<Shape>){
             this.clear();
             shapes.forEach((shape: Shape) => shape.render(this.ctx));
         }
@@ -191,6 +255,7 @@
             } else {
                 this.isDrawing = true;
                 this.accoiationsShapeStateInit[actionBtn.action](e);
+                this.currentShape!.drawSystemPoint = true;
             }
         }
 
@@ -199,6 +264,7 @@
            if(actionBtn.action == 'move'){
                 console.log('move');
             } else {
+                this.currentShape!.drawSystemPoint = false;
                 this.accoiationsShapePushState[actionBtn.action](e);
                 this.shapes.push(this.currentShape!);
                 this.isDrawing = false;
