@@ -18,6 +18,8 @@
                 @mousedown="canvasMouseDown"
                 @mouseup="canvasMouseUp"
                 @mousemove="canvasMouseMove"
+                @mousedown.middle="wheelClickDown"
+                @mouseup.middle="wheelClickUp"
                 class=" border-2 ">
             </canvas>
             
@@ -39,7 +41,7 @@
 
 
     const 
-        isDedicateds = () => {
+        isDedicated = () => {
             return methodDecoratorFactory.createDecoratorAfter((data: {systemPoints: Array<SystemPoint>, ctx: any}) => {
                 
                 data.systemPoints.forEach((point: SystemPoint) => {
@@ -78,6 +80,11 @@
 
         public x = 0;
         public y = 0;
+
+        public move(x: number, y: number) {
+            this.x += x;
+            this.y += y;
+        }
     }
 
 
@@ -103,7 +110,9 @@
     abstract class Shape {
         public isDedicated = false;
         protected points: Array<Point> = [];
+
         public abstract render(ctx: any): void;
+        public abstract move(x: number, y: number): void;
     }
 
 
@@ -125,7 +134,7 @@
         }
 
 
-        @isDedicateds()
+        @isDedicated()
         @drawSystemBorderRect()
         public render(ctx: any): {systemPoints: Array<SystemPoint>, ctx: any} {
             
@@ -151,6 +160,13 @@
             }
 
             return {systemPoints, ctx: ctx};
+        }
+
+
+        public move(x: number, y: number) {
+            this.points.forEach((point: Point) => {
+                point.move(x, y);
+            })
         }
     }
 
@@ -182,10 +198,15 @@
         private left = 0;
         private top  = 0;
 
-        private scaleCoef               = 1; 
-        private drawer   : Drawer       = new Drawer("ctx");
-        private shapes   : Array<Shape> = [];
-        private isDrawing               = false;
+        private scaleCoef      = 1; 
+        private isDrawing      = false;
+        private isWheelMoving  = false;
+
+        private drawer          : Drawer       = new Drawer("ctx");
+        private shapes          : Array<Shape> = [];
+        private dedicatedShapes : Array<Shape> = [];
+        private wheelMovingEvent: MouseEvent | undefined; 
+    
 
         private currentShape: Shape | undefined;
 
@@ -214,12 +235,33 @@
         };
 
 
-        private normalX(x: number): number{
+        private normalX(x: number): number {
             return x - this.left;
         }
 
-        private normalY(y: number): number{
+        private normalY(y: number): number {
             return y - this.top;
+        }
+
+        private normalMovingDeltaWidth(x: number): number {
+
+            const wScreen = window.innerWidth;
+            const wCanvas = 1300;
+
+            const result = (x * wCanvas) / wScreen;
+            
+            return result;
+        }
+
+
+        private normalMovingDeltaHeight(y: number): number {
+
+            const hScreen = window.innerHeight;
+            const hCanvas = 700;
+
+            const result = (y * hCanvas) / hScreen;
+            
+            return result;
         }
 
         
@@ -276,8 +318,19 @@
 
         public onMouseMove(actionBtn: ActionButton, e: MouseEvent): void {
 
-            if (actionBtn.action == 'move') {
+            if (actionBtn.action == 'move' && !this.isWheelMoving) {
                 console.log('move');
+            } else if(actionBtn.action == 'move' && this.isWheelMoving) {
+
+                const deltaX = this.normalMovingDeltaWidth(e.clientX - this.wheelMovingEvent!.clientX);
+                const deltaY = this.normalMovingDeltaHeight(e.clientY - this.wheelMovingEvent!.clientY);
+
+                console.log(deltaX, deltaY);
+
+                this.shapes.forEach((shape: Shape) => shape.move(deltaX, deltaY));
+                this.drawer.render(this.scaleCoef, this.shapes);
+
+                this.wheelMovingEvent = e;
             } else {
 
                 if(!this.isDrawing){
@@ -299,6 +352,24 @@
             });
 
             this.drawer.render(this.scaleCoef, this.shapes);
+        }
+
+
+        public wheelClickDown(actionBtn: ActionButton, e: MouseEvent): void {
+
+            console.log('middleDown')
+
+            this.isWheelMoving    = true;
+            this.wheelMovingEvent = e;
+        }
+
+
+        public wheelClickUp(actionBtn: ActionButton, e: MouseEvent): void {
+
+            console.log('middleUp')
+
+            this.isWheelMoving    = false;
+            this.wheelMovingEvent = e;
         }
 
         // public static mouseWheel(){
@@ -359,7 +430,15 @@
                 canvasMouseUp = (e: MouseEvent) => {
                     canvasState.onMouseUp(actionButtons[activeIndex.value], e);
                     activeIndex.value = 0;
-                };
+                },
+
+                wheelClickDown = (e: MouseEvent) => {
+                    canvasState.wheelClickDown(actionButtons[activeIndex.value], e);
+                },
+
+                wheelClickUp = (e: MouseEvent) => {
+                    canvasState.wheelClickUp(actionButtons[activeIndex.value], e);
+                }
 
 
             onMounted(() => {
@@ -379,7 +458,9 @@
 
                 canvasMouseDown,
                 canvasMouseUp,
-                canvasMouseMove
+                canvasMouseMove,
+                wheelClickDown,
+                wheelClickUp,
             }
         },
     });
