@@ -39,7 +39,7 @@
 
 
     const 
-        drawSystemPoints = () => {
+        isDedicateds = () => {
             return methodDecoratorFactory.createDecoratorAfter((data: {systemPoints: Array<SystemPoint>, ctx: any}) => {
                 
                 data.systemPoints.forEach((point: SystemPoint) => {
@@ -101,7 +101,7 @@
 
 
     abstract class Shape {
-        public drawSystemPoint = false;
+        public isDedicated = false;
         protected points: Array<Point> = [];
         public abstract render(ctx: any): void;
     }
@@ -125,7 +125,7 @@
         }
 
 
-        @drawSystemPoints()
+        @isDedicateds()
         @drawSystemBorderRect()
         public render(ctx: any): {systemPoints: Array<SystemPoint>, ctx: any} {
             
@@ -143,7 +143,7 @@
 
             let systemPoints: SystemPoint[] = [];
 
-            if(this.drawSystemPoint) {
+            if(this.isDedicated) {
                 systemPoints.push(new SystemPoint(this.points[0].x, this.points[0].y, ctx));
                 systemPoints.push(new SystemPoint(this.points[1].x, this.points[1].y, ctx));
                 systemPoints.push(new SystemPoint(this.points[0].x, this.points[1].y, ctx));
@@ -255,7 +255,7 @@
             } else {
                 this.isDrawing = true;
                 this.accoiationsShapeStateInit[actionBtn.action](e);
-                this.currentShape!.drawSystemPoint = true;
+                this.currentShape!.isDedicated = true;
             }
         }
 
@@ -264,7 +264,8 @@
            if(actionBtn.action == 'move'){
                 console.log('move');
             } else {
-                this.currentShape!.drawSystemPoint = false;
+                // this.currentShape!.isDedicated = false;
+
                 this.accoiationsShapePushState[actionBtn.action](e);
                 this.shapes.push(this.currentShape!);
                 this.isDrawing = false;
@@ -291,10 +292,14 @@
             } 
         }
 
-        // public click(actionBtn: ActionButton, canvas: HTMLCanvasElement): void {
-        //     UserCanvasAction.canvas = canvas;
-        //     UserCanvasAction.drawer.render(UserCanvasAction.scaleCoef);
-        // }
+        public click(actionBtn: ActionButton, e: MouseEvent): void {
+            
+            this.shapes.forEach((shape: Shape) => {
+                shape.isDedicated = false;
+            });
+
+            this.drawer.render(this.scaleCoef, this.shapes);
+        }
 
         // public static mouseWheel(){
         //     UserCanvasAction.scaleCoef = 2;
@@ -339,9 +344,8 @@
                     activeIndex.value = index;
                 },
                 
-                canvasClick = () => {
-                    // canvasState.click();
-                    // UserCanvasAction.click(actionButtons[activeIndex.value], canvas);
+                canvasClick = (e: MouseEvent) => {
+                    canvasState.click(actionButtons[activeIndex.value], e);
                 },
 
                 canvasMouseDown = (e: MouseEvent) => {
