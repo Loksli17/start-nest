@@ -4,20 +4,31 @@
     <div class="mt-8 px-10 ">
         
         <div class="grid gap-2 auto-cols-max grid-flow-col">
-            <div class="p-3 bg-gray-200 cursor-pointer rounded text-lg" v-for="(btn, index) in actionButtons" :key="btn.id" @click="actionBtnClick(index)" :class="{'bg-blue-300': index == activeIndex}">
+            <div class="p-3 bg-gray-200 cursor-pointer rounded text-lg" v-for="(btn, index) in actionButtons" :key="btn.action" @click="actionBtnClick(index)" :class="{'bg-blue-300': index == activeIndex}">
                 {{btn.action}}
             </div>
         </div>
 
         <div class="mt-5">
-            <canvas @click="canvasClick" class=" border-2 w-full h-canvas"></canvas>
+
+            <canvas ref="canvasRef"
+                width="1300"
+                height="700"
+                @click="canvasClick" 
+                @mousedown="canvasMouseDown"
+                @mouseup="canvasMouseUp"
+                @mousemove="canvasMouseMove"
+                class=" border-2 ">
+            </canvas>
+            
         </div>
     </div>
 </template>
 
 
 <script lang="ts">
-    import { defineComponent, Ref, ref } from 'vue';
+
+    import { defineComponent, Ref, ref, onMounted } from 'vue';
 
 
     interface ActionButton {
@@ -25,11 +36,57 @@
         icon  : string;
     }
 
-    
-    class Rect {
 
-        public render(ctx: any): void{
-            console.log(ctx);
+    class Point {
+
+        constructor (x: number, y: number){
+            this.x = x;
+            this.y = y;
+        }
+
+        public x = 0;
+        public y = 0;
+    }
+
+    abstract class Shape {
+
+        protected points: Array<Point> = [];
+
+        public abstract render(ctx: any): void;
+    }
+
+    
+    class Rect extends Shape {
+
+        public isFill = false;
+
+
+        public setFirstPoint(p: Point) {
+            if(this.points[0] != undefined) this.points[0] = p;
+            this.points.push(p);
+        }
+
+
+        public setSecondPoint(p: Point) {
+            if(this.points[0] == undefined) throw new Error('not use setSecondPoint before setFirstPoint')
+            if(this.points[1] != undefined) { this.points[1] = p; return; }
+            this.points.push(p);
+        }
+
+
+        public render(ctx: any): void {
+            
+            if(ctx == undefined){
+                throw new Error("CTX is null. Why?");
+            }
+            
+            if(this.isFill){
+                ctx.fillStyle = "#ccc";
+                ctx.fillRect(this.points[0].x, this.points[0].y, this.points[1].x - this.points[0].x, this.points[1].y - this.points[0].y); 
+            }else{
+                ctx.strokeStyle = "#ccc";
+                ctx.strokeRect(this.points[0].x, this.points[0].y, this.points[1].x - this.points[0].x, this.points[1].y - this.points[0].y);
+            } 
         }
     }
 
@@ -42,20 +99,141 @@
             this.ctx = ctx;
         }
 
-        public render(){
-            const rect: Rect = new Rect();
-            rect.render(this.ctx);
+        public render(scaleCoef: number, shapes: Array<Shape>) {
+            this.clear();
+            shapes.forEach((shape: Shape) => shape.render(this.ctx));
+        }
+
+        private clear(): void {
+            if(this.ctx == undefined) return;
+            this.ctx.clearRect(0, 0, 2000, 1200);
+            // this.ctx.fillStyle = '#fff';
+            // this.ctx.fillRect(0, 0, 2000, 1200);
         }
     }
 
     
-    class UserCanvasAction {
+    class CanvasState {
 
-        private static drawer: Drawer = new Drawer("ctx");
+        private left = 0;
+        private top  = 0;
 
-        public static click(actionBtn: ActionButton): void {
-            console.log('canvas click!');
-        } 
+        private scaleCoef               = 1; 
+        private drawer   : Drawer       = new Drawer("ctx");
+        private shapes   : Array<Shape> = [];
+        private isDrawing               = false;
+
+        private currentShape: Shape | undefined;
+
+        constructor(canvas: HTMLCanvasElement){
+            this.drawer = new Drawer(canvas.getContext("2d"));
+            this.left = canvas.getBoundingClientRect().left;
+            this.top  = canvas.getBoundingClientRect().top;
+        }
+
+        private accoiationsShapeStateInit: Record<string, (e: MouseEvent) => void> = {
+            'rect' : (e) => this.rectHandlerInit(e),
+            'frame': (e) => this.frameHandler(e),
+            'text' : (e) => this.textHandler(e),
+        };
+
+        private accoiationsShapeStateMove: Record<string, (e: MouseEvent) => void> = {
+            'rect' : (e) => this.rectHandlerMove(e),
+            'frame': (e) => this.frameHandler(e),
+            'text' : (e) => this.textHandler(e),
+        };
+
+        private accoiationsShapePushState: Record<string, (e: MouseEvent) => void> = {
+            'rect' : (e) => this.rectHandlerPush(e),
+            'frame': (e) => this.frameHandler(e),
+            'text' : (e) => this.textHandler(e),
+        };
+
+
+        private normalX(x: number): number{
+            return x - this.left;
+        }
+
+        private normalY(y: number): number{
+            return y - this.top;
+        }
+
+        
+        private rectHandlerInit(e: MouseEvent): void {
+            this.currentShape = new Rect();
+            (this.currentShape as Rect).setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+        }
+
+        private rectHandlerMove(e: MouseEvent): void {
+            (this.currentShape as Rect).setSecondPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+        }
+
+        private rectHandlerPush(e: MouseEvent): void {
+            (this.currentShape as Rect).isFill = true;
+        }
+
+
+        private textHandler(e: MouseEvent): void {
+            console.log(this.drawer);
+            // this.drawer.renderShape(rect);
+        }
+
+        private frameHandler(e: MouseEvent): void {
+            console.log(this.drawer);
+            // this.drawer.renderShape(rect);
+        }
+
+
+
+        public onMouseDown(actionBtn: ActionButton, e: MouseEvent): void {
+            if(actionBtn.action == 'move'){
+                console.log('move');
+            } else {
+                this.isDrawing = true;
+                this.accoiationsShapeStateInit[actionBtn.action](e);
+            }
+        }
+
+        public onMouseUp(actionBtn: ActionButton, e: MouseEvent): void {
+
+           if(actionBtn.action == 'move'){
+                console.log('move');
+            } else {
+                this.accoiationsShapePushState[actionBtn.action](e);
+                this.shapes.push(this.currentShape!);
+                this.isDrawing = false;
+
+                this.drawer.render(this.scaleCoef, this.shapes);
+            }
+        }
+
+        public onMouseMove(actionBtn: ActionButton, e: MouseEvent): void {
+
+            if (actionBtn.action == 'move') {
+                console.log('move');
+            } else {
+
+                if(!this.isDrawing){
+                    return
+                }
+
+                this.accoiationsShapeStateMove[actionBtn.action](e);
+
+                this.shapes.push(this.currentShape!);
+                this.drawer.render(this.scaleCoef, this.shapes);
+                this.shapes.pop();
+            } 
+        }
+
+        // public click(actionBtn: ActionButton, canvas: HTMLCanvasElement): void {
+        //     UserCanvasAction.canvas = canvas;
+        //     UserCanvasAction.drawer.render(UserCanvasAction.scaleCoef);
+        // }
+
+        // public static mouseWheel(){
+        //     UserCanvasAction.scaleCoef = 2;
+        //     UserCanvasAction.drawer.render(UserCanvasAction.scaleCoef);
+        // }
     }
 
 
@@ -85,6 +263,10 @@
 
             let activeIndex: Ref<number> = ref(0);
 
+            let 
+                canvasState: CanvasState,
+                canvasRef = ref(null);
+
 
             const 
                 actionBtnClick = (index: number) => {
@@ -92,8 +274,28 @@
                 },
                 
                 canvasClick = () => {
-                    UserCanvasAction.click(actionButtons[activeIndex.value]);
+                    // canvasState.click();
+                    // UserCanvasAction.click(actionButtons[activeIndex.value], canvas);
+                },
+
+                canvasMouseDown = (e: MouseEvent) => {
+                    canvasState.onMouseDown(actionButtons[activeIndex.value], e);
+                },
+
+                canvasMouseMove = (e: MouseEvent) => {
+                    canvasState.onMouseMove(actionButtons[activeIndex.value], e);
+                },
+
+                canvasMouseUp = (e: MouseEvent) => {
+                    canvasState.onMouseUp(actionButtons[activeIndex.value], e);
+                    activeIndex.value = 0;
                 };
+
+
+            onMounted(() => {
+                let canvas: HTMLCanvasElement = canvasRef.value as any;
+                canvasState = new CanvasState(canvas);
+            });
 
 
             return {
@@ -102,8 +304,13 @@
                 actionBtnClick,
                 activeIndex,
 
-                canvasClick
+                canvasClick,
+                canvasRef,
+
+                canvasMouseDown,
+                canvasMouseUp,
+                canvasMouseMove
             }
         },
-    })
+    });
 </script>

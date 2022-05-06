@@ -44,7 +44,7 @@
             
             
             const 
-                showContextMenu = (event: PointerEvent) => {
+                showContextMenu = (event: MouseEvent) => {
 
                     contextMenu = contentMenuRef.value as any;
 
