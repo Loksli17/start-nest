@@ -20,6 +20,7 @@
                 @mousemove="canvasMouseMove"
                 @mousedown.middle="wheelClickDown"
                 @mouseup.middle="wheelClickUp"
+                @wheel="mouseWheel"
                 class=" border-2 ">
             </canvas>
             
@@ -201,6 +202,7 @@
         private scaleCoef      = 1; 
         private isDrawing      = false;
         private isWheelMoving  = false;
+        private isClickUp      = false;
 
         private drawer          : Drawer       = new Drawer("ctx");
         private shapes          : Array<Shape> = [];
@@ -247,9 +249,7 @@
 
             const wScreen = window.innerWidth;
             const wCanvas = 1300;
-
             const result = (x * wCanvas) / wScreen;
-            
             return result;
         }
 
@@ -258,9 +258,7 @@
 
             const hScreen = window.innerHeight;
             const hCanvas = 700;
-
             const result = (y * hCanvas) / hScreen;
-            
             return result;
         }
 
@@ -313,6 +311,8 @@
                 this.isDrawing = false;
 
                 this.drawer.render(this.scaleCoef, this.shapes);
+
+                this.isClickUp = true;
             }
         }
 
@@ -324,8 +324,6 @@
 
                 const deltaX = this.normalMovingDeltaWidth(e.clientX - this.wheelMovingEvent!.clientX);
                 const deltaY = this.normalMovingDeltaHeight(e.clientY - this.wheelMovingEvent!.clientY);
-
-                console.log(deltaX, deltaY);
 
                 this.shapes.forEach((shape: Shape) => shape.move(deltaX, deltaY));
                 this.drawer.render(this.scaleCoef, this.shapes);
@@ -346,30 +344,37 @@
         }
 
         public click(actionBtn: ActionButton, e: MouseEvent): void {
-            
+
             this.shapes.forEach((shape: Shape) => {
                 shape.isDedicated = false;
             });
+
+            if(this.isClickUp) {
+                this.shapes[this.shapes.length - 1].isDedicated = true;
+                this.isClickUp = false;
+            }
+
+            console.log('click', this.shapes);
 
             this.drawer.render(this.scaleCoef, this.shapes);
         }
 
 
         public wheelClickDown(actionBtn: ActionButton, e: MouseEvent): void {
-
-            console.log('middleDown')
-
             this.isWheelMoving    = true;
             this.wheelMovingEvent = e;
+
         }
 
 
         public wheelClickUp(actionBtn: ActionButton, e: MouseEvent): void {
-
-            console.log('middleUp')
-
             this.isWheelMoving    = false;
             this.wheelMovingEvent = e;
+        }
+
+        
+        public wheelScroll(actionBtn: ActionButton, e: MouseEvent): void {
+            console.log(e);
         }
 
         // public static mouseWheel(){
@@ -438,7 +443,11 @@
 
                 wheelClickUp = (e: MouseEvent) => {
                     canvasState.wheelClickUp(actionButtons[activeIndex.value], e);
-                }
+                },
+
+                mouseWheel = (e: MouseEvent) => {
+                    canvasState.wheelScroll(actionButtons[activeIndex.value], e);
+                };
 
 
             onMounted(() => {
@@ -461,6 +470,7 @@
                 canvasMouseMove,
                 wheelClickDown,
                 wheelClickUp,
+                mouseWheel,
             }
         },
     });
