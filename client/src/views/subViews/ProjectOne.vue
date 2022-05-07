@@ -74,7 +74,7 @@
 
     class Point {
 
-        constructor (x: number, y: number){
+        constructor (x: number, y: number) {
             this.x = x;
             this.y = y;
         }
@@ -94,12 +94,12 @@
         private ctx;
         private gap = 6;
 
-        constructor(x: number, y: number, ctx: any){
+        constructor(x: number, y: number, ctx: any) {
             super(x, y);
             this.ctx = ctx;
         }
 
-        public render(){
+        public render() {
             this.ctx.fillStyle = "#fff";
             this.ctx.fillRect(this.x - this.gap / 2, this.y - this.gap / 2, this.gap, this.gap);
             this.ctx.strokeStyle = "#0e0efe";
@@ -110,10 +110,31 @@
 
     abstract class Shape {
         public isDedicated = false;
+        public scaleCoef   = 1;
+
         protected points: Array<Point> = [];
+
+        protected normalCoord(coord: number): number{
+            return coord * this.scaleCoef;
+        }
+
+        protected normalPoints(points: Array<Point>): Array<Point> {
+            
+            let normalPoints: Array<Point> = [];
+
+            points.forEach((point: Point) => {
+                let normalPoint = point;
+                normalPoint.x = this.normalCoord(point.x);
+                normalPoint.y = this.normalCoord(point.y);
+                normalPoints.push(point);
+            });
+
+            return normalPoints;
+        }
 
         public abstract render(ctx: any): void;
         public abstract move(x: number, y: number): void;
+        public abstract scale(scaleCoef: number): void;
     }
 
 
@@ -121,7 +142,7 @@
     class Rect extends Shape {
 
         public isFill = true;
-
+        
 
         public setFirstPoint(p: Point) {
             if(this.points[0] != undefined) this.points[0] = p;
@@ -142,22 +163,24 @@
             if(ctx == undefined){
                 throw new Error("CTX is null. Why?");
             }
+
+            const normalPoints = this.normalPoints(this.points);
             
             if(this.isFill){
                 ctx.fillStyle = "#ccc";
-                ctx.fillRect(this.points[0].x, this.points[0].y, this.points[1].x - this.points[0].x, this.points[1].y - this.points[0].y); 
+                ctx.fillRect(normalPoints[0].x, normalPoints[0].y, normalPoints[1].x - normalPoints[0].x, normalPoints[1].y - normalPoints[0].y); 
             }else{
                 ctx.strokeStyle = "#ccc";
-                ctx.strokeRect(this.points[0].x, this.points[0].y, this.points[1].x - this.points[0].x, this.points[1].y - this.points[0].y);
+                ctx.strokeRect(normalPoints[0].x, normalPoints[0].y, normalPoints[1].x - normalPoints[0].x, normalPoints[1].y - normalPoints[0].y);
             }
 
             let systemPoints: SystemPoint[] = [];
 
             if(this.isDedicated) {
-                systemPoints.push(new SystemPoint(this.points[0].x, this.points[0].y, ctx));
-                systemPoints.push(new SystemPoint(this.points[1].x, this.points[1].y, ctx));
-                systemPoints.push(new SystemPoint(this.points[0].x, this.points[1].y, ctx));
-                systemPoints.push(new SystemPoint(this.points[1].x, this.points[0].y, ctx));
+                systemPoints.push(new SystemPoint(normalPoints[0].x, normalPoints[0].y, ctx));
+                systemPoints.push(new SystemPoint(normalPoints[1].x, normalPoints[1].y, ctx));
+                systemPoints.push(new SystemPoint(normalPoints[0].x, normalPoints[1].y, ctx));
+                systemPoints.push(new SystemPoint(normalPoints[1].x, normalPoints[0].y, ctx));
             }
 
             return {systemPoints, ctx: ctx};
@@ -168,6 +191,10 @@
             this.points.forEach((point: Point) => {
                 point.move(x, y);
             })
+        }
+
+        public scale(scaleCoef: number) {
+            this.scaleCoef = scaleCoef;
         }
     }
 
@@ -180,9 +207,17 @@
             this.ctx = ctx;
         }
 
-        public render(scaleCoef: number, shapes: Array<Shape>){
+        public render(shapes: Array<Shape>) {
             this.clear();
             shapes.forEach((shape: Shape) => shape.render(this.ctx));
+        }
+
+        public scale(shapes: Array<Shape>, scaleCoef = 1) {
+            shapes.forEach((shape: Shape) => shape.scale(scaleCoef));
+        } 
+
+        public move(shapes: Array<Shape>, coords: {x: number, y: number}){
+            shapes.forEach((shape: Shape) => shape.move(coords.x, coords.y));
         }
 
         private clear(): void {
@@ -199,15 +234,15 @@
         private left = 0;
         private top  = 0;
 
-        private scaleCoef      = 1; 
-        private isDrawing      = false;
-        private isWheelMoving  = false;
-        private isClickUp      = false;
+        private scaleCoef     = 1; 
+        private isDrawing     = false;
+        private isWheelMoving = false;
+        private isClickUp     = false;
 
         private drawer          : Drawer       = new Drawer("ctx");
         private shapes          : Array<Shape> = [];
         private dedicatedShapes : Array<Shape> = [];
-        private wheelMovingEvent: MouseEvent | undefined; 
+        private wheelMovingEvent: MouseEvent | undefined;
     
 
         private currentShape: Shape | undefined;
@@ -310,7 +345,7 @@
                 this.shapes.push(this.currentShape!);
                 this.isDrawing = false;
 
-                this.drawer.render(this.scaleCoef, this.shapes);
+                this.drawer.render(this.shapes);
 
                 this.isClickUp = true;
             }
@@ -325,8 +360,10 @@
                 const deltaX = this.normalMovingDeltaWidth(e.clientX - this.wheelMovingEvent!.clientX);
                 const deltaY = this.normalMovingDeltaHeight(e.clientY - this.wheelMovingEvent!.clientY);
 
+                console.log(deltaX, deltaY, this.scaleCoef);
+
                 this.shapes.forEach((shape: Shape) => shape.move(deltaX, deltaY));
-                this.drawer.render(this.scaleCoef, this.shapes);
+                this.drawer.render(this.shapes);
 
                 this.wheelMovingEvent = e;
             } else {
@@ -338,7 +375,7 @@
                 this.accoiationsShapeStateMove[actionBtn.action](e);
 
                 this.shapes.push(this.currentShape!);
-                this.drawer.render(this.scaleCoef, this.shapes);
+                this.drawer.render(this.shapes);
                 this.shapes.pop();
             } 
         }
@@ -356,14 +393,13 @@
 
             console.log('click', this.shapes);
 
-            this.drawer.render(this.scaleCoef, this.shapes);
+            this.drawer.render(this.shapes);
         }
 
 
         public wheelClickDown(actionBtn: ActionButton, e: MouseEvent): void {
             this.isWheelMoving    = true;
             this.wheelMovingEvent = e;
-
         }
 
 
@@ -373,8 +409,21 @@
         }
 
         
-        public wheelScroll(actionBtn: ActionButton, e: MouseEvent): void {
-            console.log(e);
+        public wheelScroll(actionBtn: ActionButton, e: WheelEvent): void {
+            const mouseX1 = this.normalMovingDeltaWidth(e.clientX);
+            const mouseY1 = this.normalMovingDeltaHeight(e.clientY);
+
+            if(e.deltaY == 100) this.scaleCoef = this.scaleCoef -= 0.1;
+            else this.scaleCoef += 0.1;
+
+            const mouseX2 = this.normalMovingDeltaWidth(e.clientX);
+            const mouseY2 = this.normalMovingDeltaHeight(e.clientY);
+             
+            this.drawer.scale(this.shapes, this.scaleCoef);
+            // this.drawer.move(this.shapes, {x: mouseX2 - mouseX1, y: mouseY2 - mouseY1});
+            this.drawer.render(this.shapes);
+
+            console.log(this.scaleCoef, e.deltaY);
         }
 
         // public static mouseWheel(){
@@ -445,7 +494,7 @@
                     canvasState.wheelClickUp(actionButtons[activeIndex.value], e);
                 },
 
-                mouseWheel = (e: MouseEvent) => {
+                mouseWheel = (e: WheelEvent) => {
                     canvasState.wheelScroll(actionButtons[activeIndex.value], e);
                 };
 
