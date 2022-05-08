@@ -21,13 +21,14 @@ export default async function useChatRoomList(userId: number) {
 
                 userStore.setJwt(data.value.accessToken);
 
-                console.error(error.value);
+                if (error.value) {
+                    console.error(error.value);
+                }
             }
         },
-        
     );
 
-    if (error.value !== null) {
+    if (error.value) {
         await refresh();
     }
 

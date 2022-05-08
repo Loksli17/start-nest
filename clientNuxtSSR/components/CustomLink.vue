@@ -8,7 +8,7 @@ import { RouteLocationRaw } from 'vue-router';
 
 <template>
     <nuxt-link 
-        class=" text-blue-600 hover:text-green-400 visited:text-purple-400"
+        class=" text-blue-400 hover:text-green-400 visited:text-purple-400"
         :to="to">
         <slot></slot>
     </nuxt-link>

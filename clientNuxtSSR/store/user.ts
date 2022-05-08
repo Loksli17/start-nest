@@ -5,6 +5,9 @@ export const useUserStore = defineStore("user", {
         userId: 0,
         jwt: ""
     }),
+    getters: {
+        isAuth: (state) => state.jwt.length > 0,
+    },
     actions: {
         setUser(userId: number, jwt: string) {
             this.userId = userId;
@@ -12,11 +15,15 @@ export const useUserStore = defineStore("user", {
         },
         setJwt(jwt: string) {
             this.jwt = jwt;
+        },
+        reset() {
+            this.userId = 0;
+            this.jwt = "";
         }
     },
     persist: true
 });
 
-// if (import.meta.hot) {
-//     import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
-// }
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
+}
