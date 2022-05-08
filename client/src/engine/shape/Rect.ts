@@ -44,7 +44,7 @@ export default class Rect extends Shape {
             ctx.strokeRect(normalPoints[0].x, normalPoints[0].y, normalPoints[1].x - normalPoints[0].x, normalPoints[1].y - normalPoints[0].y);
         }
 
-        let systemPoints: SystemPoint[] = [];
+        const systemPoints: SystemPoint[] = [];
 
         if(this.isDedicated) {
             systemPoints.push(new SystemPoint(normalPoints[0].x, normalPoints[0].y, ctx));
@@ -65,5 +65,19 @@ export default class Rect extends Shape {
 
     public scale(scaleCoef: number) {
         this.scaleCoef = scaleCoef;
+    }
+
+    // ! it's can be if rect parrallels with Axios
+    public intersectionRect(rect: Rect): boolean {
+
+        const a1: Point = this.points[0].x < this.points[1].x ? this.points[0] : this.points[1];
+        const a2: Point = this.points[0].x > this.points[1].x ? this.points[0] : this.points[1];
+
+        return !(
+            a1.y > rect.points[1].y 
+            || a2.y < rect.points[0].y
+            || a2.x < rect.points[0].x
+            || a1.x > rect.points[1].x
+        );
     }
 }

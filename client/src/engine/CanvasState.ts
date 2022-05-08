@@ -147,6 +147,16 @@ export default class CanvasState {
             if(this.isSelection){
                 this.selectionRect.setSecondPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
                 this.shapes.push(this.selectionRect);
+
+                this.shapes.forEach((shape: Shape, index: number) => {
+                    if(index == this.shapes.length - 1) return
+                    console.log(shape.intersectionRect(this.selectionRect));
+                    if(shape.intersectionRect(this.selectionRect)) shape.isDedicated = true;
+                    else shape.isDedicated = false;
+                });
+
+                console.log(this.shapes)
+
                 this.drawer.render(this.shapes);
                 this.shapes.pop();
             }
@@ -181,7 +191,7 @@ export default class CanvasState {
         this.shapes.forEach((shape: Shape) => {
             shape.isDedicated = false;
         });
-
+ 
         if(this.isClickUp) {
             this.shapes[this.shapes.length - 1].isDedicated = true;
             this.isClickUp = false;

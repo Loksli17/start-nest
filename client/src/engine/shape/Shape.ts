@@ -14,10 +14,10 @@ export default abstract class Shape {
 
     protected normalPoints(points: Array<Point>): Array<Point> {
         
-        let normalPoints: Array<Point> = [];
+        const normalPoints: Array<Point> = [];
 
         points.forEach((point: Point) => {
-            let normalPoint = point;
+            const normalPoint = point;
             normalPoint.x = this.normalCoord(point.x);
             normalPoint.y = this.normalCoord(point.y);
             normalPoints.push(point);
@@ -29,4 +29,5 @@ export default abstract class Shape {
     public abstract render(ctx: any): void;
     public abstract move(x: number, y: number): void;
     public abstract scale(scaleCoef: number): void;
+    public abstract intersectionRect(shape: Shape): boolean;
 }
