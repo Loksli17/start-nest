@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import useChatRoomList from '~~/composables/chatRoomList';
     import { useUserStore } from '~~/store/user';
+    import Chat from '~~/types/Chat';
 
     const route     = useRoute();
     const userStore = useUserStore();
@@ -14,7 +15,7 @@
         $toast.error(`Error: ${error.value}`);
     }
 
-    const chatRoomList = data.value;
+    const chatRoomList = data.value as Array<Chat>;
 </script>
 
 <template>

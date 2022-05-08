@@ -1,6 +1,6 @@
 const textClass = {
     // inner: ""
-    input: "px-4 py-2 rounded border-solid border border-sky-500"
+    input: "px-4 py-2 rounded border-solid border border-sky-500",
 }
 
 const buttonClass = {
@@ -9,7 +9,8 @@ const buttonClass = {
 
 export default {
     global: {
-        help: "text-xs text-gray-400"
+        // lol this doesn't work
+        help: "text-[8px] text-gray-500",
     },
     text: textClass,
     password: textClass,

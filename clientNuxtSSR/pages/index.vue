@@ -4,6 +4,7 @@
     import { useUserStore }   from '~~/store/user';
 
     const todoStore   = useCurrentTodo();
+    const userStore   = useUserStore();
     const currentTodo = todoStore.currentTodo;
 
     useHead({
@@ -20,11 +21,15 @@
     const toggleModal = () => {
         showModal.value = !showModal.value;
     }
+
+    const logout = () => {
+        userStore.reset();
+    }
 </script>
 
 <template>
-    <div class=" grid grid-flow-row gap-y-2 m-2">
-        <div class=" p-4 rounded bg-slate-500">
+    <div class="grid grid-flow-row gap-y-2 m-2">
+        <div class="p-4 rounded bg-slate-500">
             <h1 class="font-medium text-[20px]">Test</h1>
 
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">            
@@ -38,14 +43,15 @@
         </div>
 
 
-        <div class=" p-4 rounded bg-slate-500">
+        <div class="p-4 rounded bg-slate-500">
             <h1 class="font-medium text-[20px]">Current todo</h1>
 
-            <div class=" grid grid-flow-row gap-y-1 p-3 rounded">
+            <div class="grid grid-flow-row gap-y-1 p-3 rounded">
                 <Todo :todo="currentTodo" />
             </div>
 
             <CustomButton @click="toggleModal">show modal</CustomButton>
+            <CustomButton @click="logout">logout</CustomButton>
         </div>
 
         <Modal 
