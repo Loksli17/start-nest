@@ -10,7 +10,7 @@ export default class Rect extends Shape {
     public isSelection = false;
 
     public setFirstPoint(p: Point) {
-        if(this.points[0] != undefined) this.points[0] = p;
+        if(this.points[0] != undefined) { this.points[0] = p; return; }
         this.points.push(p);
     }
 
@@ -18,6 +18,14 @@ export default class Rect extends Shape {
         if(this.points[0] == undefined) throw new Error('not use setSecondPoint before setFirstPoint')
         if(this.points[1] != undefined) { this.points[1] = p; return; }
         this.points.push(p);
+    }
+
+    public getFirstPoint(): Point {
+        return this.points[0];
+    }
+
+    public getSecondPoint(): Point {
+        return this.points[1];
     }
 
 
@@ -130,5 +138,6 @@ export default class Rect extends Shape {
             inter : inter,
             status: inter ? status : 'none',
         }
-    } 
+    }
+
 }

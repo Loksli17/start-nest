@@ -22,6 +22,8 @@ export default class CanvasState {
     private isClickUp     = false;
     private isClickDown   = false;
 
+    private isResizing: 'top' | 'left' | 'bottom' | 'right' | 'none' | undefined = undefined;
+
     private drawer          : Drawer                 = new Drawer("ctx");
     private shapes          : Array<Shape>           = [];
     private dedicatedShapes : Array<Shape>           = [];
@@ -38,22 +40,28 @@ export default class CanvasState {
         this.top  = canvas.getBoundingClientRect().top;
     }
 
-    private accoiationsShapeStateInit: Record<string, (e: MouseEvent) => void> = {
+    private assoiationsShapeStateInit: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerInit(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
     };
 
-    private accoiationsShapeStateMove: Record<string, (e: MouseEvent) => void> = {
+    private assoiationsShapeStateMove: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerMove(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
     };
 
-    private accoiationsShapePushState: Record<string, (e: MouseEvent) => void> = {
+    private assoiationsShapePushState: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerPush(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
+    };
+
+    private associationsShapeResize: Record<string, (e: MouseEvent, shape: Shape, status: 'top' | 'left' | 'bottom' | 'right' | 'none') => void> = {
+        'rect' : (e, shape, status) => this.rectHandlerResize(e, shape, status),
+        'frame': (e, status) => this.frameHandler(e),
+        'text' : (e, status) => this.textHandler(e),
     };
 
 
@@ -95,6 +103,31 @@ export default class CanvasState {
     private rectHandlerPush(e: MouseEvent): void {
         (this.currentShape as Rect).isFill = true;
     }
+    
+    private rectHandlerResize(e: MouseEvent, rect: Shape, status: 'top' | 'left' | 'bottom' | 'right' | 'none'): void {
+
+        const point1: Point = (rect as Rect).getFirstPoint();
+        const point2: Point = (rect as Rect).getSecondPoint();
+
+        switch (status) {
+            case 'left':
+                point1.x = this.normalX(e.clientX);
+                (rect as Rect).setFirstPoint(point1);
+                break;
+            case 'right':
+                point2.x = this.normalX(e.clientX);
+                (rect as Rect).setSecondPoint(point2);
+                break;
+            case 'bottom':
+                point2.y = this.normalY(e.clientY);
+                (rect as Rect).setSecondPoint(point2);
+                break;
+            case 'top':
+                point1.y = this.normalY(e.clientY);
+                (rect as Rect).setFirstPoint(point1);
+                break;
+        }
+    }
 
 
     private textHandler(e: MouseEvent): void {
@@ -117,20 +150,25 @@ export default class CanvasState {
 
             this.dedicatedMovingEvent = e;
 
-            this.isSelection = true;
-            this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
-            this.selectionRect.isSelection = true;
+            // this.isSelection = true;
+            // this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+            // this.selectionRect.isSelection = true;
 
-        } else {
+        } else if(this.dedicatedShapes.length == 0 && actionBtn.action != 'move') {
             this.isDrawing = true;
-            this.accoiationsShapeStateInit[actionBtn.action](e);
+            this.assoiationsShapeStateInit[actionBtn.action](e);
             this.currentShape!.isDedicated = true;
-        }
+        } 
     }
 
     public onMouseUp(actionBtn: ActionButton, e: MouseEvent): void {
 
         this.isClickDown = false;
+
+        if(this.isResizing) {
+            this.isResizing = undefined;
+            document.body.style.cursor = "default";
+        }
 
         if(actionBtn.action == 'move'){
             if(this.isSelection) {
@@ -141,7 +179,7 @@ export default class CanvasState {
         } else {
             // this.currentShape!.isDedicated = false;
 
-            this.accoiationsShapePushState[actionBtn.action](e);
+            this.assoiationsShapePushState[actionBtn.action](e);
             this.shapes.push(this.currentShape!);
             this.isDrawing = false;
 
@@ -170,7 +208,17 @@ export default class CanvasState {
                 this.shapes.pop();
             }
 
-            if(this.dedicatedShapes.length > 0 && this.isClickDown) {
+            if(this.dedicatedShapes.length > 0 && this.isClickDown && this.isResizing) {
+
+                this.dedicatedShapes.forEach((shape: Shape) => {
+                    if(shape instanceof Rect){
+                        this.associationsShapeResize['rect'](e, shape, this.isResizing!);
+                    }
+                });
+
+                this.drawer.render(this.shapes);
+
+            } else if(this.dedicatedShapes.length > 0 && this.isClickDown && !this.isResizing) {
 
                 const deltaX = e.clientX - this.dedicatedMovingEvent!.clientX;
                 const deltaY = e.clientY - this.dedicatedMovingEvent!.clientY;
@@ -182,16 +230,19 @@ export default class CanvasState {
                 this.drawer.render(this.shapes);
 
                 this.dedicatedMovingEvent = e;
-            } else if(this.dedicatedShapes.length > 0 && !this.isClickDown) {
+            } else if(this.dedicatedShapes.length > 0 && !this.isClickDown ) {
 
-                this.shapes.forEach((shape: Shape) => {
+                this.dedicatedShapes.forEach((shape: Shape) => {
                     const borderInter = shape.intersectionPointWithBorder(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
 
                     if(borderInter.inter == true) {
-                        document.body.style.cursor = (borderInter.status == "left" || borderInter.status == "right") ? "ew-resize" : "ns-resize"; 
+                        document.body.style.cursor = (borderInter.status == "left" || borderInter.status == "right") ? "ew-resize" : "ns-resize";
+                        this.isResizing = borderInter.status;
                     } else {
                         document.body.style.cursor = "default";
+                        this.isResizing = undefined;
                     }
+                     
                 })
             }
 
@@ -210,7 +261,7 @@ export default class CanvasState {
                 return
             }
 
-            this.accoiationsShapeStateMove[actionBtn.action](e);
+            this.assoiationsShapeStateMove[actionBtn.action](e);
 
             this.shapes.push(this.currentShape!);
             this.drawer.render(this.shapes);
@@ -220,6 +271,7 @@ export default class CanvasState {
 
     public click(actionBtn: ActionButton, e: MouseEvent): void {
 
+        this.dedicatedShapes = [];
         this.shapes.forEach((shape: Shape) => shape.isDedicated = false);
 
         for(const [index, shape] of this.shapes.entries()){
