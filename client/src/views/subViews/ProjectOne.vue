@@ -56,6 +56,10 @@
                 {
                     action: "text",
                     icon  : 'text.png',
+                },
+                {
+                    action: "line",
+                    icon  : 'line.png',
                 }
             ];
 

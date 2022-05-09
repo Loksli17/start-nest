@@ -72,7 +72,6 @@ export default class Rect extends Shape {
         const left : boolean = point.x >= this.points[0].x && point.y >= this.points[0].y;
         const right: boolean = point.x <= this.points[1].x && point.y <= this.points[1].y; 
         
-        console.log(left, right);
         return left && right;
     } 
 
