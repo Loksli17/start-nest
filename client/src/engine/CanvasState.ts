@@ -168,6 +168,7 @@ export default class CanvasState {
         if(this.isResizing) {
             this.isResizing = undefined;
             document.body.style.cursor = "default";
+            this.dedicatedShapes.forEach((shape) => shape.normalPointsShape())
         }
 
         if(actionBtn.action == 'move'){

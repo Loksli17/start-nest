@@ -9,6 +9,20 @@ export default class Rect extends Shape {
     public isFill      = true;
     public isSelection = false;
 
+    public normalPointsShape(): void {
+        if(this.points.length != 2) return;
+        
+        if((this.points[0].x > this.points[1].x) && (this.points[0].y < this.points[1].y)){
+            const x = this.points[1].x;
+            this.points[1].x = this.points[0].x;
+            this.points[0].x = x;
+        } else if ((this.points[0].y > this.points[1].y) && (this.points[0].x < this.points[1].x)) {
+            const y = this.points[1].y;
+            this.points[1].y = this.points[0].y;
+            this.points[0].y = y;
+        }
+    }
+
     public setFirstPoint(p: Point) {
         if(this.points[0] != undefined) { this.points[0] = p; return; }
         this.points.push(p);

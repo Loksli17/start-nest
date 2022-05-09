@@ -26,6 +26,8 @@ export default abstract class Shape {
         return normalPoints;
     }
 
+
+    public abstract normalPointsShape(): void;
     public abstract render(ctx: any): void;
     public abstract move(x: number, y: number): void;
     public abstract scale(scaleCoef: number): void;
