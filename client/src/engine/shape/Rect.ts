@@ -89,4 +89,46 @@ export default class Rect extends Shape {
             || a1.x > rect.points[1].x
         );
     }
+
+
+    public intersectionPointWithBorder(point: Point): { inter: boolean, status: 'top' | 'bottom' | 'left' | 'right' | 'none' } {
+        
+        const delta = 20;
+
+        const bigRect  : Rect = new Rect();
+        const smallRect: Rect = new Rect();
+
+        bigRect.setFirstPoint(new Point(this.points[0].x - delta, this.points[0].y - delta));
+        bigRect.setSecondPoint(new Point(this.points[1].x + delta, this.points[1].y + delta));
+
+        smallRect.setFirstPoint(new Point(this.points[0].x + delta, this.points[0].y + delta));
+        smallRect.setSecondPoint(new Point(this.points[1].x - delta, this.points[1].y - delta));
+
+        const bigHas = bigRect.intersectionPoint(point);
+        
+        let status: 'top' | 'bottom' | 'left' | 'right' | 'none' = 'none';
+
+        if(point.x <= smallRect.points[0].x && point.y >= smallRect.points[0].y && point.y <= smallRect.points[1].y) {
+            status = 'left';
+        } else if (point.x >= smallRect.points[1].x && point.y >= smallRect.points[0].y && point.y <= smallRect.points[1].y) {
+            status = 'right';
+        } else if(point.y <= smallRect.points[0].y && point.x >= smallRect.points[0].x && point.x <= smallRect.points[1].x) {
+            status = 'top';
+        } else if(point.y >= smallRect.points[1].y && point.x >= smallRect.points[0].x && point.x <= smallRect.points[1].x) {
+            status = 'bottom';
+        } else if (smallRect.intersectionPoint(point)) {
+            status = 'none';
+        }
+
+        let inter = false;
+        
+        if(bigHas == true && status != 'none') {
+            inter = true;
+        }
+
+        return {
+            inter : inter,
+            status: inter ? status : 'none',
+        }
+    } 
 }

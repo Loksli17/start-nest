@@ -20,6 +20,7 @@ export default class CanvasState {
     private isDrawing     = false;
     private isWheelMoving = false;
     private isClickUp     = false;
+    private mouseDown     = false;
 
     private drawer          : Drawer                 = new Drawer("ctx");
     private shapes          : Array<Shape>           = [];
@@ -109,6 +110,8 @@ export default class CanvasState {
 
 
     public onMouseDown(actionBtn: ActionButton, e: MouseEvent): void {
+
+        this.mouseDown = true;
         
         if(actionBtn.action == 'move'){
 
@@ -153,7 +156,12 @@ export default class CanvasState {
             this.drawer.render(this.shapes);
 
             this.isClickUp = true;
+
+            this.dedicatedShapes.push(this.currentShape!);
         }
+
+
+        this.mouseDown = false;
     }
 
     public onMouseMove(actionBtn: ActionButton, e: MouseEvent): void {
@@ -175,10 +183,10 @@ export default class CanvasState {
                 this.shapes.pop();
             }
 
-            if(this.dedicatedShapes.length > 0) {
+            if(this.dedicatedShapes.length > 0 && this.mouseDown) {
 
-                const deltaX = this.normalMovingDeltaWidth(e.clientX - this.dedicatedMovingEvent!.clientX);
-                const deltaY = this.normalMovingDeltaHeight(e.clientY - this.dedicatedMovingEvent!.clientY);
+                const deltaX = e.clientX - this.dedicatedMovingEvent!.clientX;
+                const deltaY = e.clientY - this.dedicatedMovingEvent!.clientY;
 
                 this.dedicatedShapes.forEach((shape: Shape) => {
                     shape.move(deltaX, deltaY);
@@ -187,12 +195,17 @@ export default class CanvasState {
                 this.drawer.render(this.shapes);
 
                 this.dedicatedMovingEvent = e;
+
+            } else if(this.dedicatedShapes.length > 0 && !this.mouseDown) {
+                this.dedicatedShapes.forEach((shape: Shape) => {
+                    console.log(shape.intersectionPointWithBorder(new Point(this.normalX(e.clientX), this.normalY(e.clientY))));
+                })
             }
 
         } else if(actionBtn.action == 'move' && this.isWheelMoving) {
 
-            const deltaX = this.normalMovingDeltaWidth(e.clientX - this.wheelMovingEvent!.clientX);
-            const deltaY = this.normalMovingDeltaHeight(e.clientY - this.wheelMovingEvent!.clientY);
+            const deltaX = e.clientX - this.wheelMovingEvent!.clientX;
+            const deltaY = e.clientY - this.wheelMovingEvent!.clientY;
 
             console.log(deltaX, deltaY, this.scaleCoef);
 

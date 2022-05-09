@@ -31,4 +31,5 @@ export default abstract class Shape {
     public abstract scale(scaleCoef: number): void;
     public abstract intersectionRect(shape: Shape): boolean;
     public abstract intersectionPoint(point: Point): boolean;
+    public abstract intersectionPointWithBorder(point: Point): { inter: boolean, status: 'top' | 'bottom' | 'left' | 'right' | 'none' };
 }
