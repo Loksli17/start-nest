@@ -190,6 +190,8 @@ export default class CanvasState {
 
         this.shapes.forEach((shape: Shape) => {
             shape.isDedicated = false;
+            console.log(shape.intersectionPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY))))
+            if (shape.intersectionPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)))) shape.isDedicated = true;
         });
  
         if(this.isClickUp) {

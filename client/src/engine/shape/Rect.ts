@@ -67,6 +67,16 @@ export default class Rect extends Shape {
         this.scaleCoef = scaleCoef;
     }
 
+    public intersectionPoint(point: Point): boolean {
+
+        const left : boolean = point.x >= this.points[0].x && point.y >= this.points[0].y;
+        const right: boolean = point.x <= this.points[1].x && point.y <= this.points[1].y; 
+        
+        console.log(left, right);
+        return left && right;
+    } 
+
+
     // ! it's can be if rect parrallels with Axios
     public intersectionRect(rect: Rect): boolean {
 
