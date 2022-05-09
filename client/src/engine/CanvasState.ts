@@ -20,6 +20,7 @@ export default class CanvasState {
     private isDrawing     = false;
     private isWheelMoving = false;
     private isClickUp     = false;
+    private isClickDown   = false;
 
     private drawer          : Drawer                 = new Drawer("ctx");
     private shapes          : Array<Shape>           = [];
@@ -109,24 +110,16 @@ export default class CanvasState {
 
 
     public onMouseDown(actionBtn: ActionButton, e: MouseEvent): void {
+
+        this.isClickDown = true;
         
         if(actionBtn.action == 'move'){
 
             this.dedicatedMovingEvent = e;
-            let cursorInDedicatedShape = false;
-            
-            for(const [index, shape] of this.shapes.entries()) {
-                if(shape.intersectionPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)))) cursorInDedicatedShape = true;
-                if(shape.isDedicated) this.dedicatedShapes.push(shape);
-            }
 
-            if(cursorInDedicatedShape == false)  {
-                this.dedicatedShapes = [];
-
-                this.isSelection = true;
-                this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
-                this.selectionRect.isSelection = true;
-            }
+            this.isSelection = true;
+            this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+            this.selectionRect.isSelection = true;
 
         } else {
             this.isDrawing = true;
@@ -136,6 +129,8 @@ export default class CanvasState {
     }
 
     public onMouseUp(actionBtn: ActionButton, e: MouseEvent): void {
+
+        this.isClickDown = false;
 
         if(actionBtn.action == 'move'){
             if(this.isSelection) {
@@ -175,7 +170,7 @@ export default class CanvasState {
                 this.shapes.pop();
             }
 
-            if(this.dedicatedShapes.length > 0) {
+            if(this.dedicatedShapes.length > 0 && this.isClickDown) {
 
                 const deltaX = e.clientX - this.dedicatedMovingEvent!.clientX;
                 const deltaY = e.clientY - this.dedicatedMovingEvent!.clientY;
@@ -187,6 +182,17 @@ export default class CanvasState {
                 this.drawer.render(this.shapes);
 
                 this.dedicatedMovingEvent = e;
+            } else if(this.dedicatedShapes.length > 0 && !this.isClickDown) {
+
+                this.shapes.forEach((shape: Shape) => {
+                    const borderInter = shape.intersectionPointWithBorder(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+
+                    if(borderInter.inter == true) {
+                        document.body.style.cursor = (borderInter.status == "left" || borderInter.status == "right") ? "ew-resize" : "ns-resize"; 
+                    } else {
+                        document.body.style.cursor = "default";
+                    }
+                })
             }
 
         } else if(actionBtn.action == 'move' && this.isWheelMoving) {
@@ -219,6 +225,7 @@ export default class CanvasState {
         for(const [index, shape] of this.shapes.entries()){
             if (shape.intersectionPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)))) {
                 shape.isDedicated = true;
+                this.dedicatedShapes.push(shape);
                 break;
             }
         }

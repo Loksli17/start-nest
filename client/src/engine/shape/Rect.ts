@@ -93,7 +93,7 @@ export default class Rect extends Shape {
 
     public intersectionPointWithBorder(point: Point): { inter: boolean, status: 'top' | 'bottom' | 'left' | 'right' | 'none' } {
         
-        const delta = 20;
+        const delta = 15;
 
         const bigRect  : Rect = new Rect();
         const smallRect: Rect = new Rect();
