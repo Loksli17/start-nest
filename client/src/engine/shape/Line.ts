@@ -79,10 +79,63 @@ export class Line extends Shape {
     
     public intersectionPoint(point: Point): boolean {
         
-        const left  = (point.x - this.points[0].x) / (this.points[1].x - this.points[0].x);
-        const right = (point.y - this.points[0].y) / (this.points[1].y - this.points[0].y)
+        if(Math.abs(this.points[0].x - this.points[1].x) > 10) {
+            const line1 = new Line();
+            line1.setFirstPoint(new Point(this.points[0].x, this.points[0].y - 20));
+            line1.setSecondPoint(new Point(this.points[1].x, this.points[1].y - 20));
 
-        return Math.abs(left - right) < 0.075;
+            const line2 = new Line();
+            line2.setFirstPoint(new Point(this.points[0].x, this.points[0].y + 20));
+            line2.setSecondPoint(new Point(this.points[1].x, this.points[1].y + 20));
+
+            let first  = false;
+            let second = false;
+
+            let xRes = false;
+
+            if(this.points[0].x < this.points[1].x) {
+                first  = ((point.x - line1.points[0].x) * (line1.points[1].y - line1.points[0].y) - (line1.points[1].x - line1.points[0].x) * (point.y - line1.points[0].y)) < 0;
+                second = ((point.x - line2.points[0].x) * (line2.points[1].y - line2.points[0].y) - (line2.points[1].x - line2.points[0].x) * (point.y - line2.points[0].y)) > 0;
+                xRes = point.x >= this.points[0].x && point.x <= this.points[1].x;
+            } else {
+                first  = ((point.x - line1.points[0].x) * (line1.points[1].y - line1.points[0].y) - (line1.points[1].x - line1.points[0].x) * (point.y - line1.points[0].y)) > 0;
+                second = ((point.x - line2.points[0].x) * (line2.points[1].y - line2.points[0].y) - (line2.points[1].x - line2.points[0].x) * (point.y - line2.points[0].y)) < 0;
+                xRes = point.x <= this.points[0].x && point.x >= this.points[1].x;
+            }
+
+            return first && second && xRes;
+
+        } else {
+            //* if line is |
+
+            const line1 = new Line();
+            line1.setFirstPoint(new Point(this.points[0].x - 15, this.points[0].y));
+            line1.setSecondPoint(new Point(this.points[1].x - 15, this.points[1].y ));
+
+            const line2 = new Line();
+            line2.setFirstPoint(new Point(this.points[0].x + 15, this.points[0].y ));
+            line2.setSecondPoint(new Point(this.points[1].x + 15, this.points[1].y));
+
+            let first  = false;
+            let second = false;
+
+            let yRes = false;
+            
+            if(this.points[0].y < this.points[1].y) {
+                first  = ((point.x - line1.points[0].x) * (line1.points[1].y - line1.points[0].y) - (line1.points[1].x - line1.points[0].x) * (point.y - line1.points[0].y)) > 0;
+                second = ((point.x - line2.points[0].x) * (line2.points[1].y - line2.points[0].y) - (line2.points[1].x - line2.points[0].x) * (point.y - line2.points[0].y)) < 0;
+                yRes = point.y >= this.points[0].y && point.y <= this.points[1].y;
+            } else {
+                first  = ((point.x - line1.points[0].x) * (line1.points[1].y - line1.points[0].y) - (line1.points[1].x - line1.points[0].x) * (point.y - line1.points[0].y)) < 0;
+                second = ((point.x - line2.points[0].x) * (line2.points[1].y - line2.points[0].y) - (line2.points[1].x - line2.points[0].x) * (point.y - line2.points[0].y)) > 0;
+                yRes = point.y <= this.points[0].y && point.y >= this.points[1].y;
+            }
+
+            console.log(first, second, yRes);
+
+            return first && second && yRes;
+        }
+        
     }
 
 
