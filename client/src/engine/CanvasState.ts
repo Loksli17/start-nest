@@ -141,7 +141,7 @@ export default class CanvasState {
     }
 
     private rectHandlerPush(e: MouseEvent): void {
-        (this.currentShape as Rect).isFill = true;
+        this.currentShape?.normalPointsShape();
     }
     
     private rectHandlerResize(e: MouseEvent, rect: Shape, status: string): void {
