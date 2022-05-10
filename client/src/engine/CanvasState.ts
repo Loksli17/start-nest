@@ -23,7 +23,7 @@ export default class CanvasState {
     private isClickUp     = false;
     private isClickDown   = false;
 
-    private isResizing: 'top' | 'left' | 'bottom' | 'right' | 'none' | undefined = undefined;
+    private isResizing: string | undefined = undefined;
 
     private drawer          : Drawer                 = new Drawer("ctx");
     private shapes          : Array<Shape>           = [];
@@ -62,8 +62,9 @@ export default class CanvasState {
         'text' : (e) => this.textHandler(e),
     };
 
-    private associationsShapeResize: Record<string, (e: MouseEvent, shape: Shape, status: 'top' | 'left' | 'bottom' | 'right' | 'none') => void> = {
+    private associationsShapeResize: Record<string, (e: MouseEvent, shape: Shape, status: string) => void> = {
         'rect' : (e, shape, status) => this.rectHandlerResize(e, shape, status),
+        'line' : (e, shape, status) => this.lineHandlerResize(e, shape, status),
         'frame': (e, status) => this.frameHandler(e),
         'text' : (e, status) => this.textHandler(e),
     };
@@ -109,6 +110,25 @@ export default class CanvasState {
         // (this.currentShape as Rect).isFill = true;
     }
 
+    private lineHandlerResize(e: MouseEvent, line: Shape, status: string): void {
+
+        const point1: Point = (line as Line).getFirstPoint();
+        const point2: Point = (line as Line).getSecondPoint();
+
+        switch (status) {
+            case 'first':
+                point1.x = this.normalX(e.clientX);
+                point1.y = this.normalY(e.clientY);
+                (line as Line).setFirstPoint(point1);
+                break;
+            case 'second':
+                point2.x = this.normalX(e.clientX);
+                point2.y = this.normalY(e.clientY);
+                (line as Line).setSecondPoint(point2);
+                break;
+        }
+    }
+
     
 
     private rectHandlerInit(e: MouseEvent): void {
@@ -124,7 +144,7 @@ export default class CanvasState {
         (this.currentShape as Rect).isFill = true;
     }
     
-    private rectHandlerResize(e: MouseEvent, rect: Shape, status: 'top' | 'left' | 'bottom' | 'right' | 'none'): void {
+    private rectHandlerResize(e: MouseEvent, rect: Shape, status: string): void {
 
         const point1: Point = (rect as Rect).getFirstPoint();
         const point2: Point = (rect as Rect).getSecondPoint();
@@ -234,6 +254,8 @@ export default class CanvasState {
                 this.dedicatedShapes.forEach((shape: Shape) => {
                     if(shape instanceof Rect){
                         this.associationsShapeResize['rect'](e, shape, this.isResizing!);
+                    } else if(shape instanceof Line) {
+                        this.associationsShapeResize['line'](e, shape, this.isResizing!);
                     }
                 });
 

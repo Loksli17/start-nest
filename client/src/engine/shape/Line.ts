@@ -58,7 +58,7 @@ export class Line extends Shape {
     }
 
     public normalPointsShape(): void {
-        throw new Error("Method not implemented.");
+        console.log('normal');
     }
 
     public move(x: number, y: number): void {
@@ -76,17 +76,34 @@ export class Line extends Shape {
         return false;
     }
 
+    
     public intersectionPoint(point: Point): boolean {
         
         const left  = (point.x - this.points[0].x) / (this.points[1].x - this.points[0].x);
         const right = (point.y - this.points[0].y) / (this.points[1].y - this.points[0].y)
 
-        console.log(left, right);
-
         return Math.abs(left - right) < 0.075;
     }
 
-    public intersectionPointWithBorder(point: Point): { inter: boolean; status: "top" | "bottom" | "left" | "right" | "none"; } {
-        return {inter: false, status: 'none'};
+
+    public intersectionPointWithBorder(point: Point): { inter: boolean; status: "first" | "second" | "none"; } {
+        
+        let inter = false;
+        let status: "first" | "second" | "none" = 'none';
+
+        if(Math.pow(point.x - this.points[0].x, 2) + Math.pow(point.y - this.points[0].y, 2) <= 10 * 10) {
+            inter = true;
+            status = "first";
+        }
+
+        if(Math.pow(point.x - this.points[1].x, 2) + Math.pow(point.y - this.points[1].y, 2) <= 10 * 10) {
+            inter = true;
+            status = "second";
+        }
+
+        return { 
+            inter: inter, 
+            status: status,
+        };
     }
 }
