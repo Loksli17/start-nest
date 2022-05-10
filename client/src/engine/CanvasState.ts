@@ -1,5 +1,6 @@
 import Drawer from "./Drawer";
 import { Point } from "./Point";
+import { Line } from "./shape/Line";
 import Rect from "./shape/Rect";
 import Shape from "./shape/Shape";
 
@@ -42,18 +43,21 @@ export default class CanvasState {
 
     private assoiationsShapeStateInit: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerInit(e),
+        'line' : (e) => this.lineHanderInit(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
     };
 
     private assoiationsShapeStateMove: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerMove(e),
+        'line' : (e) => this.lineHandlerMove(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
     };
 
     private assoiationsShapePushState: Record<string, (e: MouseEvent) => void> = {
         'rect' : (e) => this.rectHandlerPush(e),
+        'line' : (e) => this.lineHandlerPush(e),
         'frame': (e) => this.frameHandler(e),
         'text' : (e) => this.textHandler(e),
     };
@@ -90,7 +94,23 @@ export default class CanvasState {
         return result;
     }
 
+
+    private lineHanderInit(e: MouseEvent): void {
+        this.currentShape = new Line();
+        (this.currentShape as Line).setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+    }
+
+    private lineHandlerMove(e: MouseEvent): void {
+        (this.currentShape as Line).setSecondPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+    }
+
+    private lineHandlerPush(e: MouseEvent): void {
+        console.log('line');
+        // (this.currentShape as Rect).isFill = true;
+    }
+
     
+
     private rectHandlerInit(e: MouseEvent): void {
         this.currentShape = new Rect();
         (this.currentShape as Rect).setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
@@ -307,18 +327,18 @@ export default class CanvasState {
 
     
     public wheelScroll(actionBtn: ActionButton, e: WheelEvent): void {
-        const mouseX1 = this.normalMovingDeltaWidth(e.clientX);
-        const mouseY1 = this.normalMovingDeltaHeight(e.clientY);
+        // const mouseX1 = this.normalMovingDeltaWidth(e.clientX);
+        // const mouseY1 = this.normalMovingDeltaHeight(e.clientY);
 
-        if(e.deltaY == 100) this.scaleCoef = this.scaleCoef -= 0.1;
-        else this.scaleCoef += 0.1;
+        // if(e.deltaY == 100) this.scaleCoef = this.scaleCoef -= 0.1;
+        // else this.scaleCoef += 0.1;
 
-        const mouseX2 = this.normalMovingDeltaWidth(e.clientX);
-        const mouseY2 = this.normalMovingDeltaHeight(e.clientY);
+        // const mouseX2 = this.normalMovingDeltaWidth(e.clientX);
+        // const mouseY2 = this.normalMovingDeltaHeight(e.clientY);
             
-        this.drawer.scale(this.shapes, this.scaleCoef);
-        // this.drawer.move(this.shapes, {x: mouseX2 - mouseX1, y: mouseY2 - mouseY1});
-        this.drawer.render(this.shapes);
+        // this.drawer.scale(this.shapes, this.scaleCoef);
+        // // this.drawer.move(this.shapes, {x: mouseX2 - mouseX1, y: mouseY2 - mouseY1});
+        // this.drawer.render(this.shapes);
 
         console.log(this.scaleCoef, e.deltaY);
     }

@@ -82,7 +82,7 @@ export default class Rect extends Shape {
     public move(x: number, y: number) {
         this.points.forEach((point: Point) => {
             point.move(x, y);
-        })
+        });
     }
 
     public scale(scaleCoef: number) {
