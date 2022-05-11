@@ -1,10 +1,12 @@
-import { Point, SystemPoint } from "../Point";
-import { isDedicated }        from "../utils/decorators";
-import Shape                  from "./Shape";
+import { Point, SystemPoint }                from "../Point";
+import { drawSystemBorderLine, isDedicated } from "../utils/decorators";
+import Shape                                 from "./Shape";
 
 
 
 export class Line extends Shape {
+
+    public lineWidth = 2;
 
     public setFirstPoint(p: Point) {
         if(this.points[0] != undefined) { this.points[0] = p; return; }
@@ -25,7 +27,9 @@ export class Line extends Shape {
         return this.points[1];
     }
 
+
     @isDedicated()
+    @drawSystemBorderLine()
     public render(ctx: CanvasRenderingContext2D): { systemPoints: Array<SystemPoint>, ctx: any } {
 
         if(ctx == undefined){
@@ -34,10 +38,9 @@ export class Line extends Shape {
 
         const normalPoints = this.normalPoints(this.points);
 
-        // ctx.lineWidth   = this.width;
-        // ctx.strokeStyle = this.color;
-
-        ctx.strokeStyle = "#000";
+        ctx.lineWidth   = this.lineWidth; //! BAAAD
+        ctx.strokeStyle = this.color;
+        
         ctx.beginPath();
         ctx.moveTo(this.points[0].x, this.points[0].y);    
         ctx.lineTo(this.points[1].x, this.points[1].y);

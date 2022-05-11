@@ -5,6 +5,7 @@ export default abstract class Shape {
 
     public isDedicated = false;
     public scaleCoef   = 1;
+    public color       = "#000";
 
     protected points: Array<Point> = [];
 

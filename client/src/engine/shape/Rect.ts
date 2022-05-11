@@ -22,7 +22,7 @@ export default class Rect extends Shape {
             this.points[0].y = y;
         } else if(((this.points[0].y > this.points[1].y) && (this.points[0].x > this.points[1].x))) {
 
-            const point: any = {}; // новый пустой объект
+            const point: any = {};
 
             for (const key in this.points[1]) {
                 console.log(key);
@@ -31,9 +31,6 @@ export default class Rect extends Shape {
 
             point['move'] = this.points[1].move;
 
-            console.log(point);
-
-            // const point = Object.assign({}, this.points[1]);
             this.points[1] = this.points[0];
             this.points[0] = point;
         }
