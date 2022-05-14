@@ -1,9 +1,9 @@
-import Drawer from "./Drawer";
+import Drawer    from "./Drawer";
 import { Point } from "./Point";
-import { Line } from "./shape/Line";
-import Rect from "./shape/Rect";
-import Shape from "./shape/Shape";
-
+import { Line }  from "./shape/Line";
+import Rect      from "./shape/Rect";
+import Shape     from "./shape/Shape";
+import lodash    from 'lodash';
 
 export interface ActionButton {
     action: string;
@@ -12,6 +12,8 @@ export interface ActionButton {
     
 
 export default class CanvasState {
+
+    private bufferShapes: Array<Shape> = [];
 
     private left = 0;
     private top  = 0;
@@ -190,9 +192,9 @@ export default class CanvasState {
 
             this.dedicatedMovingEvent = e;
 
-            // this.isSelection = true;
-            // this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
-            // this.selectionRect.isSelection = true;
+            this.isSelection = true;
+            this.selectionRect.setFirstPoint(new Point(this.normalX(e.clientX), this.normalY(e.clientY)));
+            this.selectionRect.isSelection = true;
 
         } else if(this.dedicatedShapes.length == 0 && actionBtn.action != 'move') {
             this.isDrawing = true;
@@ -212,6 +214,7 @@ export default class CanvasState {
         }
 
         if(actionBtn.action == 'move'){
+            
             if(this.isSelection) {
                 this.isSelection = false;
             }
@@ -240,8 +243,8 @@ export default class CanvasState {
 
                 this.shapes.forEach((shape: Shape, index: number) => {
                     if(index == this.shapes.length - 1) return
-                    console.log(shape.intersectionRect(this.selectionRect));
-                    if(shape.intersectionRect(this.selectionRect)) shape.isDedicated = true;
+                    console.log(shape.intersectionRect(lodash.cloneDeep(this.selectionRect)));
+                    if(shape.intersectionRect(lodash.cloneDeep(this.selectionRect))) shape.isDedicated = true;
                     else shape.isDedicated = false;
                 });
 
@@ -369,4 +372,24 @@ export default class CanvasState {
     //     UserCanvasAction.scaleCoef = 2;
     //     UserCanvasAction.drawer.render(UserCanvasAction.scaleCoef);
     // }
+
+
+    public cntlC(): void {
+        this.bufferShapes = lodash.cloneDeep(this.dedicatedShapes);
+        this.bufferShapes.forEach(shape => {
+            shape.isDedicated = false;
+            shape.move(10, 10)
+        });
+        console.log(this.bufferShapes, this.dedicatedShapes);
+    }
+
+    public cntlV(): void {
+        this.bufferShapes.forEach(shape => this.shapes.push(shape));
+        this.drawer.render(this.shapes);
+    }
+
+    public delete(): void {
+        // this.shapes.filter(this.shapes)
+        this.dedicatedShapes = [];
+    }
 }

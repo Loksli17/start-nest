@@ -35,7 +35,6 @@
     import { defineComponent, Ref, ref, onMounted } from 'vue';
 
 
-
     export default defineComponent({
         
         setup() {
@@ -68,6 +67,29 @@
             let 
                 canvasState: CanvasState,
                 canvasRef = ref(null);
+
+            document.addEventListener("keydown", (e: KeyboardEvent) => {
+
+                console.log(e);
+                
+                if ((e.ctrlKey || e.metaKey) && e.code == "KeyC") {
+                    canvasState.cntlC();
+                }
+
+                // Ctrl+V or Cmd+V pressed?
+                if ((e.ctrlKey || e.metaKey) && e.code == "KeyV") {
+                    canvasState.cntlV();
+                }
+
+                // Ctrl+X or Cmd+X pressed?
+                if ((e.ctrlKey || e.metaKey) && e.code == "KeyX") {
+                    console.log('x');
+                }
+                
+                if(e.code == "Delete") {
+                    canvasState.delete();
+                }
+            });
 
 
             const 

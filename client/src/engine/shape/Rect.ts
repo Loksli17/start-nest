@@ -114,6 +114,8 @@ export default class Rect extends Shape {
     // ! it's can be if rect parrallels with Axios
     public intersectionRect(rect: Rect): boolean {
 
+        rect.normalPointsShape();
+
         const a1: Point = this.points[0].x < this.points[1].x ? this.points[0] : this.points[1];
         const a2: Point = this.points[0].x > this.points[1].x ? this.points[0] : this.points[1];
 

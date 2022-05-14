@@ -1,5 +1,6 @@
 import { Point, SystemPoint }                from "../Point";
 import { drawSystemBorderLine, isDedicated } from "../utils/decorators";
+import Rect from "./Rect";
 import Shape                                 from "./Shape";
 
 
@@ -75,8 +76,32 @@ export class Line extends Shape {
         throw new Error("Method not implemented.");
     }
 
-    public intersectionRect(shape: Shape): boolean {
-        return false;
+    public intersectionRect(shape: Rect): boolean {
+        
+        let firstPoint  = false;
+        let secondPoint = false;
+
+        shape.normalPointsShape();
+
+        if(
+            shape.getFirstPoint().x <= this.points[0].x &&
+            shape.getSecondPoint().x >= this.points[0].x &&
+            shape.getFirstPoint().y <= this.points[0].y &&
+            shape.getSecondPoint().y >= this.points[0].y
+        ) {
+            firstPoint = true;
+        }
+
+        if(
+            shape.getFirstPoint().x <= this.points[1].x &&
+            shape.getSecondPoint().x >= this.points[1].x &&
+            shape.getFirstPoint().y <= this.points[1].y &&
+            shape.getSecondPoint().y >= this.points[1].y
+        ) {
+            secondPoint = true;
+        }
+
+        return firstPoint || secondPoint;
     }
 
     
