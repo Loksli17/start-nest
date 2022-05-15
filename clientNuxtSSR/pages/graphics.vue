@@ -27,24 +27,25 @@
 
         
         // ! PIXI.js docs say to use 'this' in here,
-        // ! yet TS complains about 'this' being weird
+        // ! yet TS complains about 'this' being weird,
+        // ! so we're doing this the Python way
         rect
-            .on("pointerdown", function (event) {
+            .on("pointerdown", function (this: any, event) {
                 this.data = event.data;
                 this.dragging = true;
             })
-            .on("pointermove", function () {
+            .on("pointermove", function (this: any) {
                 if (this.dragging) {
                     const newPos = this.data.getLocalPosition(this.parent);
                     this.x = newPos.x - 100;
                     this.y = newPos.y - 100;
                 }
             })
-            .on("pointerup", function () {
+            .on("pointerup", function (this: any) {
                 this.dragging = false;
                 this.data = null;
             })
-            .on("pointerupoutside", function () {
+            .on("pointerupoutside", function (this: any) {
                 this.alpha = 1;
                 this.dragging = false;
                 this.data = null;
