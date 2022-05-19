@@ -10,7 +10,7 @@
             $formkit: "text",
             name: "login",
             label: "Login",
-            help: "This is a login field, hi"
+            help: "help message"
         },
         {
             $formkit: "password",

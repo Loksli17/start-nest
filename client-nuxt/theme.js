@@ -1,6 +1,8 @@
+//! https://formkit.com/guides/create-a-tailwind-theme
+
 const textClass = {
     // inner: ""
-    input: "px-4 py-2 rounded border-solid border border-sky-500",
+    input: "px-4 py-2 rounded border border-green-600",
 }
 
 const buttonClass = {
@@ -9,8 +11,7 @@ const buttonClass = {
 
 export default {
     global: {
-        // lol this doesn't work
-        help: "text-[8px] text-gray-500",
+        help: "text-sm text-gray-100",
     },
     text: textClass,
     password: textClass,

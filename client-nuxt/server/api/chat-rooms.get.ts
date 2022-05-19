@@ -1,4 +1,5 @@
-import parse, { splitCookiesString } from "set-cookie-parser";
+// ! I'm not gonna install this package again, this directory is here only for educational purposes
+// import parse, { splitCookiesString } from "set-cookie-parser";
 import { useUserStore } from "~~/store/user";
 
 export default defineEventHandler(async event => {
@@ -37,17 +38,17 @@ export default defineEventHandler(async event => {
                 headers.authorization = `Bearer ${(res._data as any).accessToken}`;
 
                 // this works as expected
-                const cookies = parse(splitCookiesString(res.headers.get("set-cookie")!));
+                // const cookies = parse(splitCookiesString(res.headers.get("set-cookie")!));
 
-                for (const cookie of cookies) {
-                    setCookie(event, cookie.name, cookie.value, 
-                        {
-                            maxAge:   cookie.maxAge, 
-                            sameSite: cookie.sameSite as any,
-                            httpOnly: cookie.httpOnly,
-                            secure:   cookie.secure
-                        });
-                }
+                // for (const cookie of cookies) {
+                //     setCookie(event, cookie.name, cookie.value, 
+                //         {
+                //             maxAge:   cookie.maxAge, 
+                //             sameSite: cookie.sameSite as any,
+                //             httpOnly: cookie.httpOnly,
+                //             secure:   cookie.secure
+                //         });
+                // }
             } catch (err) {
                 console.error(err);
             }

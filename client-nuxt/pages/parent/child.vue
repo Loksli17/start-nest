@@ -94,7 +94,6 @@
             </ul>
         </div>
 
-        <!-- Client-side render only -->
         <client-only>
             <div class=" bg-blue-900">
                 <h1>This is client only</h1>
