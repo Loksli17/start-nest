@@ -8,15 +8,16 @@
   },
   "devDependencies": {
     "@types/set-cookie-parser": "^2.4.2",
-    "nuxt": "3.0.0-rc.2"
+    "nuxt": "3.0.0-rc.3"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.0.0-beta.6",
-    "@formkit/tailwindcss": "^1.0.0-beta.6",
+    "@formkit/themes": "^1.0.0-beta.8",
     "@nuxtjs/tailwindcss": "latest",
     "@pinia/nuxt": "^0.1.8",
     "pinia": "latest",
     "pinia-plugin-persistedstate": "^1.5.1",
+    "pixi.js": "^6.3.2",
     "set-cookie-parser": "^2.4.8",
     "vue-toast-notification": "^3.0.0"
   }

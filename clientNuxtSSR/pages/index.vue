@@ -36,6 +36,7 @@
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">            
                 <CustomLink to="/about">about</CustomLink>
                 <CustomLink to="/chats">chats</CustomLink>
+                <CustomLink to="/graphics">graphcs</CustomLink>
                 <CustomLink to="/parent/child">child</CustomLink>
                 <CustomLink to="/todo/todolist">todolist</CustomLink>
                 <CustomLink to="/list">list</CustomLink>
