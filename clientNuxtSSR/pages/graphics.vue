@@ -8,6 +8,44 @@
         
         (container.value!).appendChild(app.view);
 
+
+        let startingPos: null | any = null;
+        let dragFlag = false;
+
+        app.renderer.plugins.interaction.on("mousedown", (e: PIXI.InteractionEvent) => {
+            // console.log(e)
+            if (e.data.button !== 1) return;
+            dragFlag = true;
+
+            startingPos = {
+                x: e.data.global.x,
+                y: e.data.global.y
+            }
+        });
+
+        app.renderer.plugins.interaction.on("mousemove", (e: PIXI.InteractionEvent) => {
+            if (!dragFlag) return;
+
+            const
+                dx = e.data.global.x - startingPos.x,
+                dy = e.data.global.y - startingPos.y;
+
+            app.stage.position.x += dx;
+            app.stage.position.y += dy;
+
+            startingPos = {
+                x: e.data.global.x,
+                y: e.data.global.y
+            }
+        });
+
+        app.renderer.plugins.interaction.on("mouseup", () => {
+            dragFlag = false;
+        });
+
+
+        const boundingRect = new PIXI.Graphics();
+
         const rect = new PIXI.Graphics();
         rect.interactive = true;
         rect.buttonMode = true;
@@ -15,16 +53,26 @@
         rect.beginFill(0xFF0000);
         rect.drawRect(50, 50, 100, 100);
 
-        
-
         rect.on("pointerover", e => {
+            const bounds = rect.getBounds();
+
+            boundingRect.lineStyle(2, 0xFEEB77, 1);
+            boundingRect.drawRect(
+                rect.position.x,
+                rect.position.y,
+                bounds.width,
+                bounds.height
+            );
+
             rect.tint = 0x666666;
+            rect.addChild(boundingRect);
         });
 
         rect.on("pointerout", e => {
+            boundingRect.clear();
+            rect.removeChild(boundingRect);
             rect.tint = 0xFFFFFF;
         });
-
         
         // ! PIXI.js docs say to use 'this' in here,
         // ! yet TS complains about 'this' being weird,
@@ -50,6 +98,25 @@
                 this.dragging = false;
                 this.data = null;
             });
+
+        const curve = new PIXI.Graphics();
+        curve.interactive = true;
+        curve.buttonMode = true;
+
+        curve.lineStyle(10, 0xFEEB77, 1);
+        curve.moveTo(100, 100);
+        curve.bezierCurveTo(110, 50, 150, 50, 170, 100);
+        
+
+        curve.on("pointerenter", e => {
+            // curve.tint = 0xFFFFFF;
+            console.log(e)
+        });
+
+        curve.on("pointerout", e => {
+            // curve.tint = 0xFFFFFF;
+            boundingRect.clear();
+        });
 
         app.stage.addChild(rect);
     });
