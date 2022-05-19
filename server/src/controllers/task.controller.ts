@@ -1,8 +1,8 @@
-import { Controller, Delete, Get, Param, Put, Query, Request } from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Put, Query, Request } from "@nestjs/common";
 import Task                                                    from "src/models/Task";
 import { TaskService }                                         from "src/services/task.service";
 
-
+//localhost:3000/task/get-all?
 
 @Controller('task')
 export class TaskController {
@@ -32,7 +32,7 @@ export class TaskController {
     public async removeOne(@Param() params): Promise<{msg: string}> {
         const id: number = params.id;
         await this.taskService.removeOne(id);
-        return  {msg: 'Removed successfully' };
+        return  { msg: 'Removed successfully' };
     }
 
 

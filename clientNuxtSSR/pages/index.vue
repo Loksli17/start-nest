@@ -27,6 +27,7 @@
     }
 </script>
 
+
 <template>
     <div class="grid grid-flow-row gap-y-2 m-2">
         <div class="p-4 rounded bg-slate-500">

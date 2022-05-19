@@ -55,6 +55,6 @@ export default class AuthController {
         res.code(200).send({
             accessToken: result.accessToken,
             msg        : result.msg,
-        })
+        });
     }
 }
