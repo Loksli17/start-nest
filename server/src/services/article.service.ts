@@ -18,4 +18,12 @@ export default class ArticleService {
                 having count(t.id) = ${tagIds.length})`) : Sequelize.literal('true'),
         });
     }
+
+
+    public async getAllSearch(searchData: string): Promise<Array<Article>> {
+
+        return await Article.findAll({
+            where: {title: {$like: `%${searchData}%`}}
+        });
+    } 
 }

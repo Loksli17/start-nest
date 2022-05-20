@@ -29,6 +29,9 @@
                 type="form"
                 v-model="formData"
                 @submit="sendSearchData"
+                :submit-attrs="{
+                    'input-class': 'bg-green-400 py-2 px-4 mt-4 rounded-md text-white transition-all hover:bg-green-500'
+                }"
             >
                 <FormKitSchema :schema="schema" />
             </FormKit>

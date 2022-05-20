@@ -13,9 +13,14 @@ export class ArticleContoroller {
     public async getAll(@Query() query): Promise<Array<Article>> {
 
         const tagIds: Array<number> = (query.tagIds != "") ? query.tagIds.split(',') : [];
-
         const articles: Array<Article> = await this.articleService.getAll(tagIds);
-
         return articles
+    }
+
+
+    @Post('index')
+    public async getAllIndex(@Body() body) {
+
+        return this.articleService.getAllSearch(body.searchData);
     }
 }

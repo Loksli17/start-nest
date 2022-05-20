@@ -6,7 +6,7 @@ const textClass = {
 }
 
 const buttonClass = {
-    input: "py-2 px-4 my-4 rounded-md border border-green-400 text-white bg-emerald-900 hover:bg-emerald-500"
+    input: "py-2 px-4 my-4 rounded-md border border-green-400 text-white hover:bg-emerald-500 hover:text-white"
 }
 
 export default {
