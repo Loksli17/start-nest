@@ -39,6 +39,7 @@
                 <CustomLink to="/parent/child">child</CustomLink>
                 <CustomLink to="/todo/todolist">todolist</CustomLink>
                 <CustomLink to="/users/admins/69">test</CustomLink>
+                <CustomLink to="/crud">Crud</CustomLink>
             </div>
         </div>
 
