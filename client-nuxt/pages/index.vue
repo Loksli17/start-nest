@@ -1,20 +1,20 @@
 <script setup lang="ts">
     // import useLogin           from '~~/composables/login';
-    // import { useCurrentTodo } from '~~/store/currentTodo';
+    import { useCurrentTodo } from '~~/store/currentTodo';
     // import { useUserStore }   from '~~/store/user';
 
-    // const todoStore   = useCurrentTodo();
+    const todoStore   = useCurrentTodo();
     // const userStore   = useUserStore();
     // const currentTodo = todoStore.currentTodo;
 
-    // useHead({
-    //     title: "Index",
-    //     meta: [
-    //         { name: "description",    content: "Cool index page description" },
-    //         { name: "og:title",       content: "Cool site | Index" },
-    //         { name: "og:description", content: "Cool index page description" }
-    //     ]
-    // });
+    useHead({
+        title: "Index",
+        meta: [
+            { name: "description",    content: "Cool index page description" },
+            { name: "og:title",       content: "Cool site | Index" },
+            { name: "og:description", content: "Cool index page description" }
+        ]
+    });
 
     const showModal = ref(false);
 
@@ -31,8 +31,8 @@
 <template>
     <div>
         <div>
-            <h1 class="text-lg">Test</h1>
-            <h4 class="text-sm text-gray-100 bg-slate-900">If I have this then help message in the form works, why</h4>
+            <h1 class="text-xl">Test</h1>
+            <h4 class="text-sm text-gray-500 bg-slate-900">If I have this then help message in the form works, why</h4>
 
             <div class=" grid grid-flow-col gap-x-1 grid-cols-5">
                 <CustomLink to="/graphics">graphcs</CustomLink>
@@ -42,6 +42,8 @@
                 <CustomLink to="/crud">Crud</CustomLink>
             </div>
         </div>
+
+        <Todo :todo="todoStore.currentTodo" />
 
         <CustomButton @click="toggleModal">show modal</CustomButton>
 

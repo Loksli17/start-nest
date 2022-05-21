@@ -32,7 +32,7 @@ export default defineNuxtPlugin(nuxtApp => {
                             // ! a hacky solution, but hey, it works for now
                             if (recursiveRetry) {
                                 // ! call the method to repeat the request, 
-                                // ! since ohmyfetch doesn't ao auto retries on 4xx errors
+                                // ! since ohmyfetch doesn't do auto retries on 4xx errors
                                 // ? see https://github.com/unjs/ohmyfetch/issues/31
                                 recursiveRetry();
                             }

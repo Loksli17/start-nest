@@ -64,7 +64,7 @@
         v-model="formData"
         @submit="submit"
         >
-        <h1 class=" text-[20px]">Login</h1>
+        <h1 class=" text-xl">Login</h1>
 
         <FormKitSchema :schema="schema" />
     </FormKit>
