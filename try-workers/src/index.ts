@@ -13,7 +13,7 @@ const workerFactory = (data: workerData): Worker => {
     const worker: Worker = new Worker("./dist/worker.js");
 
     worker.on("message", (value: any) => {
-        console.log(`[message]: ${value}`);
+        // console.log(`[message]: ${value}`);
     });
 
     worker.on("error", (err: Error) => {
@@ -22,6 +22,7 @@ const workerFactory = (data: workerData): Worker => {
 
     return worker;
 }
+
 
 const workers: Array<Worker> = [];
 
@@ -34,10 +35,9 @@ const main = async () => {
         terminal: true
     });
 
-
     while(true) {
 
-        const answer: string = await readPromise.questionAsync("1 - create new worker, 2 - show exists");
+        const answer: string = await readPromise.questionAsync("1 - create new worker \n2 - show exists \n3 - system data");
 
         switch(answer) {
 
@@ -47,8 +47,11 @@ const main = async () => {
                 break;
 
             case "2":
-                console.log(workers);
+                workers.forEach((worker: Worker) => console.log(`[ worker: ${worker.threadId} ]`));
                 break;
+
+            case "3":
+                console.log(process.memoryUsage());
 
             default:
                 break; 
