@@ -18,9 +18,8 @@ export class ArticleContoroller {
     }
 
 
-    @Post('index')
-    public async getAllIndex(@Body() body) {
-
+    @Post('search')
+    public async getAllIndex(@Body() body): Promise<Array<Article>> {
         return this.articleService.getAllSearch(body.searchData);
     }
 }
