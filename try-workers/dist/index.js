@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const worker_threads_1 = require("worker_threads");
 //@ts-ignore
 const readline_promise_1 = __importDefault(require("readline-promise"));
-const workerFactory = () => {
+const workerFactory = (data) => {
     const worker = new worker_threads_1.Worker("./dist/worker.js");
     worker.on("message", (value) => {
-        console.log(`[message]: ${value}`);
+        // console.log(`[message]: ${value}`);
     });
     worker.on("error", (err) => {
         console.error(err);
@@ -24,22 +24,20 @@ const main = async () => {
         terminal: true
     });
     while (true) {
-        const value = await readPromise.questionAsync('Foo?');
-        console.log(value);
-        // readLine.question("1 - create new worker, 2 - show exists", (answer: string) => {
-        //     console.log(answer);
-        //     switch(answer) {
-        //         case "1":
-        //             const worker: Worker = workerFactory();
-        //             workers.push(worker);
-        //             break;
-        //         case "2":
-        //             console.log(workers);
-        //             break;
-        //         default:
-        //             break; 
-        //     }
-        // });
+        const answer = await readPromise.questionAsync("1 - create new worker \n2 - show exists \n3 - system data");
+        switch (answer) {
+            case "1":
+                const worker = workerFactory({ id: workers.length + 1 });
+                workers.push(worker);
+                break;
+            case "2":
+                workers.forEach((worker) => console.log(`[ worker: ${worker.threadId} ]`));
+                break;
+            case "3":
+                console.log(process.memoryUsage());
+            default:
+                break;
+        }
     }
 };
 main();
