@@ -12,5 +12,11 @@
             >
             Button
         </button>
+
+        <nuxt-link 
+            class=" bg-red-700"
+            to="/form">
+            to form
+        </nuxt-link>
     </div>
 </template>
