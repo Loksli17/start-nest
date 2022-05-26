@@ -22,6 +22,9 @@ export default class Article extends Model {
     @Column 
     public img: string;
 
+    @Column
+    public title: string;
+
     @BelongsToMany(() => Tag, {
         through: { model: () => ArticleHasTag },
     })

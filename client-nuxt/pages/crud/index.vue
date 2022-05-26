@@ -12,7 +12,6 @@
 
     const sendSearchData = async (data: string) => {
         articles.value = (await articleFetch.searchArticle(data)).data.articles;
-        console.log(articles.value);
     };
 
 </script>

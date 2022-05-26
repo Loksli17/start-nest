@@ -10,5 +10,6 @@ export default interface ArticleDto {
     time          : string;
     img           : string;
     tags          : Array<TagDto>;
-    articleHasTags: Array<ArticleHasTagDto>
+    articleHasTags: Array<ArticleHasTagDto>;
+    title         : string;
 }

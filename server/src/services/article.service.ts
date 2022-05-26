@@ -26,7 +26,9 @@ export default class ArticleService {
         if(searchData == '') return [];
 
         return await Article.findAll({
-            where: {title: {[Op.like]: `%${searchData}%`}}
+            where  : {title: {[Op.like]: `%${searchData}%`}},
+            include: [Tag],
+            order  : [['id', 'DESC']],
         });
     } 
 }
