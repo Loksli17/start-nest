@@ -8,8 +8,9 @@ export default class ArticleFetch {
 
     
     public async search(data: string): Promise<ArticleFetch> {
-
-        this.response = await axios.post("http://127.0.0.1:3000/article/search", {
+        const { $axios } = useNuxtApp();
+        
+        this.response = await $axios.post("http://127.0.0.1:3000/article/search", {
             searchData: data,
         });
 
