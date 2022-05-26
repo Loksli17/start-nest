@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Req, Res } from "@nestjs/common";
 
 import Article        from "src/models/Article";
 import ArticleService from "src/services/article.service";
@@ -29,9 +29,11 @@ export class ArticleContoroller {
 
     @Delete('remove/:id')
     public async remove(@Param('id') id: string): Promise<{msg: string}> {
-
-        console.log(id);
-
         return {msg: await this.articleService.removeOne(id)};
+    }
+
+    @Post('add')
+    public async add(@Req() req, @Query() query, @Res() res): Promise<{msg: string}> {
+        return {msg: await this.articleService.add(req, query, res)};
     }
 }

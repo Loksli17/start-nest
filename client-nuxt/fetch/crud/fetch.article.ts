@@ -21,6 +21,25 @@ export default class ArticleFetch {
     }
 
 
+    public async add(article: Record<string, any>) {
+
+        const formData = new FormData();
+
+        console.log(article);
+
+        for (const key in article) {
+            if (Object.prototype.hasOwnProperty.call(article, key)) {
+                formData.append(key, article[key]);   
+            }
+        }
+
+        this.response = await this.axios.post(`http://127.0.0.1:3000/article/add`, {
+            formData: formData
+        });
+
+        return this;
+    }
+
     public async delete(id: number): Promise<ArticleFetch> {
 
         this.response = await this.axios.delete(`http://127.0.0.1:3000/article/remove/${id}`);
@@ -47,6 +66,7 @@ export default class ArticleFetch {
 
         return this;
     }
+
 
     public getData(): Record<string, any> {
 

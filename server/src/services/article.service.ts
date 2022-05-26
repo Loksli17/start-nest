@@ -61,4 +61,16 @@ export default class ArticleService {
             throw new HttpException('db error', HttpStatus.BAD_REQUEST);
         }
     }
+    
+
+    public async add(req, query, res): Promise<string> {
+
+        if(!req.isMultipart()){
+            new HttpException('No files', HttpStatus.BAD_REQUEST);
+        }
+
+        console.log(req);
+
+        return "";
+    }
 }
