@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
-import { query } from "express";
+
 import Article        from "src/models/Article";
 import ArticleService from "src/services/article.service";
 
@@ -19,7 +19,10 @@ export class ArticleContoroller {
 
 
     @Post('search')
-    public async getAllIndex(@Body() body): Promise<Array<Article>> {
-        return this.articleService.getAllSearch(body.searchData);
+    public async getAllIndex(@Body() body): Promise<{articles: Array<Article>} > {
+
+        return { 
+            articles: await this.articleService.getAllSearch(body.searchData)
+        }
     }
 }

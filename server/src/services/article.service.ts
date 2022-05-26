@@ -1,6 +1,7 @@
+import { Op }        from "sequelize";
 import { Sequelize } from "sequelize-typescript";
-import Article from "src/models/Article";
-import Tag from "src/models/Tag";
+import Article       from "src/models/Article";
+import Tag           from "src/models/Tag";
 
 
 export default class ArticleService {
@@ -23,7 +24,7 @@ export default class ArticleService {
     public async getAllSearch(searchData: string): Promise<Array<Article>> {
 
         return await Article.findAll({
-            where: {title: {$like: `%${searchData}%`}}
+            where: {title: {[Op.like]: `%${searchData}%`}}
         });
     } 
 }
