@@ -5,7 +5,8 @@
     import Article    from './Article.vue';
 
     defineProps<{
-        data: Array<ArticleDto>
+        data         : Array<ArticleDto>,
+        deleteHandler: (id: number) => {},
     }>();
 
 </script>
@@ -39,7 +40,7 @@
             <div>Actions</div>
         </div>
 
-        <Article v-for="item in data" :data="item" ></Article>
+        <Article v-for="item in data" :data="item" :deleteHandler="deleteHandler"></Article>
     </div>
 
 </template>

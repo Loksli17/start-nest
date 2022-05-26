@@ -4,7 +4,8 @@
     import TagWrapper from './TagWrapper.vue';
 
     defineProps<{
-        data: ArticleDto
+        data         : ArticleDto,
+        deleteHandler: (id: number) => {},
     }>();
 
 </script>
@@ -40,7 +41,7 @@
             </div>
 
             <div class=" h-[50px]">
-                <button class=" bg-red-500 text-white  rounded text-lg px-2 h-full hover:bg-red-700 transition-all ">Delete</button>
+                <button @click="deleteHandler(data.id)" class=" bg-red-500 text-white  rounded text-lg px-2 h-full hover:bg-red-700 transition-all ">Delete</button>
             </div>
         </div>
     </div>

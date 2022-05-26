@@ -1,13 +1,34 @@
 import axios, { AxiosResponse } from "axios";
+import ArticleDto               from "~~/dto/article.dto";
+
 
 export default class ArticleFetch {
 
-    public async searchArticle(data: string): Promise<AxiosResponse> {
+    private response: AxiosResponse; 
 
-        const response: AxiosResponse = await axios.post("http://127.0.0.1:3000/article/search", {
+    
+    public async search(data: string): Promise<ArticleFetch> {
+
+        this.response = await axios.post("http://127.0.0.1:3000/article/search", {
             searchData: data,
         });
 
-        return response;
+        return this;
+    }
+
+
+    public getResponse(): AxiosResponse {
+
+        if(this.response == undefined) throw new Error("Response is undefined!!");
+
+        return this.response;
+    }
+
+
+    public getArticles(): Array<ArticleDto> {
+
+        if(this.response == undefined) throw new Error("Response is undefined!!");
+
+        return this.response.data.articles;
     }
 }

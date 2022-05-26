@@ -13,6 +13,10 @@
         articles.value = (await articleFetch.searchArticle(data)).data.articles;
     };
 
+    const deleteHandler = async (id: number) => {
+        console.log(id);
+    };
+
 </script>
 
 
@@ -23,12 +27,11 @@
 
         <div class=" mt-5 grid grid-cols-[max-content_max-content] gap-10">
             <SearchForm :handler="sendSearchData"></SearchForm>
-
             <nuxt-link class="bg-blue-400 h-max py-3 px-5 text-xl rounded-md text-white transition-all hover:bg-blue-500" to="crud/add">Add</nuxt-link>
         </div>
 
         <div class="mt-5">
-            <ArticleWrapper :data="articles"></ArticleWrapper>
+            <ArticleWrapper :data="articles" :deleteHandler="deleteHandler"></ArticleWrapper>
         </div>
     </div>
 </template>
