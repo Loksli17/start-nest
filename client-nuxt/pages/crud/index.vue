@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
     import SearchForm     from "~~/components/crud/SearchForm.vue";
-    import ArticleFetch   from "~~/composables/crud/fetch.article";
+    import ArticleFetch   from "~~/fetch/crud/fetch.article";
     import ArticleDto     from "~~/dto/article.dto";
     import ArticleWrapper from "../../components/crud/ArticleWrapper.vue";
 

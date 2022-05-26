@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 
-
 export default class ArticleFetch {
 
     public async searchArticle(data: string): Promise<AxiosResponse> {

@@ -1,5 +1,4 @@
-import { defineNuxtConfig } from 'nuxt'
-import axios                from 'axios';
+import { defineNuxtConfig } from 'nuxt';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -8,9 +7,4 @@ export default defineNuxtConfig({
         '@formkit/nuxt',
         '@pinia/nuxt'
     ],
-    provide: {
-        axios: () => {
-            return axios.create({});
-        }
-    }
 });
