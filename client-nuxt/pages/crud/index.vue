@@ -21,10 +21,10 @@
         const response: AxiosResponse = (await articleFetch.delete(id)).getResponse();
 
         if(response.status == 200) {
-
+            if(process.client) useNuxtApp().$toast.success(`Article with id = ${id} was deleted`);
             articles.value = articles.value.filter((article: ArticleDto) => article.id != id);
         } else {
-
+            if(process.client) useNuxtApp().$toast.error(`Error with db`);
         }
     };
 
@@ -45,4 +45,5 @@
             <ArticleWrapper :data="articles" :deleteHandler="deleteHandler"></ArticleWrapper>
         </div>
     </div>
+
 </template>
