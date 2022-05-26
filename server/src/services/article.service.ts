@@ -23,6 +23,8 @@ export default class ArticleService {
 
     public async getAllSearch(searchData: string): Promise<Array<Article>> {
 
+        if(searchData == '') return [];
+
         return await Article.findAll({
             where: {title: {[Op.like]: `%${searchData}%`}}
         });
