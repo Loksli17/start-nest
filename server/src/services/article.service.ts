@@ -1,6 +1,8 @@
+import { HttpCode, HttpException, HttpStatus } from "@nestjs/common";
 import { Op }        from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 import Article       from "src/models/Article";
+import ArticleHasTag from "src/models/ArticleHasTag";
 import Tag           from "src/models/Tag";
 
 
@@ -25,10 +27,38 @@ export default class ArticleService {
 
         if(searchData == '') return [];
 
-        return await Article.findAll({
-            where  : {title: {[Op.like]: `%${searchData}%`}},
-            include: [Tag],
-            order  : [['id', 'DESC']],
-        });
-    } 
+        try {
+            return await Article.findAll({
+                where  : {title: {[Op.like]: `%${searchData}%`}},
+                include: [Tag],
+                order  : [['id', 'DESC']],
+            });
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('db error', HttpStatus.BAD_REQUEST);
+        }
+        
+    }
+
+    
+    public async removeOne(id: string): Promise<string> {
+
+        try {
+            const article: Article = await Article.findByPk(id);
+
+            if(article == undefined) {
+                throw new HttpException('article not found', HttpStatus.NOT_FOUND);
+            }
+
+            await ArticleHasTag.destroy({where: {articleId: id}});
+
+            await article.destroy();
+
+            return 'success deleting';
+
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('db error', HttpStatus.BAD_REQUEST);
+        }
+    }
 }

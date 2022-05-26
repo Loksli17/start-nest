@@ -12,4 +12,6 @@ export default interface ArticleDto {
     tags          : Array<TagDto>;
     articleHasTags: Array<ArticleHasTagDto>;
     title         : string;
+
+    dateView: string;
 }

@@ -1,5 +1,5 @@
 import { generateClasses } from "@formkit/themes";
-import theme               from "./theme";
+import theme               from "./theme.js";
 
 
 export default {
