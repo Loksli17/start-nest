@@ -94,7 +94,7 @@ export default class ArticleService {
 
     public async edit(articleDto: ArticleDto): Promise<string> {
 
-        let article = await Article.build(articleDto);
+        let article = await Article.findByPk(articleDto.id);
 
         article.set("title", articleDto.title);
         article.set("content", articleDto.content);

@@ -11,13 +11,9 @@
         content: string,
     }
 
-    defineProps<{
+    const props = defineProps<{
         handler: (formData: Record<string, any>) => void,
-        // data   : {
-        //     require: false,
-        //     type   : ArticleDto,
-        //     default: null,
-        // },
+        data?  : ArticleDto,
     }>();
 
 
@@ -65,10 +61,10 @@
     ];
 
     const formData: ArticleFormData = {
-        date   : new Date(), 
-        time   : "",
-        title  : "",
-        content: "",
+        date   : props.data == undefined ? new Date() : props.data.date, 
+        time   : props.data == undefined ? "" : props.data.time,
+        title  : props.data == undefined ? "" : props.data.title,
+        content: props.data == undefined ? "" : props.data.content,
     };
 
 </script>

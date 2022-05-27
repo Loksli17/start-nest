@@ -8,7 +8,7 @@
     const articleFetch: ArticleFetch = new ArticleFetch();
     const route = useRoute();
     
-    const article: ArticleDto = (await articleFetch.getOne(Number(route.params.id))).getData().article;
+    const article = ref<ArticleDto>((await articleFetch.getOne(Number(route.params.id))).getData().article);
 
     const handler = async (formData: ArticleFormData) => {
         
@@ -24,7 +24,7 @@
         const response: AxiosResponse = (await articleFetch.edit(article)).getResponse();
 
         if(response.status == 201) {
-            if(process.client) useNuxtApp().$toast.success(`Article was added`);
+            if(process.client) useNuxtApp().$toast.success(`Article with id = ${route.params.id} was  edit`);
         } else {
             if(process.client) useNuxtApp().$toast.error(`Error with db`);
         }
@@ -37,8 +37,7 @@
 
     <div class="p-8 grid gap-7">
         <div>
-            <ArticleForm :handler="handler"></ArticleForm>
+            <ArticleForm :data="article" :handler="handler"></ArticleForm>
         </div>
     </div>
-    {{ $route.params.id }}
 </template>
