@@ -9,6 +9,7 @@ export class ArticleContoroller {
 
     private readonly articleService: ArticleService = new ArticleService();
 
+    
     @Get('get-all')
     public async getAll(@Query() query): Promise<Array<Article>> {
 
@@ -36,5 +37,11 @@ export class ArticleContoroller {
     @Post('add')
     public async add(@Body() body): Promise<{msg: string}> {
         return {msg: await this.articleService.add(body.article)};
+    }
+
+
+    @Get('get-one/:id')
+    public async findOne(@Param("id") id): Promise<{article: Article}> {
+        return {article: await this.articleService.findOne(id)};
     }
 }

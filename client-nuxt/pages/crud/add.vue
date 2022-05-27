@@ -33,7 +33,6 @@
 <template>
 
     <div class="p-8 grid gap-7">
-
         <div>
             <ArticleForm :handler="handler"></ArticleForm>
         </div>

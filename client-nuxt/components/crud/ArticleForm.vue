@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
     import { FormKitSchema } from "@formkit/vue";
+    import ArticleDto        from "~~/dto/article.dto";
+
 
     export interface ArticleFormData {
         date   : Date, 
@@ -11,6 +13,11 @@
 
     defineProps<{
         handler: (formData: Record<string, any>) => void,
+        // data   : {
+        //     require: false,
+        //     type   : ArticleDto,
+        //     default: null,
+        // },
     }>();
 
 

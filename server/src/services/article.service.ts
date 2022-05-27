@@ -79,4 +79,35 @@ export default class ArticleService {
 
         return "success save";
     }
+
+
+    public async findOne(id: string): Promise<Article> {
+
+        try {
+            return await Article.findByPk(id);
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('db error', HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    public async edit(articleDto: ArticleDto): Promise<string> {
+
+        let article = await Article.build(articleDto);
+
+        article.set("title", articleDto.title);
+        article.set("content", articleDto.content);
+        article.set("time", articleDto.time);
+        article.set("date", articleDto.date);
+
+        try {
+            await article.save();
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('db error', HttpStatus.BAD_REQUEST);
+        }
+
+        return "success edit";
+    }
 }

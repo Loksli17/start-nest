@@ -11,6 +11,7 @@ export default class ArticleFetch {
         this.axios = useNuxtApp().$axios;
     }
     
+
     public async search(data: string): Promise<ArticleFetch> {
         
         this.response = await this.axios.post("http://127.0.0.1:3000/article/search", {
@@ -29,6 +30,25 @@ export default class ArticleFetch {
 
         return this;
     }
+
+
+    public async edit(article: ArticleDto) {
+
+        this.response = await this.axios.post(`http://127.0.0.1:3000/article/edit`, {
+            article: article,
+        });
+
+        return this;
+    }
+
+
+    public async getOne(id: number) {
+
+        this.response = await this.axios.get(`http://127.0.0.1:3000/article/get-one/${id}`);
+
+        return this;
+    }
+
 
     public async delete(id: number): Promise<ArticleFetch> {
 
