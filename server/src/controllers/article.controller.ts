@@ -32,8 +32,9 @@ export class ArticleContoroller {
         return {msg: await this.articleService.removeOne(id)};
     }
 
+
     @Post('add')
-    public async add(@Req() req, @Query() query, @Res() res): Promise<{msg: string}> {
-        return {msg: await this.articleService.add(req, query, res)};
+    public async add(@Body() body): Promise<{msg: string}> {
+        return {msg: await this.articleService.add(body.article)};
     }
 }

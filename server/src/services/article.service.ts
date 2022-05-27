@@ -1,7 +1,8 @@
 import { HttpCode, HttpException, HttpStatus } from "@nestjs/common";
+
 import { Op }        from "sequelize";
 import { Sequelize } from "sequelize-typescript";
-import Article       from "src/models/Article";
+import Article, { ArticleDto }       from "src/models/Article";
 import ArticleHasTag from "src/models/ArticleHasTag";
 import Tag           from "src/models/Tag";
 
@@ -63,14 +64,19 @@ export default class ArticleService {
     }
     
 
-    public async add(req, query, res): Promise<string> {
+    public async add(articleDto: ArticleDto): Promise<string> {
+        
+        let article: Article = Article.build(articleDto);
 
-        if(!req.isMultipart()){
-            new HttpException('No files', HttpStatus.BAD_REQUEST);
+        article.set("img", "default.png");
+
+        try {
+            await article.save();
+        } catch (error) {
+            console.error(error);
+            throw new HttpException('db error', HttpStatus.BAD_REQUEST);
         }
 
-        console.log(req);
-
-        return "";
+        return "success save";
     }
 }

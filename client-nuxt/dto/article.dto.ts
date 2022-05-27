@@ -8,12 +8,12 @@ export default interface ArticleDto {
     id?    : number;
     date   : Date;
     time   : string;
-    img  : string;
-    title: string;
+    img    : string;
+    title  : string;
 
     tags?          : Array<TagDto>;
     articleHasTags?: Array<ArticleHasTagDto>;
 
-    dateView: string;
-    file    : File;
+    dateView?: string;
+    file?    : File;
 }

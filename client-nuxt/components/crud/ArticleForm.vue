@@ -2,9 +2,17 @@
 
     import { FormKitSchema } from "@formkit/vue";
 
+    export interface ArticleFormData {
+        date   : Date, 
+        time   : string,
+        title  : string,
+        content: string,
+    }
+
     defineProps<{
         handler: (formData: Record<string, any>) => void,
     }>();
+
 
     const schema = [
 
@@ -31,10 +39,12 @@
                 {
                     $formkit: "date",
                     label   : "Date",
+                    name    : "date",
                 },
                 {
                     $formkit: "time",
                     label   : "Time",
+                    name    : 'time',
                 },
             ],
         },
@@ -45,19 +55,13 @@
             label   : "Content",
         },
 
-        {
-            $formkit: "file",
-            name    : "file",
-            label   : "Img",
-        },
     ];
 
-    const formData = {
+    const formData: ArticleFormData = {
         date   : new Date(), 
         time   : "",
         title  : "",
         content: "",
-        file   : null,
     };
 
 </script>

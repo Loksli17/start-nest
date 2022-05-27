@@ -3,9 +3,21 @@ import ArticleHasTag            from "./ArticleHasTag";
 import Tag                      from "./Tag";
 
 
+export interface ArticleDto {
+    content: string;
+    id?    : number;
+    date   : Date;
+    time   : string;
+    img    : string;
+    title  : string;
+    
+    tags?: Array<Tag>;
+}
+
+
 
 @Table({tableName: 'article', timestamps: false})
-export default class Article extends Model {
+export default class Article extends Model implements ArticleDto {
 
     @Column
     public content: string;
