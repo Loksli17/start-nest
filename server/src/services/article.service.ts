@@ -84,7 +84,10 @@ export default class ArticleService {
     public async findOne(id: string): Promise<Article> {
 
         try {
-            return await Article.findByPk(id);
+            return await Article.findOne({
+                where  : {id: id},
+                include: [Tag],
+            });
         } catch (error) {
             console.error(error);
             throw new HttpException('db error', HttpStatus.BAD_REQUEST);

@@ -24,7 +24,8 @@
         </div>
 
         <div class="h-max-content">
-            <TagWrapper :tags="data.tags"></TagWrapper>
+            <TagWrapper v-if="data.tags.length != 0" :tags="data.tags"></TagWrapper>
+            <div v-else>No Tags :(</div>
         </div>
 
         <div class="h-max-content">
@@ -36,6 +37,15 @@
         </div>
 
         <div class="grid gap-2 grid-flow-col">
+
+            <div class=" h-[50px]">
+                <nuxt-link :to="`/crud/file/${data.id}`" class=" block bg-blue-500 rounded px-2 text-white h-full text-lg hover:bg-blue-700 transition-all leading-[50px]">File</nuxt-link>
+            </div>
+
+            <div class=" h-[50px]">
+                <nuxt-link :to="`/crud/view/${data.id}`" class=" block bg-blue-500 rounded px-2 text-white h-full text-lg hover:bg-blue-700 transition-all leading-[50px]">View</nuxt-link>
+            </div>
+
             <div class=" h-[50px]">
                 <nuxt-link :to="`/crud/edit/${data.id}`" class=" block bg-green-500 rounded px-2 text-white h-full text-lg hover:bg-green-700 transition-all leading-[50px]">Edit</nuxt-link>
             </div>

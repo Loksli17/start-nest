@@ -20,7 +20,7 @@
 
     <div v-else class="grid gap-4" >
 
-        <div class="grid p-4 bg-green-200 rounded-md gap-2 items-center grid-cols-[100px_1fr_1fr_1fr_1fr_138px] font-bold text-lg">
+        <div class="grid p-4 bg-green-200 rounded-md gap-2 items-center grid-cols-[100px_1fr_1fr_1fr_1fr_234px] font-bold text-lg">
             <div>
                 ID
             </div>
